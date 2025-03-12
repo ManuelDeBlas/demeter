@@ -12,11 +12,11 @@ Será una aplicación web.
 ![Diagrama de Clases](https://git.institutomilitar.com/Manu0jeda/demeter/-/wikis/img/DiagramaClases.png)
 
 **Cumplimiento de requisitos**
-1. **Herencia**: Se realizará sobre `Persona` y sus subtipos.
-2. **Relación One-To_Many**: Relación entre `Expediente` y `Activacion`.
-3. **Método personalizado**: Imprimir justificante de la carga de datos de la activación.
-4. **Listado**: Se mostrarán las activaciones grabadas en el sistema.
-5. **CRUD**: Se podrán crear, consultar, actualizar y eliminar activaciones. 
+1. **Herencia**: Se realizará sobre `Solicitud` y sus subtipos.
+2. **Relación One-To_Many**: Relación entre `Expediente` y `Solicitud`.
+3. **Método personalizado**: Calcular el coste de cada tipo de solicitud.
+4. **Listado**: Se mostrarán las solicitudes grabadas en el sistema.
+5. **CRUD**: Se podrán crear, consultar, actualizar y eliminar solicitudes. 
 6. **URLs** del proyecto: 
     1. Documentación del proyecto: https://git.institutomilitar.com/Manu0jeda/demeter
     2. Librería: TBD

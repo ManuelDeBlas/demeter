@@ -15,7 +15,7 @@ Será una aplicación web.
 1. **Herencia**: Se realizará sobre `Solicitud` y sus subtipos.
 2. **Relación One-To_Many**: Relación entre `Expediente` y `Solicitud`.
 3. **Método personalizado**: Calcular el coste de cada tipo de solicitud.
-4. **Listado**: Se mostrarán las solicitudes grabadas en el sistema.
+4. **Listado**: Se mostrarán las solicitudes de un expediente.
 5. **CRUD**: Se podrán crear, consultar, actualizar y eliminar solicitudes. 
 6. **URLs** del proyecto: 
     1. Documentación del proyecto: https://git.institutomilitar.com/Manu0jeda/demeter

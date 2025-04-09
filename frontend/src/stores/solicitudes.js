@@ -8,8 +8,8 @@ export const useSolicitudesStore = defineStore("solicitudes", {
     })),
   }),
   actions: {
-    anadirSolicitud(nuevaSolicitud) {
-      console.log("En el store recibo este poc para almacenar: ", nuevaSolicitud);
+    anadirSolicitudStore(nuevaSolicitud) {
+      console.log("En el store recibo esta solicitud para almacenar: ", nuevaSolicitud);
       const nuevoHref = `http://api-demeter/api/solicitudes/${this.solicitudes.length + 1}`;
       const solicitudConLink = {
         ...nuevaSolicitud,
@@ -21,7 +21,7 @@ export const useSolicitudesStore = defineStore("solicitudes", {
       };
       this.solicitudes.unshift(solicitudConLink);
     },
-    eliminarSolicitud(solicitudHref) {
+    eliminarSolicitudStore(solicitudHref) {
       console.log("En el store recibo este solicitudHref a eliminar: ", solicitudHref);
       const index = this.solicitudes.findIndex(
         (solicitud) => solicitud._links.self.href === solicitudHref
@@ -30,7 +30,7 @@ export const useSolicitudesStore = defineStore("solicitudes", {
         this.solicitudes.splice(index, 1);
       }
     },
-    modificarEstadoSolicitud(solicitudHref, nuevoEstado) {
+    modificarEstadoSolicitudStore(solicitudHref, nuevoEstado) {
       console.log("En el store recibo este solicitudHref a modificar: ", solicitudHref);
       console.log("En el store recibo este nuevoEstado a modificar: ", nuevoEstado);
       const index = this.solicitudes.findIndex(

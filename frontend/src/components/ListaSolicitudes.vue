@@ -1,21 +1,35 @@
 <script>
   import { mapState, mapActions } from "pinia";
   import { useSolicitudesStore } from "@/stores/solicitudes";
+  import SolicitudEnLista from "./SolicitudEnLista.vue";
 
   export default {
+    components: {
+      SolicitudEnLista,
+    },
     computed: {
       ...mapState(useSolicitudesStore, ["solicitudes"]),
     },
 
     methods: {
       ...mapActions(useSolicitudesStore, [
-        "anadirSolicitud",
-        "eliminarSolicitud",
-        "modificarEstadoSolicitud",
+        "anadirSolicitudStore",
+        "eliminarSolicitudStore",
+        "modificarEstadoSolicitudStore",
       ]),
       abrirFormularioSolicitud() {
         // TODO enviar al router que abra el componente FormularioSolicitud
-      }
+      },
+      eliminarSolicitud(solicitud) {
+        this.eliminarSolicitudStore(solicitud._links.self.href);
+      },
+      modificarEstadoSolicitud(solicitud) {
+        this.modificarEstadoSolicitudStore(solicitud);
+      },
+      editarSolicitud(solicitud) {
+        // TODO enviar al router que abra el componente FormularioSolicitud
+        // y le pase la solicitud a editar
+      },
     },
   };
 </script>
@@ -36,7 +50,7 @@
         :key="solicitud._links.self.href"
         class="mb-3"
       >
-        <div>{{ solicitud }}</div>
+        <solicitud-en-lista :solicitud="solicitud" @eliminar-solicitud="eliminarSolicitud"></solicitud-en-lista>
       </div>
     </ul>
   </div>

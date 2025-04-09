@@ -1,20 +1,15 @@
 <script>
-import { mapState, mapActions } from "pinia";
-  import { useReservistasStore } from "@/stores/reservistas";
+  import NavBar from "@/components/navegacion/NavBar.vue";
 
   export default {
-    computed: {
-      ...mapState(useReservistasStore, ["reservistas"]),
-    },
-    methods: {
-      ...mapActions(useReservistasStore, ["anadirReservista", "eliminarReservista"]),
-    }, 
+    components: { NavBar },
   };
 </script>
 <template>
   <div class="app-container">
-    <div v-for="reservista in reservistas">
-      <div>{{ reservista }}</div>
-    </div>
+    <NavBar></NavBar>
+    <main>
+      <router-view></router-view>
+    </main>
   </div>
 </template>

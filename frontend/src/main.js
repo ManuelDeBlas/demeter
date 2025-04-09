@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import App from "@/App.vue";
+import { createPinia } from "pinia";
 
 // Import our custom CSS
 import "@/scss/styles.scss";
@@ -8,5 +9,7 @@ import "@/scss/styles.scss";
 import * as bootstrap from "bootstrap";
 
 const app = createApp(App);
+const pinia = createPinia();
 
+app.use(pinia);
 app.mount("#app");

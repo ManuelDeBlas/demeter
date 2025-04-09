@@ -1,0 +1,34 @@
+{
+  "_embedded": {
+    "pocs": [
+      {
+        "nombre": "NombrePoc1",
+        "apellido1": "Apellido1Poc1",
+        "apellido2": "Apellido2Poc1",
+        "empleo": "EmpleoPoc1",
+        "ucoDestino": "UcoDestinoPoc1",
+        "telefonoCorporativo": "123456789",
+        "emailCorporativo": "poc1@mde.es",
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/pocs/1"
+          }
+        }
+      },
+      {
+        "nombre": "NombrePoc2",
+        "apellido1": "Apellido1Poc2",
+        "apellido2": "Apellido2Poc2",
+        "empleo": "EmpleoPoc2",
+        "ucoDestino": "UcoDestinoPoc2",
+        "telefonoCorporativo": "987654321",
+        "emailCorporativo": "poc2@mde.es",
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/pocs/2"
+          }
+        }
+      }
+    ]
+  }
+}

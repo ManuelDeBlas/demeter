@@ -1,0 +1,10 @@
+{
+  "_embedded": {
+    "expedientes": [
+      {
+        "numeroExpediente": "EXP-001",
+        "activaciones": []
+      }
+    ]
+  }
+}

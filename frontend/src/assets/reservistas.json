@@ -1,0 +1,40 @@
+{
+  "_embedded": {
+    "reservistas": [
+      {
+        "nombre": "NombreReservista1",
+        "apellido1": "Apellido1Reservista1",
+        "apellido2": "Apellido2Reservista1",
+        "empleo": "EmpleoReservista1",
+        "telefonoParticular": "123456789",
+        "dni": "12345678A",
+        "fechaFinCompromiso": "2027-12-31",
+        "diasConsumidos": 10,
+        "localidadResidencia": "Madrid",
+        "subdelegacionDefensa": "Madrid",
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/reservistas/1"
+          }
+        }
+      },
+      {
+        "nombre": "NombreReservista2",
+        "apellido1": "Apellido1Reservista2",
+        "apellido2": "Apellido2Reservista2",
+        "empleo": "EmpleoReservista2",
+        "telefonoParticular": "987654321",
+        "dni": "87654321B",
+        "fechaFinCompromiso": "202-06-30",
+        "diasConsumidos": 5,
+        "localidadResidencia": "Barcelona",
+        "subdelegacionDefensa": "Barcelona",
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/reservistas/2"
+          }
+        }
+      }
+    ]
+  }
+}

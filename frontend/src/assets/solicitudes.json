@@ -1,0 +1,55 @@
+{
+  "_embedded": {
+    "solicitudes": [
+      {
+        "nombreUco": "NombreUco1",
+        "ciu": "12345678",
+        "situacion": "Pendiente de evaluación",
+        "reservista": "http://api-demeter/api/reservistas/1",
+        "poc": "http://api-demeter/api/pocs/1",
+        "fechaInicio": "2023-10-01",
+        "fechaFin": "2023-10-15",
+        "tipoSolicitud": "Formación Continuada",
+        "tiempoMaximo": 30,
+        "escala": "Oficiales",
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/solicitudes/1"
+          }
+        }
+      },
+      {
+        "nombreUco": "NombreUco2",
+        "ciu": "87654321",
+        "situacion": "Pendiente de evaluación",
+        "reservista": "http://api-demeter/api/reservistas/2",
+        "poc": "http://api-demeter/api/pocs/2",
+        "fechaInicio": "2023-11-01",
+        "fechaFin": "2023-11-15",
+        "tipoSolicitud": "Activación ampliada",
+        "motivo": "Necesidades del servicio",
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/solicitudes/2"
+          }
+        }
+      },
+      {
+        "nombreUco": "NombreUco3",
+        "ciu": "11223344",
+        "situacion": "Pendiente de evaluación",
+        "reservista": "http://api-demeter/api/reservistas/1",
+        "poc": "http://api-demeter/api/pocs/2",
+        "fechaInicio": "2023-12-01",
+        "fechaFin": "2023-12-15",
+        "tipoSolicitud": "Prestación servicios unidad",
+        "tiempoMaximo": 20,
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/solicitudes/3"
+          }
+        }
+      }
+    ]
+  }
+}

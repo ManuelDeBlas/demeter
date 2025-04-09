@@ -23,14 +23,16 @@
       <div class="container text-center">
         <div class="row justify-content-end">
           <div class="col-4 text-nowrap">
-            <h3>{{ solicitud.ciu }}</h3>
+            <h3>CIU: {{ solicitud.ciu }}. Estado: {{ solicitud.estado }}</h3>
           </div>
-          <div class="col-4">
+          <div class="col-6">
+            Editar
             <font-awesome-icon
               :icon="['fas', 'pen-to-square']"
               size="xl"
               @click="editarSolicitud"
             />
+            Modificar estado
             <font-awesome-icon
               :icon="['fas', 'pen-to-square']"
               size="xl"

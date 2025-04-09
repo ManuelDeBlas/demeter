@@ -7,28 +7,43 @@
     components: {
       SolicitudEnLista,
     },
+    data() {
+      return {
+        estados: [
+          "Pendiente de evaluación",
+          "Aceptada pendiente de publicación",
+          "Aceptada publicada",
+          "Rechazada",
+        ],
+        filtroEstado: "",
+      };
+    },
     computed: {
       ...mapState(useSolicitudesStore, ["solicitudes"]),
+      solicitudesFiltradas() {
+        if (this.filtroEstado) {
+          return this.solicitudes.filter(
+            (solicitud) => solicitud.estado === this.filtroEstado
+          );
+        }
+        return this.solicitudes;
+      },
     },
 
     methods: {
       ...mapActions(useSolicitudesStore, [
         "anadirSolicitudStore",
-        "eliminarSolicitudStore",
         "modificarEstadoSolicitudStore",
+        "editarSolicitudStore"
       ]),
       abrirFormularioSolicitud() {
         // TODO enviar al router que abra el componente FormularioSolicitud
-      },
-      eliminarSolicitud(solicitud) {
-        this.eliminarSolicitudStore(solicitud._links.self.href);
       },
       modificarEstadoSolicitud(solicitud) {
         this.modificarEstadoSolicitudStore(solicitud);
       },
       editarSolicitud(solicitud) {
-        // TODO enviar al router que abra el componente FormularioSolicitud
-        // y le pase la solicitud a editar
+        this.editarSolicitudStore(solicitud);
       },
     },
   };
@@ -44,13 +59,24 @@
     >
       Añadir
     </button>
+    <label class="block mb-2 font-bold">Filtrar por estado:</label>
+    <select v-model="filtroEstado" class="border p-2 rounded mb-4">
+      <option value="">Todas</option>
+      <option v-for="estado in estados" :key="estado" :value="estado">
+        {{ estado }}
+      </option>
+    </select>
     <ul>
       <div
-        v-for="solicitud in solicitudes"
+        v-for="solicitud in solicitudesFiltradas"
         :key="solicitud._links.self.href"
         class="mb-3"
       >
-        <solicitud-en-lista :solicitud="solicitud" @eliminar-solicitud="eliminarSolicitud"></solicitud-en-lista>
+        <solicitud-en-lista
+          :solicitud="solicitud"
+          @editar-solicitud="editarSolicitud"
+          @modificar-estado-solicitud="modificarEstadoSolicitud"
+        ></solicitud-en-lista>
       </div>
     </ul>
   </div>

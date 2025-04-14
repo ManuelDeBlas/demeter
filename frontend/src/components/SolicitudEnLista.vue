@@ -18,26 +18,35 @@
 
 <template>
   <div class="card text-center">
-    <div class="card-header"> Solicitud</div>
+    <div class="card-header fw-bold fs-5">Solicitud</div>
     <div class="card-body">
       <div class="container text-center">
-        <div class="row justify-content-end">
-          <div class="col-4 text-nowrap">
-            <h3>CIU: {{ solicitud.ciu }}. Estado: {{ solicitud.estado }}</h3>
+        <div class="row justify-content-between align-items-center">
+          <div class="col-md-6 text-start">
+            <h5 class="mb-0">CIU: {{ solicitud.ciu }}</h5>
+            <p class="mb-0">Estado: <strong>{{ solicitud.estado }}</strong></p>
           </div>
-          <div class="col-6">
-            Editar
-            <font-awesome-icon
-              :icon="['fas', 'pen-to-square']"
-              size="xl"
-              @click="editarSolicitud"
-            />
-            Modificar estado
-            <font-awesome-icon
-              :icon="['fas', 'pen-to-square']"
-              size="xl"
-              @click="modificarEstadoSolicitud"
-            />
+          <div class="col-md-6 text-end">
+            <div class="d-flex justify-content-end align-items-center gap-3">
+              <div class="d-flex align-items-center">
+                <span class="me-2">Editar</span>
+                <font-awesome-icon
+                  :icon="['fas', 'pen-to-square']"
+                  size="lg"
+                  @click="editarSolicitud"
+                  class="text-primary cursor-pointer"
+                />
+              </div>
+              <div class="d-flex align-items-center">
+                <span class="me-2">Modificar estado</span>
+                <font-awesome-icon
+                  :icon="['fas', 'pen-to-square']"
+                  size="lg"
+                  @click="modificarEstadoSolicitud"
+                  class="text-success cursor-pointer"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

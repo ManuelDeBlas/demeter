@@ -11,6 +11,7 @@
       return {
         estados: [
           "Pendiente de evaluación",
+          "Aceptada sin expediente",
           "Aceptada pendiente de publicación",
           "Aceptada publicada",
           "Rechazada",
@@ -36,9 +37,6 @@
         "modificarEstadoSolicitudStore",
         "editarSolicitudStore"
       ]),
-      abrirFormularioSolicitud() {
-        // TODO enviar al router que abra el componente FormularioSolicitud
-      },
       modificarEstadoSolicitud(solicitud) {
         this.modificarEstadoSolicitudStore(solicitud);
       },

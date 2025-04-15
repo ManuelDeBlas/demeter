@@ -33,16 +33,10 @@
 
     methods: {
       ...mapActions(useSolicitudesStore, [
-        "anadirSolicitudStore",
-        "modificarEstadoSolicitudStore",
-        "editarSolicitudStore"
+        "anadirElemento",
+        "eliminarElemento",
+        "editarElemento",
       ]),
-      modificarEstadoSolicitud(solicitud) {
-        this.modificarEstadoSolicitudStore(solicitud);
-      },
-      editarSolicitud(solicitud) {
-        this.editarSolicitudStore(solicitud);
-      },
     },
   };
 </script>
@@ -50,11 +44,7 @@
 <template>
   <div class="container">
     <h1 class="titulo p-4">LISTA SOLICITUDES</h1>
-    <button
-      type="button"
-      class="btn btn-success mb-3"
-      @click="abrirFormularioSolicitud"
-    >
+    <button type="button" class="btn btn-success mb-3" @click="anadirElemento">
       Añadir
     </button>
     <label class="block mb-2 font-bold">Filtrar por estado:</label>
@@ -72,8 +62,7 @@
       >
         <solicitud-en-lista
           :solicitud="solicitud"
-          @editar-solicitud="editarSolicitud"
-          @modificar-estado-solicitud="modificarEstadoSolicitud"
+          @editar-solicitud="editarElemento"
         ></solicitud-en-lista>
       </div>
     </ul>

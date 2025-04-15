@@ -37,15 +37,6 @@
                   class="text-primary cursor-pointer"
                 />
               </div>
-              <div class="d-flex align-items-center">
-                <span class="me-2">Modificar estado</span>
-                <font-awesome-icon
-                  :icon="['fas', 'pen-to-square']"
-                  size="lg"
-                  @click="modificarEstadoSolicitud"
-                  class="text-success cursor-pointer"
-                />
-              </div>
             </div>
           </div>
         </div>

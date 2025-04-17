@@ -20,14 +20,15 @@
       };
     },
     computed: {
-      ...mapState(useSolicitudesStore, ["solicitudes"]),
+      ...mapState(useSolicitudesStore, ["elementos"]),
       solicitudesFiltradas() {
+        let solicitudesFiltradas = this.elementos;
         if (this.filtroEstado) {
-          return this.solicitudes.filter(
+          solicitudesFiltradas = this.elementos.filter(
             (solicitud) => solicitud.estado === this.filtroEstado
           );
         }
-        return this.solicitudes;
+        return solicitudesFiltradas;
       },
     },
 

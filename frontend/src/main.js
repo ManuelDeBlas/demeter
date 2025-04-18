@@ -12,8 +12,8 @@ import * as bootstrap from "bootstrap";
 // FontAwesome
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-library.add(faTrash, faPenToSquare);
+import { faTrash, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+library.add(faTrash, faMagnifyingGlass);
 
 const app = createApp(App);
 const pinia = createPinia();

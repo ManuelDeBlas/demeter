@@ -58,6 +58,7 @@ export default {
         class="mb-3"
       >
         <elemento-en-lista
+          :tipoListado="tipoListado"
           :elemento="elemento"
           @editar-elemento="editarElemento"
         ></elemento-en-lista>

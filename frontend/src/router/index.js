@@ -1,6 +1,7 @@
 import Inicio from "@/components/Inicio.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 import { getListadoConfig } from "@/router/listadoConfig";
+import FormularioSolicitud from "@/components/FormularioSolicitud.vue";
 
 const NotFound = () => import("@/components/NotFound.vue");
 const Listado = () => import("@/components/Listado.vue");
@@ -15,6 +16,11 @@ const routes = [
       tipoListado: route.params.tipoListado,
       config: getListadoConfig(route.params.tipoListado),
     }),
+  },
+  {
+    path: "/formulario-solicitud",
+    name: "formulario-solicitud",
+    component: FormularioSolicitud,
   },
   { path: "/:pathMatch(.*)*", component: NotFound, name: "notfound" },
 ];

@@ -8,16 +8,16 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link class="nav-link" to="/listareservistas">Lista reservistas</router-link>
+            <router-link class="nav-link" to="/listade/reservistas">Reservistas</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/listapocs">Lista POCs</router-link>
+            <router-link class="nav-link" to="/listado/pocs">POCs</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/listado/solicitudes">Lista solicitudes</router-link>
+            <router-link class="nav-link" to="/listado/solicitudes">Solicitudes</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/listaexpedientes">Lista expedientes</router-link>
+            <router-link class="nav-link" to="/listado/expedientes">Expedientes</router-link>
           </li>
         </ul>
       </div>

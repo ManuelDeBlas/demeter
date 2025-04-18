@@ -3,7 +3,33 @@
     "expedientes": [
       {
         "numeroExpediente": "EXP-001",
-        "activaciones": []
+        "estado": "Pendiente de publicación",
+        "solicitudes": [],
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/expedientes/EXP-001"
+          }
+        }
+      },
+      {
+        "numeroExpediente": "EXP-002",
+        "estado": "Enviado al BOD",
+        "solicitudes": [],
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/expedientes/EXP-002"
+          }
+        }
+      },
+      {
+        "numeroExpediente": "EXP-003",
+        "estado": "Publicado",
+        "solicitudes": [],
+        "_links": {
+          "self": {
+            "href": "http://api-demeter/api/expedientes/EXP-003"
+          }
+        }
       }
     ]
   }

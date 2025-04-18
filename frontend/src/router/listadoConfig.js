@@ -1,4 +1,5 @@
 import { useSolicitudesStore } from "@/stores/solicitudes";
+import { useExpedientesStore } from "@/stores/expedientes";
 
 export function getListadoConfig(tipoListado) {
     const config = {
@@ -10,6 +11,14 @@ export function getListadoConfig(tipoListado) {
                 "Aceptada pendiente de publicación",
                 "Aceptada publicada",
                 "Rechazada",
+              ],
+        },
+        expedientes: {
+            store: () => useExpedientesStore(),
+            estados: [
+                "Pendiente de publicación",
+                "Enviado al BOD",
+                "Publicado"
               ],
         },
     };

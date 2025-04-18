@@ -14,7 +14,7 @@
             <router-link class="nav-link" to="/listapocs">Lista POCs</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/listasolicitudes">Lista solicitudes</router-link>
+            <router-link class="nav-link" to="/listado/solicitudes">Lista solicitudes</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/listaexpedientes">Lista expedientes</router-link>

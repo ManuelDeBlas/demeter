@@ -33,6 +33,9 @@ export function crearStore(nombreStore, datosJSON, urlBase) {
         const indice = this.elementos.findIndex(
           (elemento) => elemento._links.self.href === hrefAEliminar
         );
+        console.log(
+          `En el store ${nombreStore} el índice del elemento a eliminar es: ${indice}`
+        );
         if (indice !== -1) {
           this.elementos.splice(indice, 1);
         }

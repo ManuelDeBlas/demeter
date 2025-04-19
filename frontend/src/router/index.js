@@ -18,7 +18,7 @@ const routes = [
     }),
   },
   {
-    path: "/formulario-solicitud",
+    path: "/formulario/solicitudes",
     name: "FormularioSolicitud",
     component: FormularioSolicitud
   },

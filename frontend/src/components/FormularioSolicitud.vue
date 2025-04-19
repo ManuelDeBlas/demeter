@@ -6,23 +6,41 @@ export default {
   name: "FormularioSolicitud",
   computed: {
     solicitudAbierta() {
-      return useSolicitudesStore().elementoAbierto;
+      let solicitud = useSolicitudesStore().elementoAbierto;
+      if (solicitud === null) {
+        solicitud = {
+          nombreUco: "",
+          ciu: "",
+          estado: "",
+          reservista: "",
+          poc: "",
+          fechaInicio: "",
+          fechaFin: "",
+          tipoSolicitud: "",
+          tiempoMaximo: 0,
+          escala: "",
+        };
+      }
+      return solicitud;
     },
   },
   methods: {
     ...mapActions(useSolicitudesStore, [
-      "recuperarElemento",
       "anadirElemento",
       "eliminarElemento",
       "editarElemento",
     ]),
     enviarFormulario() {
-      if (this.solicitudAbierta._links.self.href) {
+      if (this.solicitudAbierta && this.solicitudAbierta._links && this.solicitudAbierta._links.self) {
         this.editarElemento(this.solicitudAbierta);
       } else {
         this.anadirElemento(this.solicitudAbierta);
       }
       this.solicitudAbierta = null;
+      this.$router.push({ path: "/listado/solicitudes" });
+    },
+    eliminarSolicitud() {
+      this.eliminarElemento(this.solicitudAbierta._links.self.href);
       this.$router.push({ path: "/listado/solicitudes" });
     },
   },
@@ -34,7 +52,7 @@ export default {
     <h2>Editar Solicitud</h2>
     <form @submit.prevent="enviarFormulario">
       <div>
-        <label>Nombre UCOfdsfs: {{ solicitudAbierta }}</label>
+        <label>Nombre UCO:</label>
         <input v-model="solicitudAbierta.nombreUco" type="text" />{{
           solicitudAbierta.nombreUco
         }}
@@ -85,6 +103,7 @@ export default {
       </div>
 
       <button type="submit">Guardar Cambios</button>
+      <button type="button" @click="eliminarSolicitud">Eliminar</button>
     </form>
   </div>
 </template>

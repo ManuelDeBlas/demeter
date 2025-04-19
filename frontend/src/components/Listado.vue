@@ -1,5 +1,4 @@
 <script>
-import { mapActions } from "pinia";
 import ElementoEnLista from "@/components/ElementoEnLista.vue";
 
 export default {
@@ -29,6 +28,12 @@ export default {
       return elementosFiltrados;
     },
   },
+  methods: {
+    anadirElemento() {
+      this.config.store().elementoAbierto = null;
+      this.$router.push({ path: `/formulario/${this.tipoListado}` });
+    },
+  },
 };
 </script>
 
@@ -36,7 +41,7 @@ export default {
   <div class="container">
     <h1 class="titulo p-4">Lista de {{ tipoListado }}</h1>
     <button type="button" class="btn btn-success mb-3" @click="anadirElemento">
-      Añadir
+      Nuevo
     </button>
     <label class="block mb-2 font-bold">Filtrar por estado:</label>
     <select v-model="seleccionFiltro" class="border p-2 rounded mb-4">

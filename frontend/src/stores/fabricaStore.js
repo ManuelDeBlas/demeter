@@ -6,6 +6,7 @@ export function crearStore(nombreStore, datosJSON, urlBase) {
       elementos: datosJSON.map((elemento) => ({
         ...elemento,
       })),
+      elementoAbierto: null,
     }),
     actions: {
       anadirElemento(nuevoElemento) {
@@ -42,7 +43,8 @@ export function crearStore(nombreStore, datosJSON, urlBase) {
           elementoEditado
         );
         const indice = this.elementos.findIndex(
-          (elemento) => elemento._links.self.href === elementoEditado._links.self.href
+          (elemento) =>
+            elemento._links.self.href === elementoEditado._links.self.href
         );
         if (indice !== -1) {
           this.elementos[indice] = elementoEditado;

@@ -1,20 +1,17 @@
 <script>
   export default {
-    props: ["tipoListado" ,"elemento"],
+    props: ["tipoListado", "config", "elemento"],
     methods: {
       abrirElemento() {
-        const tiposListado = {
+        const tiposFormularios = {
           solicitudes: "FormularioSolicitud",
           expedientes: "FormularioExpediente",
         }
-        const nombreFormulario = tiposListado[this.tipoListado];
-        console.log("Se abre el elemento", this.elemento);
         console.log("Tipo de listado", this.tipoListado);
+        this.config.store().elementoAbierto = this.elemento;
+        console.log("Se abre el elemento", this.elementoAbierto);
         this.$router.push({
-          name: tiposListado[this.tipoListado],
-          params: {
-            elemento: this.elemento
-          },
+          name: tiposFormularios[this.tipoListado],
         });
       },
     },

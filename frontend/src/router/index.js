@@ -19,8 +19,8 @@ const routes = [
   },
   {
     path: "/formulario-solicitud",
-    name: "formulario-solicitud",
-    component: FormularioSolicitud,
+    name: "FormularioSolicitud",
+    component: FormularioSolicitud
   },
   { path: "/:pathMatch(.*)*", component: NotFound, name: "notfound" },
 ];

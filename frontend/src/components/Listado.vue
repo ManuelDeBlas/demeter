@@ -29,12 +29,6 @@ export default {
       return elementosFiltrados;
     },
   },
-  methods: {
-    ...mapActions(
-      (contexto) => contexto.config.store(),
-      ["anadirElemento", "eliminarElemento", "editarElemento"]
-    ),
-  },
 };
 </script>
 
@@ -59,8 +53,8 @@ export default {
       >
         <elemento-en-lista
           :tipoListado="tipoListado"
+          :config="config"
           :elemento="elemento"
-          @editar-elemento="editarElemento"
         ></elemento-en-lista>
       </div>
     </ul>

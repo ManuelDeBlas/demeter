@@ -8,7 +8,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link class="nav-link" to="/listade/reservistas">Reservistas</router-link>
+            <router-link class="nav-link" to="/listado/reservistas">Reservistas</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/listado/pocs">POCs</router-link>

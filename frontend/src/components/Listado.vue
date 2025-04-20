@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     anadirElemento() {
-      this.config.store().elementoAbierto = null;
+      this.config.store().elementoAbierto = null;  // Vacía el store para añadir un nuevo elemento
       this.$router.push({ path: `/formulario/${this.tipoListado}` });
     },
   },

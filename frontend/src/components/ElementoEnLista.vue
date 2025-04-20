@@ -8,7 +8,7 @@ export default {
         expedientes: "FormularioExpediente",
       };
       console.log("Tipo de listado", this.tipoListado);
-      this.config.store().elementoAbierto = this.elemento;
+      this.config.store().elementoAbierto = this.elemento;  // Guarda el elemento en el store para editarlo
       console.log("Se abre el elemento", this.elementoAbierto);
       this.$router.push({
         name: tiposFormularios[this.tipoListado],

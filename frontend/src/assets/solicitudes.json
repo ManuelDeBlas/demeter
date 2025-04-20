@@ -9,7 +9,7 @@
         "poc": "http://api-demeter/api/pocs/1",
         "fechaInicio": "2023-10-01",
         "fechaFin": "2023-10-15",
-        "tipoSolicitud": "Formación Continuada",
+        "tipoSolicitud": "Formación continuada",
         "tiempoMaximo": 30,
         "escala": "Oficiales",
         "_links": {

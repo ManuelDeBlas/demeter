@@ -43,7 +43,7 @@ export default {
     <button type="button" class="btn btn-success mb-3" @click="anadirElemento">
       Nuevo
     </button>
-    <label class="block mb-2 font-bold">Filtrar por estado:</label>
+    <label class="block mb-2 font-bold">Filtrar:</label>
     <select v-model="seleccionFiltro" class="border p-2 rounded mb-4">
       <option value="">Todas</option>
       <option v-for="estado in config.estados" :key="estado" :value="estado">

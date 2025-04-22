@@ -34,8 +34,10 @@
       <div class="container text-center">
         <div class="row justify-content-between align-items-center">
           <div class="col-md-6 text-start">
-            <h5 class="mb-0">CIU: {{ elemento.ciu }}</h5>
-            <p class="mb-0">
+            <p
+              class="mb-0"
+              v-if="tipoListado === ('solicitudes' || 'expedientes')"
+            >
               Estado: <strong>{{ elemento.estado }}</strong>
             </p>
           </div>

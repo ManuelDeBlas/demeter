@@ -36,7 +36,7 @@
           <div class="col-md-6 text-start">
             <p
               class="mb-0"
-              v-if="tipoListado === ('solicitudes' || 'expedientes')"
+              v-if="tipoListado === 'solicitudes' || 'expedientes'"
             >
               Estado: <strong>{{ elemento.estado }}</strong>
             </p>

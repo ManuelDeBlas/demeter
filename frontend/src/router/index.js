@@ -18,8 +18,13 @@ const routes = [
   },
   {
     path: "/formulario/solicitudes",
-    name: "FormularioSolicitud",
+    name: "FormularioSolicitudView",
     component: () => import("@/views/FormularioSolicitudView.vue"),
+  },
+  {
+    path: "/formulario/expedientes",
+    name: "FormularioExpedienteView",
+    component: () => import("@/views/FormularioExpedienteView.vue"),
   },
   {
     path: "/:pathMatch(.*)*",

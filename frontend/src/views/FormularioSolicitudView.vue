@@ -3,7 +3,7 @@ import { useSolicitudesStore } from "@/stores/solicitudes";
 import { mapActions } from "pinia";
 
 export default {
-  name: "FormularioSolicitud",
+  name: "FormularioSolicitudView",
   data() {
     return {
       editando: true,

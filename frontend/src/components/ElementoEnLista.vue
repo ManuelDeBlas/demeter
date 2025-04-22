@@ -4,8 +4,8 @@
     methods: {
       abrirElemento() {
         const tiposFormularios = {
-          solicitudes: "FormularioSolicitud",
-          expedientes: "FormularioExpediente",
+          solicitudes: "FormularioSolicitudView",
+          expedientes: "FormularioExpedienteView",
         };
         console.log("Tipo de listado", this.tipoListado);
         this.config.store().elementoAbierto = this.elemento; // Guarda el elemento en el store para editarlo

@@ -14,6 +14,11 @@ export default {
       seleccionFiltro: "",
     };
   },
+  watch: {
+    tipoListado() {
+      this.seleccionFiltro = "";
+    },
+  },
   computed: {
     elementos() {
       return this.config.store().elementos;

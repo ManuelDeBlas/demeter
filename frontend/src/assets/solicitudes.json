@@ -21,7 +21,7 @@
       {
         "nombreUco": "NombreUco2",
         "ciu": "87654321",
-        "estado": "Pendiente de evaluación",
+        "estado": "Aceptada sin expediente",
         "reservista": "http://api-demeter/api/reservistas/2",
         "poc": "http://api-demeter/api/pocs/2",
         "fechaInicio": "2023-11-01",

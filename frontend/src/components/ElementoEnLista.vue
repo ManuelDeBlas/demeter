@@ -1,26 +1,35 @@
 <script>
-export default {
-  props: ["tipoListado", "config", "elemento"],
-  methods: {
-    abrirElemento() {
-      const tiposFormularios = {
-        solicitudes: "FormularioSolicitud",
-        expedientes: "FormularioExpediente",
-      };
-      console.log("Tipo de listado", this.tipoListado);
-      this.config.store().elementoAbierto = this.elemento;  // Guarda el elemento en el store para editarlo
-      console.log("Se abre el elemento", this.elementoAbierto);
-      this.$router.push({
-        name: tiposFormularios[this.tipoListado],
-      });
+  export default {
+    props: ["tipoListado", "config", "elemento"],
+    methods: {
+      abrirElemento() {
+        const tiposFormularios = {
+          solicitudes: "FormularioSolicitud",
+          expedientes: "FormularioExpediente",
+        };
+        console.log("Tipo de listado", this.tipoListado);
+        this.config.store().elementoAbierto = this.elemento; // Guarda el elemento en el store para editarlo
+        console.log("Se abre el elemento", this.elementoAbierto);
+        this.$router.push({
+          name: tiposFormularios[this.tipoListado],
+        });
+      },
+      getNombreElemento(tipoListado) {
+        const nombres = {
+          solicitudes: "Solicitud",
+          expedientes: "Expediente",
+        };
+        return nombres[tipoListado] || "Indefinido";
+      },
     },
-  },
-};
+  };
 </script>
 
 <template>
   <div class="card text-center">
-    <div class="card-header fw-bold fs-5">Elemento ??? {{ tipoListado }}</div>
+    <div class="card-header fw-bold fs-5">
+      {{ getNombreElemento(tipoListado) }}
+    </div>
     <div class="card-body">
       <div class="container text-center">
         <div class="row justify-content-between align-items-center">

@@ -35,22 +35,9 @@
         "anadirElemento",
         "editarElemento",
         "eliminarElemento",
+        "agregarSolicitudAExpediente",
+        "eliminarSolicitudDeExpediente",
       ]),
-      agregarSolicitud() {
-        console.log("Solicitud seleccionada", this.seleccionSolicitud);
-        if (this.seleccionSolicitud) {
-          this.expedienteAbierto.solicitudes.push(this.seleccionSolicitud);
-          this.seleccionSolicitud.estado = "Aceptada pendiente de publicación";
-          this.seleccionSolicitud = "";
-        }
-      },
-      eliminarSolicitud(solicitud) {
-        solicitud.estado = "Aceptada sin expediente";
-        const index = this.expedienteAbierto.solicitudes.indexOf(solicitud);
-        if (index !== -1) {
-          this.expedienteAbierto.solicitudes.splice(index, 1);
-        }
-      },
       enviarFormulario() {
         if (this.editando) {
           this.editarElemento(this.expedienteAbierto);
@@ -106,7 +93,7 @@
           <button
             type="button"
             class="btn btn-primary mb-2"
-            @click="agregarSolicitud"
+            @click="agregarSolicitudAExpediente(seleccionSolicitud)"
           >
             Añadir solicitud
           </button>
@@ -125,7 +112,7 @@
               <button
                 type="button"
                 class="btn btn-danger ms-3"
-                @click="eliminarSolicitud(solicitud)"
+                @click="eliminarSolicitudDeExpediente(solicitud)"
               >
                 Eliminar solicitud
               </button>

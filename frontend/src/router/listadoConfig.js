@@ -17,7 +17,6 @@ export function getListadoConfig(tipoListado) {
       store: () => useSolicitudesStore(),
       estados: [
         "Pendiente de evaluación",
-        "Aceptada sin expediente",
         "Aceptada pendiente de publicación",
         "Aceptada publicada",
         "Rechazada",
@@ -25,7 +24,7 @@ export function getListadoConfig(tipoListado) {
     },
     expedientes: {
       store: () => useExpedientesStore(),
-      estados: ["Pendiente de publicación", "Enviado al BOD", "Publicado"],
+      estados: ["Abierto", "Cerrado", "Publicado"],
     },
   };
   return config[tipoListado] || null;

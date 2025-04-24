@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export function crearStore(nombreStore, datosJSON, urlBase) {
+export function crearStore(nombreStore, datosJSON, urlBase, accionesAdicionales = {}) {
   return defineStore(nombreStore, {
     state: () => ({
       elementos: datosJSON.map((elemento) => ({
@@ -53,6 +53,7 @@ export function crearStore(nombreStore, datosJSON, urlBase) {
           this.elementos[indice] = elementoEditado;
         }
       },
+      ...accionesAdicionales,
     },
   });
 }

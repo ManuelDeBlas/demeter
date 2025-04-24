@@ -2,7 +2,7 @@
   "_embedded": {
     "expedientes": [
       {
-        "numeroExpediente": "EXP-001",
+        "numeroExpediente": "T64PSAENE251",
         "estado": "Pendiente de publicación",
         "solicitudes": [],
         "_links": {
@@ -12,7 +12,7 @@
         }
       },
       {
-        "numeroExpediente": "EXP-002",
+        "numeroExpediente": "T64PSAENE252",
         "estado": "Enviado al BOD",
         "solicitudes": [],
         "_links": {
@@ -22,7 +22,7 @@
         }
       },
       {
-        "numeroExpediente": "EXP-003",
+        "numeroExpediente": "T64FCAFEB251",
         "estado": "Publicado",
         "solicitudes": [],
         "_links": {

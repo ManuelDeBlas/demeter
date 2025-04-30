@@ -38,7 +38,7 @@ public abstract class SolicitudConId extends SolicitudImpl {
 
   @Override
   @ManyToOne(targetEntity = ReservistaConId.class)
-  @JoinColumn(name = "RESERVISTA")
+  @JoinColumn(name = "reservista_id", nullable = false)
   public Reservista getReservista() {
     return super.getReservista();
   }

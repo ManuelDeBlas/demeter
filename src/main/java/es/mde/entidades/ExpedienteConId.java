@@ -1,20 +1,16 @@
 package es.mde.entidades;
 
-import java.util.Collection;
-import java.util.List;
-import es.mde.secres.ReservistaImpl;
-import es.mde.secres.Solicitud;
+import es.mde.secres.Expediente;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "RESERVISTAS")
-public class ReservistaConId extends ReservistaImpl {
+@Table(name = "EXPEDIENTES")
+public class ExpedienteConId extends Expediente {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +25,10 @@ public class ReservistaConId extends ReservistaImpl {
     this.id = id;
   }
 
-  public ReservistaConId() {}
-
-  @Override
-  @OneToMany(targetEntity = SolicitudConId.class)
-  public List<Solicitud> getSolicitudes() {
-    return super.getSolicitudes();
+  // TODO eliminar. Constructor creado para pruebas
+  public ExpedienteConId(String numeroExpediente) {
+    super();
+    setNumeroExpediente(numeroExpediente);
   }
 
 }

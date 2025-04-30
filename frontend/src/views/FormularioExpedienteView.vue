@@ -83,7 +83,7 @@
           <select v-model="seleccionSolicitud" class="border p-2 rounded mb-4">
             <option value="">Seleccionar</option>
             <option
-              v-for="solicitud in solicitudes.filter((s) => s.estado === 'Aceptada sin expediente')"
+              v-for="solicitud in solicitudes.filter((s) => s.estado === 'Pendiente de evaluación')"
               :key="solicitud._links.self.href"
               :value="solicitud"
             >

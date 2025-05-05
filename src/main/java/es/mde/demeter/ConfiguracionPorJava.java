@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -20,10 +21,10 @@ import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories("${repositorios}")
+@EnableJpaRepositories("${es.mde.demeter.repositorios}")
 public class ConfiguracionPorJava {
 
-    @Value("${entidades}")
+    @Value("${es.mde.demeter.entidades}")
     String entidades;
 
     @Bean
@@ -41,6 +42,8 @@ public class ConfiguracionPorJava {
                 .map(p -> new AbstractMap.SimpleEntry<String, String>(p, env.getProperty(p)))
                 .filter(e -> e.getValue() != null).forEach(e -> jpaProperties.put(e.getKey(), e.getValue()));
         em.setJpaProperties(jpaProperties);
+        
+        em.setMappingResources("jpa/ExpedienteConId.orm.xml", "jpa/Expediente.orm.xml");
 
         return em;
     }

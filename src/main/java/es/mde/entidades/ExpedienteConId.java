@@ -8,13 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "EXPEDIENTES")
+//@Entity
+//@Table(name = "EXPEDIENTES")
 public class ExpedienteConId extends Expediente {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(unique = true)
+//  @Id
+//  @GeneratedValue(strategy = GenerationType.IDENTITY)
+//  @Column(unique = true)
   private Long id;
 
   public Long getId() {

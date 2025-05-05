@@ -25,6 +25,9 @@ public abstract class SolicitudConId extends SolicitudImpl {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
+  
+  @ManyToOne(targetEntity = ExpedienteConId.class)
+  private ExpedienteConId expediente;
 
   public Long getId() {
     return id;
@@ -32,6 +35,14 @@ public abstract class SolicitudConId extends SolicitudImpl {
 
   public void setId(Long id) {
     this.id = id;
+  }
+  
+  public ExpedienteConId getExpediente() {
+    return expediente;
+  }
+  
+  public void setExpediente(ExpedienteConId expediente) {
+    this.expediente = expediente;
   }
 
   public SolicitudConId() {}

@@ -20,7 +20,8 @@ public class DemeterApplication {
     
     // TODO eliminar. Añadido para pruebas
     ExpedienteDAO expedienteDAO = context.getBean(ExpedienteDAO.class);
-    expedienteDAO.save(new ExpedienteConId("T64PSAENE251"));
+    ExpedienteConId expedienteDePrueba = new ExpedienteConId("T64PSAENE251");
+    expedienteDAO.save(expedienteDePrueba);
   }
 
 }

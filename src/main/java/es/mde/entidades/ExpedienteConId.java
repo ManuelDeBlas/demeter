@@ -37,10 +37,4 @@ public class ExpedienteConId extends Expediente {
   public ExpedienteConId() {
   }
 
-  // TODO eliminar. Constructor creado para pruebas
-  public ExpedienteConId(String numeroExpediente) {
-    super();
-    setNumeroExpediente(numeroExpediente);
-  }
-
 }

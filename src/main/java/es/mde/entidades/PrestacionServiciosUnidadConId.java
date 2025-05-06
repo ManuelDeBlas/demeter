@@ -9,23 +9,16 @@ import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("Prestacion servicios unidad")
-public class PrestacionServiciosUnidadConId extends SolicitudConId
-    implements PrestacionServiciosUnidad {
+public class PrestacionServiciosUnidadConId extends SolicitudConId implements PrestacionServiciosUnidad {
 
   private int tiempoMaximo;
-  
+
   @Override
   public int getTiempoMaximo() {
     return tiempoMaximo;
   }
-  
-  // TODO eliminar
-  public PrestacionServiciosUnidadConId(String nombreUCO, String ciu, String situacion,
-      Reservista reservista, LocalDate fechaInicio, LocalDate fechaFin, Expediente expediente, int tiempoMaximo) {
-    super(nombreUCO, ciu, situacion, reservista, fechaInicio, fechaFin, expediente);
-    this.tiempoMaximo = tiempoMaximo;
+
+  public PrestacionServiciosUnidadConId() {
   }
-  
-  public PrestacionServiciosUnidadConId() {}
 
 }

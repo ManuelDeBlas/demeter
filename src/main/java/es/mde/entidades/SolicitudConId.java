@@ -33,25 +33,20 @@ public abstract class SolicitudConId extends SolicitudImpl {
   public void setId(Long id) {
     this.id = id;
   }
-  
+
   @Override
-  @JsonBackReference  // Evita un bucle infinito al generar el JSON
+  @JsonBackReference // Evita un bucle infinito al generar el JSON
   public Reservista getReservista() {
     return super.getReservista();
   }
-  
+
   @Override
   @JsonBackReference // Evita un bucle infinito al generar el JSON
   public Expediente getExpediente() {
-      return super.getExpediente();
+    return super.getExpediente();
   }
 
-
-  public SolicitudConId() {}
-
-  public SolicitudConId(String nombreUCO, String ciu, String situacion, Reservista reservista,
-      LocalDate fechaInicio, LocalDate fechaFin, Expediente expediente) {
-    super(nombreUCO, ciu, situacion, reservista, fechaInicio, fechaFin, expediente);
+  public SolicitudConId() {
   }
 
 }

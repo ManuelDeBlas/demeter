@@ -35,12 +35,6 @@ public class ReservistaConId extends ReservistaImpl {
   }
   
   public ReservistaConId() {
-    // TODO Auto-generated constructor stub
-  }
-
-  public ReservistaConId(String nombre, String apellido1, String apellido2, String empleo) {
-    super(nombre, apellido1, apellido2, empleo);
-    // TODO Auto-generated constructor stub
   }
 
 }

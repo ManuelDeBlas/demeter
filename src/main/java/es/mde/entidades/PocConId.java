@@ -24,11 +24,8 @@ public class PocConId extends Poc {
   public void setId(Long id) {
     this.id = id;
   }
-  
-  public PocConId(String nombre, String apellido1, String apellido2, String empleo,
-      String ucoDestino, String telefonoCorporativo, String emailCorporativo) {
-    super(nombre, apellido1, apellido2, empleo, ucoDestino, telefonoCorporativo, emailCorporativo);
-    // TODO Auto-generated constructor stub
+
+  public PocConId() {
   }
-  
+
 }

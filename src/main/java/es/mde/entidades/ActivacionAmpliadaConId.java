@@ -11,14 +11,8 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("Activacion ampliada")
 public class ActivacionAmpliadaConId extends SolicitudConId implements ActivacionAmpliada {
 
-  public ActivacionAmpliadaConId(String nombreUCO, String ciu, String situacion,
-      Reservista reservista, LocalDate fechaInicio, LocalDate fechaFin, Expediente expediente) {
-    super(nombreUCO, ciu, situacion, reservista, fechaInicio, fechaFin, expediente);
-    // TODO Auto-generated constructor stub
-  }
-
   private String motivo;
-  
+
   @Override
   public String getMotivo() {
     return motivo;

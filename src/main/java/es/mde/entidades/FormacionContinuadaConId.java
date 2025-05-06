@@ -31,16 +31,8 @@ public class FormacionContinuadaConId extends SolicitudConId implements Formacio
   public void setEscala(String escala) {
     this.escala = escala;
   }
-  
-  public FormacionContinuadaConId() {
-  }
 
-  public FormacionContinuadaConId(String nombreUCO, String ciu, String situacion,
-      Reservista reservista, LocalDate fechaInicio, LocalDate fechaFin, Expediente expediente,
-      int tiempoMaximo, String escala) {
-    super(nombreUCO, ciu, situacion, reservista, fechaInicio, fechaFin, expediente);
-    setTiempoMaximo(tiempoMaximo);
-    setEscala(escala);
+  public FormacionContinuadaConId() {
   }
 
 }

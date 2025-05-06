@@ -29,12 +29,15 @@ public class ReservistaConId extends ReservistaImpl {
     this.id = id;
   }
 
-  public ReservistaConId() {}
-
-  @Override
-  @OneToMany(targetEntity = SolicitudConId.class)
-  public List<Solicitud> getSolicitudes() {
-    return super.getSolicitudes();
+  public ReservistaConId(String nombre, String apellido1, String apellido2, String empleo) {
+    super(nombre, apellido1, apellido2, empleo);
+    // TODO Auto-generated constructor stub
   }
+
+//  @Override
+//  @OneToMany(targetEntity = SolicitudConId.class)
+//  public List<Solicitud> getSolicitudes() {
+//    return super.getSolicitudes();
+//  }
 
 }

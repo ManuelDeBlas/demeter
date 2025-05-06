@@ -1,6 +1,6 @@
 package es.mde.entidades;
 
-import es.mde.secres.Expediente;
+import es.mde.secres.Poc;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,8 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "EXPEDIENTES")
-public class ExpedienteConId extends Expediente {
+@Table(name = "POCS")
+public class PocConId extends Poc {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +24,11 @@ public class ExpedienteConId extends Expediente {
   public void setId(Long id) {
     this.id = id;
   }
-
-  // TODO eliminar. Constructor creado para pruebas
-  public ExpedienteConId(String numeroExpediente) {
-    super();
-    setNumeroExpediente(numeroExpediente);
+  
+  public PocConId(String nombre, String apellido1, String apellido2, String empleo,
+      String ucoDestino, String telefonoCorporativo, String emailCorporativo) {
+    super(nombre, apellido1, apellido2, empleo, ucoDestino, telefonoCorporativo, emailCorporativo);
+    // TODO Auto-generated constructor stub
   }
-
+  
 }

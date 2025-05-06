@@ -25,7 +25,10 @@ import jakarta.persistence.EntityManagerFactory;
 public class ConfiguracionPorJava {
 
     @Value("${es.mde.demeter.entidades}")
-    String entidades;
+    private String entidades;
+    
+    @Value("${es.mde.demeter.jpa-resources}")
+    private String[] xmlsJpa;
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, Environment env,
@@ -43,7 +46,7 @@ public class ConfiguracionPorJava {
                 .filter(e -> e.getValue() != null).forEach(e -> jpaProperties.put(e.getKey(), e.getValue()));
         em.setJpaProperties(jpaProperties);
         
-        em.setMappingResources("jpa/ExpedienteConId.orm.xml", "jpa/Expediente.orm.xml");
+        em.setMappingResources(xmlsJpa);
 
         return em;
     }

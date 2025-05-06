@@ -12,17 +12,20 @@ import jakarta.persistence.Entity;
 public class PrestacionServiciosUnidadConId extends SolicitudConId
     implements PrestacionServiciosUnidad {
 
-  public PrestacionServiciosUnidadConId(String nombreUCO, String ciu, String situacion,
-      Reservista reservista, LocalDate fechaInicio, LocalDate fechaFin, Expediente expediente) {
-    super(nombreUCO, ciu, situacion, reservista, fechaInicio, fechaFin, expediente);
-    // TODO Auto-generated constructor stub
-  }
-
   private int tiempoMaximo;
   
   @Override
   public int getTiempoMaximo() {
     return tiempoMaximo;
   }
+  
+  // TODO eliminar
+  public PrestacionServiciosUnidadConId(String nombreUCO, String ciu, String situacion,
+      Reservista reservista, LocalDate fechaInicio, LocalDate fechaFin, Expediente expediente, int tiempoMaximo) {
+    super(nombreUCO, ciu, situacion, reservista, fechaInicio, fechaFin, expediente);
+    this.tiempoMaximo = tiempoMaximo;
+  }
+  
+  public PrestacionServiciosUnidadConId() {}
 
 }

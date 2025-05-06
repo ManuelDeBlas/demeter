@@ -7,9 +7,10 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -22,6 +23,8 @@ import jakarta.persistence.EntityManagerFactory;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories("${es.mde.demeter.repositorios}")
+@ComponentScan("${es.mde.demeter.rest}")
+@PropertySource({ "classpath:config/rest.properties" })
 public class ConfiguracionPorJava {
 
     @Value("${es.mde.demeter.entidades}")
@@ -38,6 +41,7 @@ public class ConfiguracionPorJava {
         em.setDataSource(dataSource);
         em.setJpaVendorAdapter(vendorAdapter);
         em.setPackagesToScan(entidades);
+        em.setMappingResources(xmlsJpa);
 
         Properties jpaProperties = new Properties();
         Arrays.asList("dialect", "show_sql", "hbm2ddl.auto", "enable_lazy_load_no_trans")
@@ -45,8 +49,6 @@ public class ConfiguracionPorJava {
                 .map(p -> new AbstractMap.SimpleEntry<String, String>(p, env.getProperty(p)))
                 .filter(e -> e.getValue() != null).forEach(e -> jpaProperties.put(e.getKey(), e.getValue()));
         em.setJpaProperties(jpaProperties);
-        
-        em.setMappingResources(xmlsJpa);
 
         return em;
     }

@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "RESERVISTAS")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ReservistaConId extends ReservistaImpl {
 
   @Id
@@ -30,12 +29,6 @@ public class ReservistaConId extends ReservistaImpl {
   public void setId(Long id) {
     this.id = id;
   }
-  
-//  @Override
-//  @JsonManagedReference  // Evita un bucle infinito al generar el JSON
-//  public List<Solicitud> getSolicitudes() {
-//    return super.getSolicitudes();
-//  }
   
   public ReservistaConId() {
   }

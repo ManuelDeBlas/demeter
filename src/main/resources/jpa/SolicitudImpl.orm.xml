@@ -11,7 +11,9 @@
 		<attributes>
 			<basic name="nombreUco" />
 			<basic name="ciu" />
-			<basic name="estado" />
+			<basic name="estado">
+				<enumerated>STRING</enumerated>
+			</basic>
 			<basic name="fechaInicio" />
 			<basic name="fechaFin" />
 			<basic name="coste" />
@@ -20,6 +22,7 @@
 			<many-to-one name="expediente"
 				target-entity="es.mde.entidades.ExpedienteConId" />
 		</attributes>
+
 	</mapped-superclass>
 
 </entity-mappings>

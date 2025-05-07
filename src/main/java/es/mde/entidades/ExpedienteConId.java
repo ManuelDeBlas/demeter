@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,11 +29,11 @@ public class ExpedienteConId extends Expediente {
     this.id = id;
   }
   
-//  @Override
-//  @JsonManagedReference  // Evita un bucle infinito al generar el JSON
-//  public List<Solicitud> getSolicitudes() {
-//    return super.getSolicitudes();
-//  }
+  @Override
+  @OneToMany(targetEntity = SolicitudConId.class)
+  public List<Solicitud> getSolicitudes() {
+    return super.getSolicitudes();
+  }
   
   public ExpedienteConId() {
   }

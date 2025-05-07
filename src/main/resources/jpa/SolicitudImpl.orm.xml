@@ -11,7 +11,7 @@
 		<attributes>
 			<basic name="nombreUco" />
 			<basic name="ciu" />
-			<basic name="situacion" />
+			<basic name="estado" />
 			<basic name="fechaInicio" />
 			<basic name="fechaFin" />
 			<basic name="coste" />

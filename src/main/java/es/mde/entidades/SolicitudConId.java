@@ -2,17 +2,22 @@ package es.mde.entidades;
 
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import es.mde.secres.SolicitudImpl;
 import es.mde.secres.Expediente;
 import es.mde.secres.Reservista;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,6 +31,14 @@ public abstract class SolicitudConId extends SolicitudImpl {
   @Column(unique = true)
   private Long id;
 
+//  @Column(name = "ESTADO")
+//  @Enumerated(EnumType.STRING)
+//  private Estados estado;
+  
+  @ManyToOne
+  @JoinColumn(name = "RESERVISTA_ID")
+  private ReservistaConId reservista;
+
   public Long getId() {
     return id;
   }
@@ -34,17 +47,18 @@ public abstract class SolicitudConId extends SolicitudImpl {
     this.id = id;
   }
 
-  @Override
-  @JsonBackReference // Evita un bucle infinito al generar el JSON
-  public Reservista getReservista() {
-    return super.getReservista();
-  }
-
-  @Override
-  @JsonBackReference // Evita un bucle infinito al generar el JSON
-  public Expediente getExpediente() {
-    return super.getExpediente();
-  }
+//  @Override
+//  @JsonBackReference // Evita un bucle infinito al generar el JSON
+//  @JsonDeserialize(as = ReservistaConId.class)
+//  public Reservista getReservista() {
+//    return super.getReservista();
+//  }
+//
+//  @Override
+//  @JsonBackReference // Evita un bucle infinito al generar el JSON
+//  public Expediente getExpediente() {
+//    return super.getExpediente();
+//  }
 
   public SolicitudConId() {
   }

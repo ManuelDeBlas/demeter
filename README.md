@@ -19,7 +19,7 @@ Será una aplicación web.
 5. **CRUD**: Se podrán crear, consultar, actualizar y eliminar solicitudes. 
 6. **URLs** del proyecto: 
     1. Documentación del proyecto: https://git.institutomilitar.com/ddcDIM47/demeter
-    2. Librería: TBD
+    2. Librería: https://github.com/ManuelDeBlas/secres
 7. **Despliegue** en Internet:
     1. API: TBD
     2. Web: TBD

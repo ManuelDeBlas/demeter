@@ -24,7 +24,8 @@ import jakarta.persistence.EntityManagerFactory;
 @EnableTransactionManagement
 @EnableJpaRepositories("${es.mde.demeter.repositorios}")
 @ComponentScan("${es.mde.demeter.rest}")
-@PropertySource({"classpath:config/rest.properties", "classpath:config/DB.properties",
+@PropertySource({"classpath:config/rest.properties", "classpath:config/jackson.properties", 
+  "classpath:config/DB.properties",
     "classpath:config/passwordsBD.properties"
 })
 public class ConfiguracionPorJava {

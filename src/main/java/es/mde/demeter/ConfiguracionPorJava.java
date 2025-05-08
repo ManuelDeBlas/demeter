@@ -24,50 +24,53 @@ import jakarta.persistence.EntityManagerFactory;
 @EnableTransactionManagement
 @EnableJpaRepositories("${es.mde.demeter.repositorios}")
 @ComponentScan("${es.mde.demeter.rest}")
-@PropertySource({ "classpath:config/rest.properties" })
+@PropertySource({"classpath:config/rest.properties", "classpath:config/DB.properties",
+    "classpath:config/passwordsBD.properties"
+})
 public class ConfiguracionPorJava {
 
-    @Value("${es.mde.demeter.entidades}")
-    private String entidades;
-    
-    @Value("${es.mde.demeter.jpa-resources}")
-    private String[] xmlsJpa;
+  @Value("${es.mde.demeter.entidades}")
+  private String entidades;
 
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, Environment env,
-            JpaVendorAdapter vendorAdapter) {
+  @Value("${es.mde.demeter.jpa-resources}")
+  private String[] xmlsJpa;
 
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource);
-        em.setJpaVendorAdapter(vendorAdapter);
-        em.setPackagesToScan(entidades);
-        em.setMappingResources(xmlsJpa);
+  @Bean
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
+      Environment env, JpaVendorAdapter vendorAdapter) {
 
-        Properties jpaProperties = new Properties();
-        Arrays.asList("dialect", "show_sql", "hbm2ddl.auto", "enable_lazy_load_no_trans")
-                .stream().map(s -> "hibernate." + s)
-                .map(p -> new AbstractMap.SimpleEntry<String, String>(p, env.getProperty(p)))
-                .filter(e -> e.getValue() != null).forEach(e -> jpaProperties.put(e.getKey(), e.getValue()));
-        em.setJpaProperties(jpaProperties);
+    LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+    em.setDataSource(dataSource);
+    em.setJpaVendorAdapter(vendorAdapter);
+    em.setPackagesToScan(entidades);
+    em.setMappingResources(xmlsJpa);
 
-        return em;
-    }
+    Properties jpaProperties = new Properties();
+    Arrays.asList("dialect", "show_sql", "hbm2ddl.auto", "enable_lazy_load_no_trans").stream()
+        .map(s -> "hibernate." + s)
+        .map(p -> new AbstractMap.SimpleEntry<String, String>(p, env.getProperty(p)))
+        .filter(e -> e.getValue() != null)
+        .forEach(e -> jpaProperties.put(e.getKey(), e.getValue()));
+    em.setJpaProperties(jpaProperties);
 
-    @Bean
-    public EntityManager entityManager(EntityManagerFactory emf) {
-        System.err.println("--- LAS ENTIDADES MAPEADAS SON ---");
-        emf.getMetamodel().getEntities().forEach(System.err::println);
-        System.err.println("----------------------------------");
+    return em;
+  }
 
-        return emf.createEntityManager();
-    }
-    
-    @Bean
-    public ObjectMapper getObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
+  @Bean
+  public EntityManager entityManager(EntityManagerFactory emf) {
+    System.err.println("--- LAS ENTIDADES MAPEADAS SON ---");
+    emf.getMetamodel().getEntities().forEach(System.err::println);
+    System.err.println("----------------------------------");
 
-        return mapper;
-    }
+    return emf.createEntityManager();
+  }
+
+  @Bean
+  public ObjectMapper getObjectMapper() {
+    ObjectMapper mapper = new ObjectMapper();
+
+    return mapper;
+  }
 
 
 }

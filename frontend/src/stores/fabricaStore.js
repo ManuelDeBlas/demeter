@@ -1,40 +1,67 @@
 import { defineStore } from "pinia";
+import { API_HOST } from "@/stores/api-service";
+import {
+  getElementos,
+  postEnColeccion,
+  deleteEntidad,
+  putEntidad,
+} from "@/stores/api-service";
 
-export function crearStore(nombreStore, datosJSON, urlBase, accionesAdicionales = {}) {
-  return defineStore(nombreStore, {
+export function crearStore(nombreColeccion, accionesAdicionales = {}) {
+  return defineStore(nombreColeccion, {
     state: () => ({
-      elementos: datosJSON.map((elemento) => ({
-        ...elemento,
-      })),
+      elementos: [],
       elementoAbierto: null,
     }),
     actions: {
-      anadirElemento(nuevoElemento) {
-        console.log(
-          `En el store ${nombreStore} recibo este elemento para almacenar: `,
-          nuevoElemento
-        );
-        const nuevoHref = `${urlBase}/${this.elementos.length + 1}`;
-        const elementoConLink = {
-          ...nuevoElemento,
-          _links: {
-            self: {
-              href: nuevoHref,
-            },
-          },
-        };
-        this.elementos.unshift(elementoConLink);
+      async cargarElementos() {
+        await getElementos(nombreColeccion)
+          .then((response) => {
+            if (response.data._embedded) {
+              const embedded = response.data._embedded;
+              this.elementos = Object.values(embedded).flat();
+            }
+            console.log("La API me devuelve ", response);
+            console.log("En el store ", this.elementos);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
+      async anadirElemento(nuevoElemento) {
+        console.log("En el store, lo que recibe: ", nuevoElemento);
+        // Esto evita hacer un post a 'soliticitudes'
+        if (nombreColeccion === "solicitudes") {
+          nombreColeccion = nuevoElemento.tipoSolicitud;
+        }
+        console.log("En el store, lo que recibe: ", nuevoElemento);
+        try {
+          const response = await postEnColeccion(
+            nuevoElemento,
+            nombreColeccion
+          );
+          console.log("La respuesta de la API es: ", response);
+          if (response.status === 201) {
+            const elementoAgregado = {
+              ...nuevoElemento,
+              _links: response.data._links,
+            };
+            this.elementos.unshift(elementoAgregado);
+          }
+        } catch (error) {
+          console.error("Error: ", error);
+        }
       },
       eliminarElemento(hrefAEliminar) {
         console.log(
-          `En el store ${nombreStore} recibo este href a eliminar: `,
+          `En el store ${nombreColeccion} recibo este href a eliminar: `,
           hrefAEliminar
         );
         const indice = this.elementos.findIndex(
           (elemento) => elemento._links.self.href === hrefAEliminar
         );
         console.log(
-          `En el store ${nombreStore} el índice del elemento a eliminar es: ${indice}`
+          `En el store ${nombreColeccion} el índice del elemento a eliminar es: ${indice}`
         );
         if (indice !== -1) {
           this.elementos.splice(indice, 1);
@@ -42,7 +69,7 @@ export function crearStore(nombreStore, datosJSON, urlBase, accionesAdicionales 
       },
       editarElemento(elementoEditado) {
         console.log(
-          `En el store ${nombreStore} recibo este elemento editado: `,
+          `En el store ${nombreColeccion} recibo este elemento editado: `,
           elementoEditado
         );
         const indice = this.elementos.findIndex(

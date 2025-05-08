@@ -121,16 +121,16 @@ export default {
             v-model="solicitudAbierta.tipoSolicitud"
             class="form-select w-50 mx-auto"
           >
-            <option value="Formación continuada">Formación continuada</option>
-            <option value="Activación ampliada">Activación ampliada</option>
-            <option value="Prestación servicios unidad">
+            <option value="formaciones-continuadas">Formación continuada</option>
+            <option value="activaciones-ampliadas">Activación ampliada</option>
+            <option value="prestaciones-servicios-unidad">
               Prestación servicios unidad
             </option>
           </select>
         </div>
 
         <div
-          v-if="solicitudAbierta.tipoSolicitud === 'Formación continuada'"
+          v-if="solicitudAbierta.tipoSolicitud === 'formaciones-continuadas'"
           class="mb-3"
         >
           <label class="form-label">Tiempo máximo:</label>
@@ -141,7 +141,7 @@ export default {
           />
         </div>
         <div
-          v-if="solicitudAbierta.tipoSolicitud === 'Formación continuada'"
+          v-if="solicitudAbierta.tipoSolicitud === 'formaciones-continuadas'"
           class="mb-3"
         >
           <label class="form-label">Escala:</label>
@@ -152,7 +152,7 @@ export default {
           />
         </div>
         <div
-          v-if="solicitudAbierta.tipoSolicitud === 'Activación ampliada'"
+          v-if="solicitudAbierta.tipoSolicitud === 'activaciones-ampliadas'"
           class="mb-3"
         >
           <label class="form-label">Motivo:</label>
@@ -163,7 +163,7 @@ export default {
         </div>
         <div
           v-if="
-            solicitudAbierta.tipoSolicitud === 'Prestación servicios unidad'
+            solicitudAbierta.tipoSolicitud === 'prestaciones-servicios-unidad'
           "
           class="mb-3"
         >

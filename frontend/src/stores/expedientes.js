@@ -1,14 +1,12 @@
 import { crearStore } from "@/stores/fabricaStore";
-import expedientesJSON from "@/assets/expedientes.json";
+import { putEntidad } from "@/stores/api-service";
 
 export const useExpedientesStore = crearStore(
   "expedientes",
-  expedientesJSON._embedded.expedientes,
-  "http://api-demeter/api/expedientes",
   {
     agregarSolicitudAExpediente(solicitud) {
       console.log('Agregando solicitud al expediente:', solicitud);
-      // TODO
+      putEntidad(
       console.log("Solicitud agregada correctamente.");
     },
     eliminarSolicitudDeExpediente(solicitud) {

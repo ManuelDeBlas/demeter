@@ -1,45 +1,48 @@
 <script>
-import ElementoEnLista from "@/components/ElementoEnLista.vue";
+  import ElementoEnLista from "@/components/ElementoEnLista.vue";
 
-export default {
-  props: {
-    tipoListado: String,
-    config: Object,
-  },
-  components: {
-    ElementoEnLista,
-  },
-  data() {
-    return {
-      seleccionFiltro: "",
-    };
-  },
-  watch: {
-    tipoListado() {
-      this.seleccionFiltro = "";
+  export default {
+    props: {
+      tipoListado: String,
+      config: Object,
     },
-  },
-  computed: {
-    elementos() {
-      return this.config.store().elementos;
+    components: {
+      ElementoEnLista,
     },
-    elementosFiltrados() {
-      let elementosFiltrados = this.elementos;
-      if (this.seleccionFiltro) {
-        elementosFiltrados = this.elementos.filter(
-          (elemento) => elemento.estado === this.seleccionFiltro
-        );
-      }
-      return elementosFiltrados;
+    data() {
+      return {
+        seleccionFiltro: "",
+      };
     },
-  },
-  methods: {
-    anadirElemento() {
-      this.config.store().elementoAbierto = null;  // Vacía el store para añadir un nuevo elemento
-      this.$router.push({ path: `/formulario/${this.tipoListado}` });
+    watch: {
+      tipoListado() {
+        this.seleccionFiltro = "";
+      },
     },
-  },
-};
+    // mounted() {
+    //         this.config.store().cargarElementos();
+    //   },
+    computed: {
+      elementos() {
+        return this.config.store().elementos;
+      },
+      elementosFiltrados() {
+        let elementosFiltrados = this.elementos;
+        if (this.seleccionFiltro) {
+          elementosFiltrados = this.elementos.filter(
+            (elemento) => elemento.estado === this.seleccionFiltro
+          );
+        }
+        return elementosFiltrados;
+      },
+    },
+    methods: {
+      anadirElemento() {
+        this.config.store().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
+        this.$router.push({ path: `/formulario/${this.tipoListado}` });
+      },
+    },
+  };
 </script>
 
 <template>

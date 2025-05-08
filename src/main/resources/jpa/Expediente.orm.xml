@@ -9,8 +9,8 @@
                      access="FIELD">
     <attributes>
       <basic name="numeroExpediente" />
-	  <one-to-many name="solicitudes" target-entity="es.mde.entidades.SolicitudConId" mapped-by="expediente"/>
-    </attributes>
+<!-- 	  <one-to-many name="solicitudes" target-entity="es.mde.entidades.SolicitudConId" mapped-by="expediente"/>
+ -->    </attributes>
   </mapped-superclass>
 
 </entity-mappings>

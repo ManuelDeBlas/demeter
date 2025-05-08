@@ -1,9 +1,7 @@
 package es.mde.entidades;
 
-import java.util.List;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.Collection;
 import es.mde.secres.Expediente;
-import es.mde.secres.Solicitud;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +18,8 @@ public class ExpedienteConId extends Expediente {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
+  @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "expediente")
+  private Collection<SolicitudConId> solicitudes;
 
   public Long getId() {
     return id;
@@ -28,14 +28,15 @@ public class ExpedienteConId extends Expediente {
   public void setId(Long id) {
     this.id = id;
   }
-  
-  @Override
-  @OneToMany(targetEntity = SolicitudConId.class)
-  public List<Solicitud> getSolicitudes() {
-    return super.getSolicitudes();
+
+  public Collection<SolicitudConId> getSolicitudes() {
+    return solicitudes;
   }
-  
-  public ExpedienteConId() {
+
+  public void setSolicitudes(Collection<SolicitudConId> solicitudes) {
+    this.solicitudes = solicitudes;
   }
+
+  public ExpedienteConId() {}
 
 }

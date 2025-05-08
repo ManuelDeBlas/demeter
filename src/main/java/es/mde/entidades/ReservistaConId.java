@@ -1,16 +1,13 @@
 package es.mde.entidades;
 
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import es.mde.secres.ReservistaImpl;
-import es.mde.secres.Solicitud;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -21,6 +18,8 @@ public class ReservistaConId extends ReservistaImpl {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
+  @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "reservista")
+  private List<SolicitudConId> solicitudesConId;
 
   public Long getId() {
     return id;
@@ -29,8 +28,15 @@ public class ReservistaConId extends ReservistaImpl {
   public void setId(Long id) {
     this.id = id;
   }
-  
-  public ReservistaConId() {
+
+  public List<SolicitudConId> getSolicitudesConId() {
+    return solicitudesConId;
   }
+
+  public void setSolicitudesConId(List<SolicitudConId> solicitudesConId) {
+    this.solicitudesConId = solicitudesConId;
+  }
+
+  public ReservistaConId() {}
 
 }

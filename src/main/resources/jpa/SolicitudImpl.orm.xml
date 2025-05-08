@@ -17,10 +17,10 @@
 			<basic name="fechaInicio" />
 			<basic name="fechaFin" />
 			<basic name="coste" />
-			<many-to-one name="reservista"
+<!-- 			<many-to-one name="reservista"
 				target-entity="es.mde.entidades.ReservistaConId" />
 			<many-to-one name="expediente"
-				target-entity="es.mde.entidades.ExpedienteConId" />
+				target-entity="es.mde.entidades.ExpedienteConId" /> -->
 		</attributes>
 
 	</mapped-superclass>

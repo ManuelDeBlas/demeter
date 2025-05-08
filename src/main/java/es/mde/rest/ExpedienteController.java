@@ -19,21 +19,32 @@ public class ExpedienteController {
     this.expedienteDAO = expedienteDAODAO;
   }
 
-  @PatchMapping("/expedientes/{expedienteId}/asignar-solicitud")
-  public ResponseEntity<String> asignarSolicitud(@PathVariable Long expedienteId,
-      @RequestParam Long solicitudId) {
+  @PatchMapping("/expedientes/{expedienteId}/asignar-solicitud/{solicitudId}")
+  public ResponseEntity<String> asignarSolicitud(@PathVariable Long expedienteId, @PathVariable Long solicitudId) {
+    ResponseEntity<String> respuesta = null;
     try {
       expedienteDAO.asignarSolicitudAExpediente(expedienteId, solicitudId);
-      return ResponseEntity
+      respuesta = ResponseEntity
           .ok("Solicitud " + solicitudId + " asignada correctamente al expediente " + expedienteId);
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND)
-          .body("No se encontró el expediente o la solicitud");
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("Error interno al asignar la solicitud: " + e.getMessage());
+      respuesta = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
+
+    return respuesta;
+  }
+  
+  @PatchMapping("/expedientes/{expedienteId}/desasignar-solicitud/{solicitudId}")
+  public ResponseEntity<String> desasignarSolicitud(@PathVariable Long expedienteId, @PathVariable Long solicitudId) {
+    ResponseEntity<String> respuesta = null;
+    try {
+      expedienteDAO.eliminarSolicitudDeExpediente(expedienteId, solicitudId);
+      respuesta = ResponseEntity
+          .ok("Solicitud " + solicitudId + " desasignada correctamente del expediente " + expedienteId);
+    } catch (Exception e) {
+      respuesta = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    return respuesta;
   }
 
 }
-

@@ -40,7 +40,8 @@ public class ExpedienteConId extends Expediente {
     this.solicitudes = solicitudes;
   }
 
-  public ExpedienteConId() {}
+  public ExpedienteConId() {
+  }
 
   // private String getTipoSolicitud() {
   // Matcher matcher = REGEX_TIPO_SOLICITUD.matcher(getNumeroExpediente());
@@ -51,6 +52,11 @@ public class ExpedienteConId extends Expediente {
   // }
 
   public void addSolicitud(SolicitudConId solicitud) {
+    if (solicitud.getExpediente() != null) {
+      throw new IllegalArgumentException(
+          "Esta solicitud ya está asignada al expediente " + solicitud.getExpediente().getNumeroExpediente()
+              + ". Elimínela de su expediente antes de asignarla a otro.");
+    }
     if (Objects.equals(solicitud.getTipoSolicitud(), this.getTipoSolicitud())) {
       getSolicitudes().add(solicitud);
       solicitud.setExpediente(this);
@@ -67,7 +73,8 @@ public class ExpedienteConId extends Expediente {
       solicitud.setExpediente(null);
       solicitud.setEstado(Estados.PENDIENTE_EVALUACION);
     } else {
-      System.err.println("Este expediente no contiene esta solicitud");
+      throw new IllegalArgumentException(
+          "El expediente " + this.getNumeroExpediente() + " no contiene la solicitud que se quiere eliminar.");
     }
   }
 

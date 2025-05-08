@@ -5,6 +5,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import es.mde.entidades.ExpedienteConId;
 
 @RepositoryRestResource(path = "expedientes", itemResourceRel = "expediente", collectionResourceRel = "expedientes")
-public interface ExpedienteDAO  extends JpaRepository<ExpedienteConId, Long>{
+public interface ExpedienteDAO  extends JpaRepository<ExpedienteConId, Long>, ExpedienteDAOCustom {
 
 }

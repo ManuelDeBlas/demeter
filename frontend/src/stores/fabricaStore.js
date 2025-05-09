@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { API_HOST } from "@/stores/api-service";
-import { get, post, deleteEntidad, putEntidad } from "@/stores/api-service";
+import { getNombreDAO } from "@/stores/expedientes";
+import { API_HOST, get, post, deleteEntidad, putEntidad } from "@/stores/api-service";
 
 export function crearStore(nombreColeccion, accionesAdicionales = {}) {
   return defineStore(nombreColeccion, {
@@ -25,9 +25,9 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
       },
       async anadirElemento(nuevoElemento) {
         console.log("En el store, lo que recibe: ", nuevoElemento);
-        // Esto evita hacer un post a 'soliticitudes'
+        // Esto evita hacer un post a '/soliticitudes'
         if (nombreColeccion === "solicitudes") {
-          nombreColeccion = nuevoElemento.tipoSolicitud;
+          nombreColeccion = getNombreDAO(nuevoElemento.tipoSolicitud);
         }
         try {
           const respuesta = await post(

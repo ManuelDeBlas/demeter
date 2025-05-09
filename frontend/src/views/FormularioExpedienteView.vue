@@ -1,6 +1,6 @@
 <script>
   import ElementoEnLista from "@/components/ElementoEnLista.vue";
-  import { useExpedientesStore, getTipoSolicitud } from "@/stores/expedientes";
+  import { useExpedientesStore, getNombreDAO } from "@/stores/expedientes";
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import { mapState, mapActions } from "pinia";
   import { getListadoConfig } from "@/router/listadoConfig";
@@ -105,9 +105,7 @@
         );
         const solicitudes =
           resSolicitudes.data._embedded[
-            getTipoSolicitud(
-              useExpedientesStore().elementoAbierto.tipoSolicitud
-            )
+            getNombreDAO(useExpedientesStore().elementoAbierto.tipoSolicitud)
           ] || [];
 
         // Asignar las solicitudes al expediente abierto

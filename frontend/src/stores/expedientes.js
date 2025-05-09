@@ -1,7 +1,7 @@
 import { crearStore } from "@/stores/fabricaStore";
 import { patchEntidad, API_HOST } from "@/stores/api-service";
 
-export const getTipoSolicitud = (tipoSolicitud) => {
+export const getNombreDAO = (tipoSolicitud) => {
   const tiposSolicitudes = {
     PS: "prestaciones-servicios-unidad",
     FC: "formaciones-continuadas",

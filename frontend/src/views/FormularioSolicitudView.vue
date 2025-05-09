@@ -2,6 +2,7 @@
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import { useReservistasStore } from "@/stores/reservistas";
   import { usePocsStore } from "@/stores/pocs";
+  import { useUcosStore } from "@/stores/ucos";
   import { mapActions } from "pinia";
 
   export default {
@@ -12,6 +13,7 @@
         mostrarModal: false,
         mostrarModalReservistas: false,
         mostrarModalPocs: false,
+        mostrarModalUcos: false,
         mensajeModal: "",
         uco: null,
         reservista: null,
@@ -31,6 +33,7 @@
               fechaInicio: "",
               fechaFin: "",
               tipoSolicitud: "",
+              estado: "PENDIENTE_EVALUACION",
             };
           }
           return this.store.elementoAbierto;
@@ -44,6 +47,9 @@
       },
       pocs() {
         return usePocsStore().elementos;
+      },
+      ucos() {
+        return useUcosStore().ucos;
       },
       reservistaFormateado() {
         return this.reservista
@@ -62,6 +68,11 @@
         "editarElemento",
         "eliminarElemento",
       ]),
+      seleccionarUco(uco) {
+        this.solicitudAbierta.nombreUco = uco.nombreUco;
+        this.solicitudAbierta.ciu = uco.ciu;
+        this.mostrarModalUcos = false;
+      },
       seleccionarReservista(reservista) {
         this.reservista = reservista;
         this.solicitudAbierta.reservista = `/reservistas/${reservista._links.self.href
@@ -128,6 +139,13 @@
             type="text"
             class="form-control w-50 mx-auto"
           />
+          <button
+            type="button"
+            class="btn btn-secondary mt-2"
+            @click="mostrarModalUcos = true"
+          >
+            Seleccionar UCO
+          </button>
         </div>
         <div class="mb-3">
           <label class="form-label">CIU:</label>
@@ -192,18 +210,18 @@
             v-model="solicitudAbierta.tipoSolicitud"
             class="form-select w-50 mx-auto"
           >
-            <option value="formaciones-continuadas">
+            <option value="FC">
               Formación continuada
             </option>
-            <option value="activaciones-ampliadas">Activación ampliada</option>
-            <option value="prestaciones-servicios-unidad">
+            <option value="EX">Activación ampliada</option>
+            <option value="PS">
               Prestación servicios unidad
             </option>
           </select>
         </div>
 
         <div
-          v-if="solicitudAbierta.tipoSolicitud === 'formaciones-continuadas'"
+          v-if="solicitudAbierta.tipoSolicitud === 'FC'"
           class="mb-3"
         >
           <label class="form-label">Tiempo máximo:</label>
@@ -214,7 +232,7 @@
           />
         </div>
         <div
-          v-if="solicitudAbierta.tipoSolicitud === 'formaciones-continuadas'"
+          v-if="solicitudAbierta.tipoSolicitud === 'FC'"
           class="mb-3"
         >
           <label class="form-label">Escala:</label>
@@ -225,7 +243,7 @@
           />
         </div>
         <div
-          v-if="solicitudAbierta.tipoSolicitud === 'activaciones-ampliadas'"
+          v-if="solicitudAbierta.tipoSolicitud === 'EX'"
           class="mb-3"
         >
           <label class="form-label">Motivo:</label>
@@ -236,7 +254,7 @@
         </div>
         <div
           v-if="
-            solicitudAbierta.tipoSolicitud === 'prestaciones-servicios-unidad'
+            solicitudAbierta.tipoSolicitud === 'PS'
           "
           class="mb-3"
         >
@@ -353,6 +371,38 @@
               {{ poc.empleo }}&nbsp; {{ poc.apellido1 }}&nbsp;
               {{ poc.apellido2 }},&nbsp;
               {{ poc.nombre }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    v-if="mostrarModalUcos"
+    class="modal fade show"
+    tabindex="-1"
+    style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Seleccionar UCO</h5>
+          <button
+            type="button"
+            class="btn-close"
+            @click="mostrarModalUcos = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <li
+              v-for="uco in ucos"
+              :key="uco.id"
+              class="list-group-item"
+              @click="seleccionarUco(uco)"
+            >
+              {{ uco.nombreUco }}&nbsp; (CIU: {{ uco.ciu }})
             </li>
           </ul>
         </div>

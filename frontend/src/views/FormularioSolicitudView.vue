@@ -1,5 +1,7 @@
 <script>
   import { useSolicitudesStore } from "@/stores/solicitudes";
+  import { useReservistasStore } from "@/stores/reservistas";
+  import { usePocsStore } from "@/stores/pocs";
   import { mapActions } from "pinia";
 
   export default {
@@ -8,7 +10,12 @@
       return {
         editando: true,
         mostrarModal: false,
+        mostrarModalReservistas: false,
+        mostrarModalPocs: false,
         mensajeModal: "",
+        uco: null,
+        reservista: null,
+        poc: null,
       };
     },
     computed: {
@@ -19,9 +26,8 @@
             this.store.elementoAbierto = {
               nombreUco: "",
               ciu: "",
-              estado: "",
-              reservista: "",
-              poc: "",
+              reservista: null,
+              poc: null,
               fechaInicio: "",
               fechaFin: "",
               tipoSolicitud: "",
@@ -33,6 +39,22 @@
           this.store.elementoAbierto = value;
         },
       },
+      reservistas() {
+        return useReservistasStore().elementos;
+      },
+      pocs() {
+        return usePocsStore().elementos;
+      },
+      reservistaFormateado() {
+        return this.reservista
+          ? `${this.reservista.dni} ${this.reservista.empleo} ${this.reservista.apellido1} ${this.reservista.apellido2}, ${this.reservista.nombre}`
+          : "";
+      },
+      pocFormateado() {
+        return this.poc
+          ? `${this.poc.empleo} ${this.poc.apellido1} ${this.poc.apellido2}, ${this.poc.nombre}`
+          : "";
+      },
     },
     methods: {
       ...mapActions(useSolicitudesStore, [
@@ -40,6 +62,20 @@
         "editarElemento",
         "eliminarElemento",
       ]),
+      seleccionarReservista(reservista) {
+        this.reservista = reservista;
+        this.solicitudAbierta.reservista = `/reservistas/${reservista._links.self.href
+          .split("/")
+          .pop()}`;
+        this.mostrarModalReservistas = false;
+      },
+      seleccionarPoc(poc) {
+        this.poc = poc;
+        this.solicitudAbierta.poc = `/pocs/${poc._links.self.href
+          .split("/")
+          .pop()}`;
+        this.mostrarModalPocs = false;
+      },
       async enviarFormulario() {
         try {
           if (this.editando) {
@@ -87,6 +123,7 @@
         <div class="mb-3">
           <label class="form-label">Nombre UCO:</label>
           <input
+            readonly
             v-model="solicitudAbierta.nombreUco"
             type="text"
             class="form-control w-50 mx-auto"
@@ -95,15 +132,8 @@
         <div class="mb-3">
           <label class="form-label">CIU:</label>
           <input
+            readonly
             v-model="solicitudAbierta.ciu"
-            type="text"
-            class="form-control w-50 mx-auto"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Estado:</label>
-          <input
-            v-model="solicitudAbierta.estado"
             type="text"
             class="form-control w-50 mx-auto"
           />
@@ -111,18 +141,34 @@
         <div class="mb-3">
           <label class="form-label">Reservista:</label>
           <input
-            v-model="solicitudAbierta.reservista"
+            readonly
+            v-model="reservistaFormateado"
             type="text"
             class="form-control w-50 mx-auto"
           />
+          <button
+            type="button"
+            class="btn btn-secondary mt-2"
+            @click="mostrarModalReservistas = true"
+          >
+            Seleccionar Reservista
+          </button>
         </div>
         <div class="mb-3">
           <label class="form-label">POC:</label>
           <input
-            v-model="solicitudAbierta.poc"
+            readonly
+            v-model="pocFormateado"
             type="text"
             class="form-control w-50 mx-auto"
           />
+          <button
+            type="button"
+            class="btn btn-secondary mt-2"
+            @click="mostrarModalPocs = true"
+          >
+            Seleccionar POC
+          </button>
         </div>
         <div class="mb-3">
           <label class="form-label">Fecha Inicio:</label>
@@ -241,6 +287,74 @@
           <button type="button" class="btn btn-secondary" @click="cerrarModal">
             Cerrar
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    v-if="mostrarModalReservistas"
+    class="modal fade show"
+    tabindex="-1"
+    style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Seleccionar Reservista</h5>
+          <button
+            type="button"
+            class="btn-close"
+            @click="mostrarModalReservistas = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <li
+              v-for="reservista in reservistas"
+              :key="reservista.id"
+              class="list-group-item"
+              @click="seleccionarReservista(reservista)"
+            >
+              {{ reservista.dni }}&nbsp; {{ reservista.empleo }}&nbsp;
+              {{ reservista.apellido1 }}&nbsp; {{ reservista.apellido2 }},&nbsp;
+              {{ reservista.nombre }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    v-if="mostrarModalPocs"
+    class="modal fade show"
+    tabindex="-1"
+    style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Seleccionar POC</h5>
+          <button
+            type="button"
+            class="btn-close"
+            @click="mostrarModalPocs = false"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <li
+              v-for="poc in pocs"
+              :key="poc.id"
+              class="list-group-item"
+              @click="seleccionarPoc(poc)"
+            >
+              {{ poc.empleo }}&nbsp; {{ poc.apellido1 }}&nbsp;
+              {{ poc.apellido2 }},&nbsp;
+              {{ poc.nombre }}
+            </li>
+          </ul>
         </div>
       </div>
     </div>

@@ -49,6 +49,7 @@
               class="mb-0"
               v-if="tipoListado === 'reservistas' || tipoListado === 'pocs'"
             >
+              <strong>{{ elemento.dni }}&nbsp; </strong>
               <strong>{{ elemento.empleo }}&nbsp; </strong>
               <strong>{{ elemento.apellido1 }}&nbsp; </strong>
               <strong>{{ elemento.apellido2 }},&nbsp; </strong>

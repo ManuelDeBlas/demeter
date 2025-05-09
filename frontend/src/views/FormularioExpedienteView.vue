@@ -1,9 +1,10 @@
 <script>
   import ElementoEnLista from "@/components/ElementoEnLista.vue";
-  import { useExpedientesStore } from "@/stores/expedientes";
+  import { useExpedientesStore, getTipoSolicitud } from "@/stores/expedientes";
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import { mapState, mapActions } from "pinia";
   import { getListadoConfig } from "@/router/listadoConfig";
+  import { get } from "@/stores/api-service.js";
 
   export default {
     name: "FormularioExpedienteView",
@@ -13,6 +14,8 @@
         editando: true,
         config: getListadoConfig("solicitudes"),
         seleccionSolicitud: "",
+        antiguoListadoSolicitudes: [],
+        nuevoListadoSolicitudes: [],
       };
     },
     computed: {
@@ -28,6 +31,16 @@
         }
         return expediente;
       },
+      solicitudesDisponibles() {
+        return this.solicitudes.filter(
+          (s) =>
+            !this.nuevoListadoSolicitudes.some(
+              (ns) => ns._links.self.href === s._links.self.href
+            ) &&
+            s.estado === "PENDIENTE_EVALUACION" &&
+            s.tipoSolicitud === this.expedienteAbierto.tipoSolicitud
+        );
+      },
       ...mapState(useSolicitudesStore, { solicitudes: "elementos" }),
     },
     methods: {
@@ -38,18 +51,76 @@
         "agregarSolicitudAExpediente",
         "eliminarSolicitudDeExpediente",
       ]),
+      eliminarSolicitudDelNuevoListado(solicitud) {
+        this.nuevoListadoSolicitudes = this.nuevoListadoSolicitudes.filter(
+          (s) => s._links.self.href !== solicitud._links.self.href
+        );
+      },
       enviarFormulario() {
-        if (this.editando) {
-          this.editarElemento(this.expedienteAbierto);
-        } else {
-          this.anadirElemento(this.expedienteAbierto);
-        }
+        // if (this.editando) {
+        //   // this.editarElemento(this.expedienteAbierto);
+        // } else {
+        //   this.anadirElemento(this.expedienteAbierto);
+        // }
+        console.log(this.nuevoListadoSolicitudes);
+        console.log(this.antiguoListadoSolicitudes);
+        // Envío de los cambios realizados a la API
+        this.antiguoListadoSolicitudes
+          .filter(
+            (s) =>
+              !this.nuevoListadoSolicitudes.some(
+                (ns) => ns._links.self.href === s._links.self.href
+              )
+          )
+          .forEach((s) => {
+            console.log(s);
+            this.eliminarSolicitudDeExpediente(s);
+          });
+        this.nuevoListadoSolicitudes
+          .filter(
+            (s) =>
+              !this.antiguoListadoSolicitudes.some(
+                (ns) => ns._links.self.href === s._links.self.href
+              )
+          )
+          .forEach((s) => {
+            this.agregarSolicitudAExpediente(s);
+          });
+        this.expedienteAbierto.solicitudes = this.nuevoListadoSolicitudes;
         this.$router.push({ path: "/listado/expedientes" });
       },
       eliminarExpediente() {
         this.eliminarElemento(this.expedienteAbierto._links.self.href);
         this.$router.push({ path: "/listado/expedientes" });
       },
+      descartarCambios() {
+        this.$router.push({ path: "/listado/expedientes" });
+      },
+    },
+    async created() {
+      try {
+        // Descargar de la API las solicitudes del expediente abierto
+        const resSolicitudes = await get(
+          useExpedientesStore().elementoAbierto._links.solicitudes.href
+        );
+        const solicitudes =
+          resSolicitudes.data._embedded[
+            getTipoSolicitud(
+              useExpedientesStore().elementoAbierto.tipoSolicitud
+            )
+          ] || [];
+
+        // Asignar las solicitudes al expediente abierto
+        useExpedientesStore().elementoAbierto.solicitudes = solicitudes;
+
+        // Crear una copia independiente para antiguoListadoSolicitudes
+        this.antiguoListadoSolicitudes = [...solicitudes];
+
+        // Asignar directamente las solicitudes a nuevoListadoSolicitudes
+        this.nuevoListadoSolicitudes = [...solicitudes];
+      } catch (error) {
+        console.error("Error al cargar las solicitudes:", error);
+      }
     },
   };
 </script>
@@ -83,7 +154,7 @@
           <select v-model="seleccionSolicitud" class="border p-2 rounded mb-4">
             <option value="">Seleccionar</option>
             <option
-              v-for="solicitud in solicitudes.filter((s) => s.estado === 'Pendiente de evaluación')"
+              v-for="solicitud in solicitudesDisponibles"
               :key="solicitud._links.self.href"
               :value="solicitud"
             >
@@ -93,13 +164,14 @@
           <button
             type="button"
             class="btn btn-primary mb-2"
-            @click="agregarSolicitudAExpediente(seleccionSolicitud)"
+            :disabled="!seleccionSolicitud"
+            @click="nuevoListadoSolicitudes.push(seleccionSolicitud)"
           >
             Añadir solicitud
           </button>
           <ul>
             <div
-              v-for="solicitud in expedienteAbierto.solicitudes"
+              v-for="solicitud in nuevoListadoSolicitudes"
               :key="solicitud._links.self.href"
               class="d-flex align-items-center justify-content-between mb-3"
             >
@@ -112,7 +184,7 @@
               <button
                 type="button"
                 class="btn btn-danger ms-3"
-                @click="eliminarSolicitudDeExpediente(solicitud)"
+                @click="eliminarSolicitudDelNuevoListado(solicitud)"
               >
                 Eliminar solicitud
               </button>
@@ -134,6 +206,14 @@
             class="btn btn-danger"
           >
             Eliminar expediente
+          </button>
+          <button
+            v-if="editando"
+            type="button"
+            @click="descartarCambios"
+            class="btn btn-danger"
+          >
+            Descartar cambios
           </button>
         </div>
       </form>

@@ -32,7 +32,7 @@ public class ExpedienteController {
 
     return respuesta;
   }
-  
+
   @PatchMapping("/expedientes/{expedienteId}/desasignar-solicitud/{solicitudId}")
   public ResponseEntity<String> desasignarSolicitud(@PathVariable Long expedienteId, @PathVariable Long solicitudId) {
     ResponseEntity<String> respuesta = null;

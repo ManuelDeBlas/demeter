@@ -1,57 +1,63 @@
 <script>
-import { useSolicitudesStore } from "@/stores/solicitudes";
-import { mapActions } from "pinia";
+  import { useSolicitudesStore } from "@/stores/solicitudes";
+  import { mapActions } from "pinia";
 
-export default {
-  name: "FormularioSolicitudView",
-  data() {
-    return {
-      editando: true,
-    };
-  },
-  computed: {
-    solicitudAbierta() {
-      let solicitud = useSolicitudesStore().elementoAbierto;
-      if (solicitud === null) {
-        solicitud = {
-          nombreUco: "",
-          ciu: "",
-          estado: "",
-          reservista: "",
-          poc: "",
-          fechaInicio: "",
-          fechaFin: "",
-          tipoSolicitud: "",
-        };
-        this.editando = false;
-      }
-      return solicitud;
+  export default {
+    name: "FormularioSolicitudView",
+    data() {
+      return {
+        editando: true,
+      };
     },
-  },
-  methods: {
-    ...mapActions(useSolicitudesStore, [
-      "anadirElemento",
-      "editarElemento",
-      "eliminarElemento",
-    ]),
-    enviarFormulario() {
-      if (this.editando) {
-        this.editarElemento(this.solicitudAbierta);
-      } else {
-        this.anadirElemento(this.solicitudAbierta);
-      }
-      this.$router.push({ path: "/listado/solicitudes" });
+    computed: {
+      solicitudAbierta: {
+        get() {
+          if (!this.store.elementoAbierto) {
+            this.editando = false;
+            this.store.elementoAbierto = {
+              nombreUco: "",
+              ciu: "",
+              estado: "",
+              reservista: "",
+              poc: "",
+              fechaInicio: "",
+              fechaFin: "",
+              tipoSolicitud: "",
+            };
+          }
+          return this.store.elementoAbierto;
+        },
+        set(value) {
+          this.store.elementoAbierto = value;
+        },
+      },
     },
-    eliminarSolicitud() {
-      this.eliminarElemento(this.solicitudAbierta._links.self.href);
-      this.$router.push({ path: "/listado/solicitudes" });
+    methods: {
+      ...mapActions(useSolicitudesStore, [
+        "anadirElemento",
+        "editarElemento",
+        "eliminarElemento",
+      ]),
+      enviarFormulario() {
+        if (this.editando) {
+          this.editarElemento(this.solicitudAbierta);
+        } else {
+          this.anadirElemento(this.solicitudAbierta);
+        }
+        this.$router.push({ path: "/listado/solicitudes" });
+      },
+      eliminarSolicitud() {
+        this.eliminarElemento(this.solicitudAbierta._links.self.href);
+        this.$router.push({ path: "/listado/solicitudes" });
+      },
     },
-  },
-};
+    created() {
+      this.store = useSolicitudesStore();
+    },
+  };
 </script>
 
 <template>
-  <div>{{ solicitudAbierta }}</div>
   <div class="card text-center">
     <div class="card-header fw-bold fs-5">
       <h2 v-if="editando">Editar solicitud</h2>
@@ -121,7 +127,9 @@ export default {
             v-model="solicitudAbierta.tipoSolicitud"
             class="form-select w-50 mx-auto"
           >
-            <option value="formaciones-continuadas">Formación continuada</option>
+            <option value="formaciones-continuadas">
+              Formación continuada
+            </option>
             <option value="activaciones-ampliadas">Activación ampliada</option>
             <option value="prestaciones-servicios-unidad">
               Prestación servicios unidad

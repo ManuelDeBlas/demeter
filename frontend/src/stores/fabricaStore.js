@@ -1,11 +1,6 @@
 import { defineStore } from "pinia";
 import { API_HOST } from "@/stores/api-service";
-import {
-  getElementos,
-  postEnColeccion,
-  deleteEntidad,
-  putEntidad,
-} from "@/stores/api-service";
+import { get, post, deleteEntidad, putEntidad } from "@/stores/api-service";
 
 export function crearStore(nombreColeccion, accionesAdicionales = {}) {
   return defineStore(nombreColeccion, {
@@ -15,7 +10,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
     }),
     actions: {
       async cargarElementos() {
-        await getElementos(nombreColeccion)
+        await get(API_HOST + "/" + nombreColeccion)
           .then((response) => {
             if (response.data._embedded) {
               const embedded = response.data._embedded;
@@ -36,9 +31,9 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
         }
         console.log("En el store, lo que recibe: ", nuevoElemento);
         try {
-          const response = await postEnColeccion(
+          const response = await post(
             nuevoElemento,
-            nombreColeccion
+            API_HOST + "/" + nombreColeccion
           );
           console.log("La respuesta de la API es: ", response);
           if (response.status === 201) {
@@ -52,11 +47,12 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
           console.error("Error: ", error);
         }
       },
-      eliminarElemento(hrefAEliminar) {
+      async eliminarElemento(hrefAEliminar) {
         console.log(
           `En el store ${nombreColeccion} recibo este href a eliminar: `,
           hrefAEliminar
         );
+        deleteEntidad(hrefAEliminar);
         const indice = this.elementos.findIndex(
           (elemento) => elemento._links.self.href === hrefAEliminar
         );

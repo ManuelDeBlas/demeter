@@ -29,20 +29,19 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
         if (nombreColeccion === "solicitudes") {
           nombreColeccion = nuevoElemento.tipoSolicitud;
         }
-        console.log("En el store, lo que recibe: ", nuevoElemento);
         try {
-          const response = await post(
+          const respuesta = await post(
             nuevoElemento,
             API_HOST + "/" + nombreColeccion
           );
-          console.log("La respuesta de la API es: ", response);
-          if (response.status === 201) {
+          if (respuesta.status === 201) {
             const elementoAgregado = {
               ...nuevoElemento,
-              _links: response.data._links,
+              _links: respuesta.data._links,
             };
             this.elementos.unshift(elementoAgregado);
           }
+          return respuesta;
         } catch (error) {
           console.error("Error: ", error);
         }
@@ -52,7 +51,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
           `En el store ${nombreColeccion} recibo este href a eliminar: `,
           hrefAEliminar
         );
-        deleteEntidad(hrefAEliminar);
+        const respuesta = await deleteEntidad(hrefAEliminar);
         const indice = this.elementos.findIndex(
           (elemento) => elemento._links.self.href === hrefAEliminar
         );
@@ -62,19 +61,21 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
         if (indice !== -1) {
           this.elementos.splice(indice, 1);
         }
+        return respuesta;
       },
       editarElemento(elementoEditado) {
-        console.log(
-          `En el store ${nombreColeccion} recibo este elemento editado: `,
-          elementoEditado
-        );
-        const indice = this.elementos.findIndex(
-          (elemento) =>
-            elemento._links.self.href === elementoEditado._links.self.href
-        );
-        if (indice !== -1) {
-          this.elementos[indice] = elementoEditado;
-        }
+        return "Esta función se implementará en el futuro";
+        // console.log(
+        //   `En el store ${nombreColeccion} recibo este elemento editado: `,
+        //   elementoEditado
+        // );
+        // const indice = this.elementos.findIndex(
+        //   (elemento) =>
+        //     elemento._links.self.href === elementoEditado._links.self.href
+        // );
+        // if (indice !== -1) {
+        //   this.elementos[indice] = elementoEditado;
+        // }
       },
       ...accionesAdicionales,
     },

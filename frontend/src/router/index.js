@@ -16,6 +16,16 @@ const routes = [
       config: getListadoConfig(route.params.tipoListado),
     }),
   },
+    {
+    path: "/formulario/reservistas",
+    name: "FormularioReservistaView",
+    component: () => import("@/views/FormularioReservistaView.vue"),
+  },
+      {
+    path: "/formulario/poc",
+    name: "FormularioPocView",
+    component: () => import("@/views/FormularioPocView.vue"),
+  },
   {
     path: "/formulario/solicitudes",
     name: "FormularioSolicitudView",

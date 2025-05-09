@@ -7,6 +7,8 @@
     data() {
       return {
         editando: true,
+        mostrarModal: false,
+        mensajeModal: "",
       };
     },
     computed: {
@@ -38,16 +40,33 @@
         "editarElemento",
         "eliminarElemento",
       ]),
-      enviarFormulario() {
-        if (this.editando) {
-          this.editarElemento(this.solicitudAbierta);
-        } else {
-          this.anadirElemento(this.solicitudAbierta);
+      async enviarFormulario() {
+        try {
+          if (this.editando) {
+            await this.editarElemento(this.solicitudAbierta);
+            this.mensajeModal = `Solicitud editada correctamente`;
+          } else {
+            await this.anadirElemento(this.solicitudAbierta);
+            this.mensajeModal = `Solicitud añadida correctamente`;
+          }
+        } catch (error) {
+          this.mensajeModal = `Error al procesar la solicitud: ${error.message}`;
+        } finally {
+          this.mostrarModal = true;
         }
-        this.$router.push({ path: "/listado/solicitudes" });
       },
-      eliminarSolicitud() {
-        this.eliminarElemento(this.solicitudAbierta._links.self.href);
+      async eliminarSolicitud() {
+        try {
+          await this.eliminarElemento(this.solicitudAbierta._links.self.href);
+          this.mensajeModal = `Solicitud eliminada correctamente.`;
+        } catch (error) {
+          this.mensajeModal = `Error al eliminar la solicitud: ${error.message}`;
+        } finally {
+          this.mostrarModal = true;
+        }
+      },
+      cerrarModal() {
+        this.mostrarModal = false;
         this.$router.push({ path: "/listado/solicitudes" });
       },
     },
@@ -200,6 +219,30 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div
+    v-if="mostrarModal"
+    class="modal fade show"
+    tabindex="-1"
+    style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Información</h5>
+          <button type="button" class="btn-close" @click="cerrarModal"></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ mensajeModal }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @click="cerrarModal">
+            Cerrar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

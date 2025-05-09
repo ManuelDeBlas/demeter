@@ -6,6 +6,8 @@
         const tiposFormularios = {
           solicitudes: "FormularioSolicitudView",
           expedientes: "FormularioExpedienteView",
+          reservistas: "FormularioReservistaView",
+          pocs: "FormularioPocView",
         };
         this.config.store().elementoAbierto = this.elemento; // Guarda el elemento en el store para editarlo
         this.$router.push({
@@ -16,6 +18,8 @@
         const nombres = {
           solicitudes: "Solicitud",
           expedientes: "Expediente",
+          reservistas: "Reservista",
+          pocs: "POC",
         };
         return nombres[tipoListado] || "Indefinido";
       },
@@ -32,11 +36,23 @@
       <div class="container text-center">
         <div class="row justify-content-between align-items-center">
           <div class="col-md-6 text-start">
+            <div
+              class="mb-0"
+              v-if="
+                tipoListado === 'solicitudes' || tipoListado === 'expedientes'
+              "
+            >
+              Estado: <strong>{{ elemento.estado }}</strong> Tipo:
+              <strong>{{ elemento.tipoSolicitud }}</strong>
+            </div>
             <p
               class="mb-0"
-              v-if="tipoListado === 'solicitudes' || 'expedientes'"
+              v-if="tipoListado === 'reservistas' || tipoListado === 'pocs'"
             >
-              Estado: <strong>{{ elemento.estado }}</strong>
+              <strong>{{ elemento.empleo }}&nbsp; </strong>
+              <strong>{{ elemento.apellido1 }}&nbsp; </strong>
+              <strong>{{ elemento.apellido2 }},&nbsp; </strong>
+              <strong>{{ elemento.nombre }}</strong>
             </p>
           </div>
           <div class="col-md-6 text-end">

@@ -15,7 +15,7 @@ export const useExpedientesStore = crearStore("expedientes", {
     console.log("Agregando solicitud al expediente:", solicitud);
     let urlExpediente = this.elementoAbierto._links.self.href.split("/");
     let expedienteId = urlExpediente[urlExpediente.length - 1];
-    let urlSolicitud = this.elementoAbierto._links.self.href.split("/");
+    let urlSolicitud = solicitud._links.self.href.split("/");
     let solicitudId = urlSolicitud[urlSolicitud.length - 1];
     patchEntidad(
       `${API_HOST}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
@@ -24,7 +24,8 @@ export const useExpedientesStore = crearStore("expedientes", {
     console.log("Solicitud a agregar:", solicitud);
     this.elementoAbierto.solicitudes.push(solicitud);
     solicitud.expediente = this.elementoAbierto;
-    console.log("Solicitud agregada correctamente.");
+    solicitud.estado = "ACEPTADA_PENDIENTE_PUBLICACION";
+    this.cargarElementos();
   },
   eliminarSolicitudDeExpediente(solicitud) {
     console.log("Eliminando solicitud del expediente:", solicitud);
@@ -42,5 +43,6 @@ export const useExpedientesStore = crearStore("expedientes", {
       this.elementoAbierto.solicitudes.splice(indice, 1);
     }
     solicitud.expediente = null;
+    solicitud.estado = "PENDIENTE_EVALUACION";
   },
 });

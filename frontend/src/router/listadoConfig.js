@@ -16,15 +16,15 @@ export function getListadoConfig(tipoListado) {
     solicitudes: {
       store: () => useSolicitudesStore(),
       estados: [
-        "Pendiente de evaluación",
-        "Aceptada pendiente de publicación",
-        "Aceptada publicada",
-        "Rechazada",
+        "PENDIENTE_EVALUACION",
+        "ACEPTADA_PENDIENTE_PUBLICACION",
+        "ACEPTADA_PUBLICADA",
+        "RECHAZADA",
       ],
     },
     expedientes: {
       store: () => useExpedientesStore(),
-      estados: ["Abierto", "Cerrado", "Publicado"],
+      estados: ["ABIERTO", "ENVIADO_AL_BOD", "PUBLICADO"],
     },
   };
   return config[tipoListado] || null;

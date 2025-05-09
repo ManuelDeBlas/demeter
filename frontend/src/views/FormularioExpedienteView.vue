@@ -73,7 +73,6 @@
               )
           )
           .forEach((s) => {
-            console.log(s);
             this.eliminarSolicitudDeExpediente(s);
           });
         this.nuevoListadoSolicitudes
@@ -137,6 +136,7 @@
             v-model="expedienteAbierto.numeroExpediente"
             type="text"
             class="form-control w-50 mx-auto"
+            :readonly="editando"
           />
         </div>
         <div class="mb-3">
@@ -145,6 +145,7 @@
             v-model="expedienteAbierto.estado"
             type="text"
             class="form-control w-50 mx-auto"
+            readonly
           />
         </div>
         <div class="mb-3">

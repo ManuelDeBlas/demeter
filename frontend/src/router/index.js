@@ -22,7 +22,7 @@ const routes = [
     component: () => import("@/views/FormularioReservistaView.vue"),
   },
       {
-    path: "/formulario/poc",
+    path: "/formulario/pocs",
     name: "FormularioPocView",
     component: () => import("@/views/FormularioPocView.vue"),
   },

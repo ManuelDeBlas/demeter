@@ -23,6 +23,7 @@ public class ExpedienteConId extends Expediente {
   private Long id;
   @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "expediente")
   private Collection<SolicitudConId> solicitudes;
+  private String estado;
 
   public Long getId() {
     return id;
@@ -38,6 +39,14 @@ public class ExpedienteConId extends Expediente {
 
   public void setSolicitudes(Collection<SolicitudConId> solicitudes) {
     this.solicitudes = solicitudes;
+  }
+
+  public String getEstado() {
+    return estado;
+  }
+
+  public void setEstado(String estado) {
+    this.estado = estado;
   }
 
   public ExpedienteConId() {

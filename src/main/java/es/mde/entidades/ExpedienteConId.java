@@ -2,9 +2,8 @@ package es.mde.entidades;
 
 import java.util.Collection;
 import java.util.Objects;
-import java.util.regex.Matcher;
 import es.mde.secres.Expediente;
-import es.mde.secres.SolicitudImpl.Estados;
+import es.mde.secres.Solicitud.Estados;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

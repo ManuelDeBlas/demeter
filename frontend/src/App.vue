@@ -8,15 +8,22 @@
 
   export default {
     components: { NavBar },
-    mounted() {
-      for (let store of [
-        useExpedientesStore(),
-        usePocsStore(),
-        useReservistasStore(),
-        useSolicitudesStore(),
-      ]) {
-        store.cargarElementos();
-      }
+    async mounted() {
+      console.log("Cargando datos iniciales...");
+
+      const expedientes = useExpedientesStore();
+      const pocs = usePocsStore();
+      const reservistas = useReservistasStore();
+      const solicitudes = useSolicitudesStore();
+
+      await Promise.all([
+        expedientes.cargarElementos(),
+        pocs.cargarElementos(),
+        reservistas.cargarElementos(),
+        solicitudes.cargarElementos(),
+      ]);
+
+      solicitudes.obtenerReservista();
     },
   };
 </script>

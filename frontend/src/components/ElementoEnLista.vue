@@ -36,6 +36,17 @@
       <div class="container text-center">
         <div class="row justify-content-between align-items-center">
           <div class="col-md-6 text-start">
+            <div class="mb-0" v-if="tipoListado === 'solicitudes'">
+              {{ elemento.reservista.dni }}
+              &nbsp; {{ elemento.reservista.empleo }} &nbsp;
+              {{ elemento.reservista.apellido1 }} &nbsp;
+              {{ elemento.reservista.apellido2 }}
+              &nbsp;
+              {{ elemento.reservista.nombre }}&nbsp;
+            </div>
+            <div class="mb-0" v-if="tipoListado === 'expedientes'">
+              {{ elemento.numeroExpediente }}
+            </div>
             <div
               class="mb-0"
               v-if="

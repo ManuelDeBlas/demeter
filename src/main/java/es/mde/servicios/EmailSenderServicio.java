@@ -8,8 +8,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import es.mde.repositorios.ExpedienteDAOImpl;
-
 @Service
 public class EmailSenderServicio {
   private static final Logger log = LoggerFactory.getLogger(EmailSenderServicio.class);

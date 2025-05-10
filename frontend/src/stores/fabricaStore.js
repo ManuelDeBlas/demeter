@@ -16,7 +16,6 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
               const embedded = response.data._embedded;
               this.elementos = Object.values(embedded).flat();
             }
-            console.log("La API me devuelve ", response);
             console.log("En el store ", this.elementos);
           })
           .catch((error) => {

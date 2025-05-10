@@ -44,14 +44,10 @@
           let respuesta;
           if (this.editando) {
             respuesta = await this.editarElemento(this.pocAbierto);
-            this.mensajeModal = `POC editado correctamente: ${JSON.stringify(
-              respuesta.data
-            )}`;
+            this.mensajeModal = `POC editado correctamente`;
           } else {
             respuesta = await this.anadirElemento(this.pocAbierto);
-            this.mensajeModal = `POC añadido correctamente: ${JSON.stringify(
-              respuesta.data
-            )}`;
+            this.mensajeModal = `POC añadido correctamente`;
           }
         } catch (error) {
           this.mensajeModal = `Error al procesar la solicitud: ${error.message}`;

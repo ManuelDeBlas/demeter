@@ -1,8 +1,11 @@
 package es.mde.repositorios;
 
+import es.mde.entidades.ExpedienteConId;
+import es.mde.entidades.SolicitudConId;
+
 public interface ExpedienteDAOCustom {
 
-  void asignarSolicitudAExpediente(Long expedienteId, Long solicitudId);
+  void asignarSolicitudAExpediente(ExpedienteConId expediente, SolicitudConId solicitud);
   
-  void eliminarSolicitudDeExpediente(Long expedienteId, Long solicitudId);
+  void eliminarSolicitudDeExpediente(ExpedienteConId expediente, SolicitudConId solicitud);
 }

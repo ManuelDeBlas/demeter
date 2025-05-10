@@ -47,11 +47,11 @@
         try {
           if (this.editando) {
             let respuesta = await this.editarElemento(this.reservistaAbierto);
-            this.mensajeModal = `Solicitud editada correctamente: ${respuesta}`;
+            this.mensajeModal = `Solicitud editada correctamente`;
           } else {
             console.log(this.reservistaAbierto);
             let respuesta = await this.anadirElemento(this.reservistaAbierto);
-            this.mensajeModal = `Solicitud añadida correctamente: ${respuesta}`;
+            this.mensajeModal = `Solicitud añadida correctamente`;
           }
         } catch (error) {
           this.mensajeModal = `Error al procesar la solicitud: ${error.message}`;

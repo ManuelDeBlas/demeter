@@ -6,24 +6,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import es.mde.repositorios.ExpedienteDAO;
+import es.mde.servicios.ExpedienteServicio;
 
 @RepositoryRestController
 public class ExpedienteController {
 
-  private ExpedienteDAO expedienteDAO;
+  private ExpedienteServicio expedienteServicio;
 
   @Autowired
-  public ExpedienteController(ExpedienteDAO expedienteDAODAO) {
-    this.expedienteDAO = expedienteDAODAO;
+  public ExpedienteController(ExpedienteServicio expedienteServicio) {
+    this.expedienteServicio = expedienteServicio;
   }
 
   @PatchMapping("/expedientes/{expedienteId}/asignar-solicitud/{solicitudId}")
   public ResponseEntity<String> asignarSolicitud(@PathVariable Long expedienteId, @PathVariable Long solicitudId) {
     ResponseEntity<String> respuesta = null;
     try {
-      expedienteDAO.asignarSolicitudAExpediente(expedienteId, solicitudId);
+      expedienteServicio.asignarSolicitudConNotificacion(expedienteId, solicitudId);
       respuesta = ResponseEntity
           .ok("Solicitud " + solicitudId + " asignada correctamente al expediente " + expedienteId);
     } catch (Exception e) {
@@ -37,7 +36,7 @@ public class ExpedienteController {
   public ResponseEntity<String> desasignarSolicitud(@PathVariable Long expedienteId, @PathVariable Long solicitudId) {
     ResponseEntity<String> respuesta = null;
     try {
-      expedienteDAO.eliminarSolicitudDeExpediente(expedienteId, solicitudId);
+      expedienteServicio.desasignarSolicitudConNotificacion(expedienteId, solicitudId);
       respuesta = ResponseEntity
           .ok("Solicitud " + solicitudId + " desasignada correctamente del expediente " + expedienteId);
     } catch (Exception e) {

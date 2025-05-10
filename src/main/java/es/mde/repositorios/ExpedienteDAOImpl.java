@@ -15,11 +15,7 @@ import jakarta.persistence.PersistenceContext;
 public class ExpedienteDAOImpl implements ExpedienteDAOCustom {
   private static final Logger log = LoggerFactory.getLogger(ExpedienteDAOImpl.class);
 
-  private record ExpedienteSolicitud(ExpedienteConId expediente, SolicitudConId solicitud) {
-  }
 
-  @Autowired
-  private SolicitudDAO solicitudDAO;
   @Autowired
   private ExpedienteDAO expedienteDAO;
 
@@ -27,34 +23,17 @@ public class ExpedienteDAOImpl implements ExpedienteDAOCustom {
   EntityManager entityManager;
 
   @Override
-  public void asignarSolicitudAExpediente(Long expedienteId, Long solicitudId) {
-    ExpedienteSolicitud resultado = obtenerExpedienteYSolicitud(expedienteId, solicitudId);
-    ExpedienteConId expediente = resultado.expediente();
-    SolicitudConId solicitud = resultado.solicitud();
+  public void asignarSolicitudAExpediente(ExpedienteConId expediente, SolicitudConId solicitud) {
     expediente.addSolicitud(solicitud);
     expedienteDAO.save(expediente);
-    solicitudDAO.save(solicitud);
-    log.info("Solicitud {} asignada correctamente al expediente {}", solicitudId, expediente.getNumeroExpediente());
+    log.info("Solicitud {} asignada correctamente al expediente {}", solicitud.getId(), expediente.getNumeroExpediente());
   }
 
   @Override
-  public void eliminarSolicitudDeExpediente(Long expedienteId, Long solicitudId) {
-    ExpedienteSolicitud resultado = obtenerExpedienteYSolicitud(expedienteId, solicitudId);
-    ExpedienteConId expediente = resultado.expediente();
-    SolicitudConId solicitud = resultado.solicitud();
+  public void eliminarSolicitudDeExpediente(ExpedienteConId expediente, SolicitudConId solicitud) {
     expediente.removeSolicitud(solicitud);
     expedienteDAO.save(expediente);
-    solicitudDAO.save(solicitud);
-    log.info("Solicitud {} asignada correctamente al expediente {}", solicitudId, expediente.getNumeroExpediente());
-  }
-
-  private ExpedienteSolicitud obtenerExpedienteYSolicitud(Long expedienteId, Long solicitudId) {
-    Optional<ExpedienteConId> expedienteOpt = expedienteDAO.findById(expedienteId);
-    Optional<SolicitudConId> solicitudOpt = solicitudDAO.findById(solicitudId);
-    if (expedienteOpt.isEmpty() || solicitudOpt.isEmpty()) {
-      throw new IllegalArgumentException("Expediente o solicitud no encontrado");
-    }
-    return new ExpedienteSolicitud(expedienteOpt.get(), solicitudOpt.get());
+    log.info("Solicitud {} desasignada correctamente al expediente {}", solicitud.getId(), expediente.getNumeroExpediente());
   }
 
 }

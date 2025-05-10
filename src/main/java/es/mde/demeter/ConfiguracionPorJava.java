@@ -23,11 +23,11 @@ import jakarta.persistence.EntityManagerFactory;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories("${es.mde.demeter.repositorios}")
-@ComponentScan("${es.mde.demeter.rest}")
-@PropertySource({"classpath:config/rest.properties", "classpath:config/jackson.properties", 
-  "classpath:config/DB.properties",
-    "classpath:config/passwordsBD.properties"
-})
+@ComponentScan({ "${es.mde.demeter.rest}", "${es.mde.demeter.servicios}" })
+@PropertySource({ "classpath:config/rest.properties", "classpath:config/jackson.properties",
+    "classpath:config/email.properties", "classpath:config/DB.properties", 
+    "classpath:config/passwordsBD.properties", "classpath:config/passwords-email.properties"
+  })
 public class ConfiguracionPorJava {
 
   @Value("${es.mde.demeter.entidades}")
@@ -37,8 +37,8 @@ public class ConfiguracionPorJava {
   private String[] xmlsJpa;
 
   @Bean
-  public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
-      Environment env, JpaVendorAdapter vendorAdapter) {
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, Environment env,
+      JpaVendorAdapter vendorAdapter) {
 
     LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
     em.setDataSource(dataSource);
@@ -48,10 +48,8 @@ public class ConfiguracionPorJava {
 
     Properties jpaProperties = new Properties();
     Arrays.asList("dialect", "show_sql", "hbm2ddl.auto", "enable_lazy_load_no_trans").stream()
-        .map(s -> "hibernate." + s)
-        .map(p -> new AbstractMap.SimpleEntry<String, String>(p, env.getProperty(p)))
-        .filter(e -> e.getValue() != null)
-        .forEach(e -> jpaProperties.put(e.getKey(), e.getValue()));
+        .map(s -> "hibernate." + s).map(p -> new AbstractMap.SimpleEntry<String, String>(p, env.getProperty(p)))
+        .filter(e -> e.getValue() != null).forEach(e -> jpaProperties.put(e.getKey(), e.getValue()));
     em.setJpaProperties(jpaProperties);
 
     return em;
@@ -73,6 +71,4 @@ public class ConfiguracionPorJava {
     return mapper;
   }
 
-
 }
-

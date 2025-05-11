@@ -10,6 +10,12 @@ import es.mde.entidades.SolicitudConId;
 import es.mde.repositorios.ExpedienteDAO;
 import es.mde.repositorios.SolicitudDAO;
 
+/**
+ * Servicio para gestionar la lógica de negocio relacionada con los expedientes.
+ * Incluye operaciones para asignar y desasignar solicitudes con notificaciones.
+ * 
+ * @version 1.0
+ */
 @Service
 public class ExpedienteServicio {
   private record ExpedienteSolicitud(ExpedienteConId expediente, SolicitudConId solicitud) {
@@ -19,6 +25,13 @@ public class ExpedienteServicio {
   private SolicitudDAO solicitudDAO;
   private final EmailSenderServicio emailSenderServicio;
 
+  /**
+   * Constructor que inyecta los DAOs y el servicio de correo electrónico.
+   * 
+   * @param expedienteDAO DAO para gestionar expedientes.
+   * @param solicitudDAO DAO para gestionar solicitudes.
+   * @param emailSenderServicio Servicio para enviar correos electrónicos.
+   */
   @Autowired
   public ExpedienteServicio(ExpedienteDAO expedienteDAO, SolicitudDAO solicitudDAO,
       EmailSenderServicio emailSenderServicio) {
@@ -27,6 +40,12 @@ public class ExpedienteServicio {
     this.emailSenderServicio = emailSenderServicio;
   }
 
+  /**
+   * Asigna una solicitud a un expediente y envía una notificación.
+   * 
+   * @param expedienteId ID del expediente.
+   * @param solicitudId ID de la solicitud.
+   */
   public void asignarSolicitudConNotificacion(Long expedienteId, Long solicitudId) {
     ExpedienteSolicitud resultado = obtenerExpedienteYSolicitud(expedienteId, solicitudId);
     ExpedienteConId expediente = resultado.expediente();
@@ -39,6 +58,12 @@ public class ExpedienteServicio {
     emailSenderServicio.enviarEmail(solicitud.getPoc().getEmailCorporativo(), asunto, mensaje);
   }
 
+  /**
+   * Desasigna una solicitud de un expediente y envía una notificación.
+   * 
+   * @param expedienteId ID del expediente.
+   * @param solicitudId ID de la solicitud.
+   */
   public void desasignarSolicitudConNotificacion(Long expedienteId, Long solicitudId) {
     ExpedienteSolicitud resultado = obtenerExpedienteYSolicitud(expedienteId, solicitudId);
     ExpedienteConId expediente = resultado.expediente();

@@ -12,6 +12,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+/**
+ * Representa un expediente con un identificador único.
+ * Extiende la funcionalidad de la clase {@link Expediente}.
+ * 
+ * @author Manuel de Blas Pino
+ * @version 1.0
+ */
 @Entity
 @Table(name = "EXPEDIENTES")
 public class ExpedienteConId extends Expediente {
@@ -20,14 +27,32 @@ public class ExpedienteConId extends Expediente {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
+
+  /**
+   * Colección de solicitudes asociadas al expediente.
+   */
   @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "expediente")
   private Collection<SolicitudConId> solicitudes;
+
+  /**
+   * Estado actual del expediente.
+   */
   private String estado;
 
+  /**
+   * Obtiene el identificador único del expediente.
+   * 
+   * @return el identificador del expediente.
+   */
   public Long getId() {
     return id;
   }
 
+  /**
+   * Establece el identificador único del expediente.
+   * 
+   * @param id el identificador a establecer.
+   */
   public void setId(Long id) {
     this.id = id;
   }
@@ -50,14 +75,6 @@ public class ExpedienteConId extends Expediente {
 
   public ExpedienteConId() {
   }
-
-  // private String getTipoSolicitud() {
-  // Matcher matcher = REGEX_TIPO_SOLICITUD.matcher(getNumeroExpediente());
-  // String resultado = null;
-  // resultado = matcher.group(1);
-  //
-  // return resultado;
-  // }
 
   public void addSolicitud(SolicitudConId solicitud) {
     if (solicitud.getExpediente() != null) {

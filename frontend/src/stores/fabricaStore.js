@@ -22,7 +22,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
             console.log(error);
           });
       },
-      async anadirElemento(nuevoElemento) {
+      async anadirElemento(nuevoElemento, poc, reservista) {
         console.log("En el store, lo que recibe: ", nuevoElemento);
         // Esto evita hacer un post a '/soliticitudes'
         if (nombreColeccion === "solicitudes") {
@@ -34,10 +34,18 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
             API_HOST + "/" + nombreColeccion
           );
           if (respuesta.status === 201) {
+            console.log("En el store, lo que recibe: ", respuesta.data);
             const elementoAgregado = {
               ...nuevoElemento,
               _links: respuesta.data._links,
             };
+            if (reservista) {
+              elementoAgregado.reservista = reservista;
+            }
+            if (poc) {
+              elementoAgregado.poc = poc;
+            }
+            console.log("Elemento agregado: ", elementoAgregado);
             this.elementos.unshift(elementoAgregado);
           }
           return respuesta;

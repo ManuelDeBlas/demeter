@@ -110,117 +110,123 @@
 </script>
 
 <template>
-  <div class="card text-center">
-    <div class="card-header fw-bold fs-5">
-      <h2 v-if="editando">Editar expediente</h2>
-      <h2 v-else>Crear nuevo expediente</h2>
-    </div>
-    <div class="card-body">
-      <form @submit.prevent="enviarFormulario">
-        <div class="mb-3">
-          <label class="form-label">Número expediente:</label>
-          <input
-            v-model="expedienteAbierto.numeroExpediente"
-            type="text"
-            class="form-control w-50 mx-auto"
-            :disabled="editando"
-          />
-        </div>
-                <div class="mb-3">
-          <label class="form-label">Tipo de Solicitud:</label>
-          <select
-            v-model="expedienteAbierto.tipoSolicitud"
-            class="form-select w-50 mx-auto"
-            :disabled="editando"
-          >
-            <option value="FC">
-              Formación continuada
-            </option>
-            <option value="EX">Activación ampliada</option>
-            <option value="PS">
-              Prestación servicios unidad
-            </option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Estado:</label>
-          <input
-            v-model="expedienteAbierto.estado"
-            type="text"
-            class="form-control w-50 mx-auto"
-            :disabled="!editando"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Solicitudes: </label>
-          <select v-model="seleccionSolicitud" class="border p-2 rounded mb-4">
-            <option value="">Seleccionar</option>
-            <option
-              v-for="solicitud in solicitudesDisponibles"
-              :key="solicitud._links.self.href"
-              :value="solicitud"
-            > DNI: {{ solicitud.reservista.dni }}
-            , Inicio: {{ solicitud.fechaInicio }}
-            , Fin: {{ solicitud.fechaFin }}
-              {{ solicitud.nombreUco }}
-            </option>
-          </select>
-          <button
-            type="button"
-            class="btn btn-primary mb-2"
-            :disabled="!seleccionSolicitud"
-            @click="nuevoListadoSolicitudes.push(seleccionSolicitud)"
-          >
-            Añadir solicitud
-          </button>
-          <ul>
-            <div
-              v-for="solicitud in nuevoListadoSolicitudes"
-              :key="solicitud._links.self.href"
-              class="d-flex align-items-center justify-content-between mb-3"
+  <div
+    class="formulario-con-fondo d-flex justify-content-center align-items-center"
+  >
+    <div class="card text-center">
+      <div class="card-header fw-bold fs-5">
+        <h2 v-if="editando">Editar expediente</h2>
+        <h2 v-else>Crear nuevo expediente</h2>
+      </div>
+      <div class="card-body">
+        <form @submit.prevent="enviarFormulario">
+          <div class="mb-3">
+            <label class="form-label">Número expediente:</label>
+            <input
+              v-model="expedienteAbierto.numeroExpediente"
+              type="text"
+              class="form-control w-50 mx-auto"
+              :disabled="editando"
+              pattern="^T64(PS|EX|FC)A(ENE|FEB|MAR|ABR|MAY|JUN|JUL|AGO|SEP|OCT|NOV|DIC)25[1-9][0-9]*$"
+              title="Formato: T64 seguido de PS, EX o FC, luego A, el mes (ej. ENE), el año (25) y el número de expediente que corresponda (ej. 1). Ejemplo completo: T64PSAENE251"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tipo de Solicitud:</label>
+            <select
+              v-model="expedienteAbierto.tipoSolicitud"
+              class="form-select w-50 mx-auto"
+              :disabled="editando"
             >
-              <elemento-en-lista
-                :tipoListado="'solicitudes'"
-                :config="config"
-                :elemento="solicitud"
-                class="flex-grow-1"
-              ></elemento-en-lista>
-              <button
-                type="button"
-                class="btn btn-danger ms-3"
-                @click="eliminarSolicitudDelNuevoListado(solicitud)"
+              <option value="FC">Formación continuada</option>
+              <option value="EX">Activación ampliada</option>
+              <option value="PS">Prestación servicios unidad</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Estado:</label>
+            <input
+              v-model="expedienteAbierto.estado"
+              type="text"
+              class="form-control w-50 mx-auto"
+              :disabled="!editando"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Solicitudes: </label>
+            <select
+              v-model="seleccionSolicitud"
+              class="border p-2 rounded mb-4"
+            >
+              <option value="">Seleccionar</option>
+              <option
+                v-for="solicitud in solicitudesDisponibles"
+                :key="solicitud._links.self.href"
+                :value="solicitud"
               >
-                Eliminar solicitud
-              </button>
-            </div>
-          </ul>
-        </div>
+                DNI: {{ solicitud.reservista.dni }} , Inicio:
+                {{ solicitud.fechaInicio }} , Fin: {{ solicitud.fechaFin }}
+                {{ solicitud.nombreUco }}
+              </option>
+            </select>
+            <button
+              type="button"
+              class="btn btn-primary mb-2"
+              :disabled="!seleccionSolicitud"
+              @click="nuevoListadoSolicitudes.push(seleccionSolicitud)"
+            >
+              Añadir solicitud
+            </button>
+            <ul>
+              <div
+                v-for="solicitud in nuevoListadoSolicitudes"
+                :key="solicitud._links.self.href"
+                class="d-flex align-items-center justify-content-between mb-3"
+              >
+                <elemento-en-lista
+                  :tipoListado="'solicitudes'"
+                  :config="config"
+                  :elemento="solicitud"
+                  class="flex-grow-1"
+                ></elemento-en-lista>
+                <button
+                  type="button"
+                  class="btn btn-danger ms-3"
+                  @click="eliminarSolicitudDelNuevoListado(solicitud)"
+                >
+                  Eliminar solicitud
+                </button>
+              </div>
+            </ul>
+          </div>
 
-        <div class="d-flex justify-content-between">
-          <button v-if="editando" type="submit" class="btn btn-primary">
-            Guardar cambios
-          </button>
-          <button v-else type="submit" class="btn btn-success">
-            Crear expediente
-          </button>
-          <button
-            v-if="editando"
-            type="button"
-            @click="eliminarExpediente"
-            class="btn btn-danger"
-          >
-            Eliminar expediente
-          </button>
-          <button
-            v-if="editando"
-            type="button"
-            @click="descartarCambios"
-            class="btn btn-danger"
-          >
-            Descartar cambios
-          </button>
-        </div>
-      </form>
+          <div class="d-flex justify-content-between">
+            <button v-if="editando" type="submit" class="btn btn-primary">
+              Guardar cambios
+            </button>
+            <button v-else type="submit" class="btn btn-success">
+              Crear expediente
+            </button>
+            <button
+              v-if="editando"
+              type="button"
+              @click="eliminarExpediente"
+              class="btn btn-danger"
+            >
+              Eliminar expediente
+            </button>
+            <button
+              v-if="editando"
+              type="button"
+              @click="descartarCambios"
+              class="btn btn-danger"
+            >
+              Descartar cambios
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>

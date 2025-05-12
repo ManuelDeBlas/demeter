@@ -17,4 +17,13 @@ export const useSolicitudesStore = crearStore("solicitudes", {
           });
     }
   },
+  async guardarSolicitudEnAPI(solicitud, reservista, poc) {
+    await this.anadirElemento(solicitud, reservista, poc);
+    console.log("Solicitud guardada en la API: ", solicitud);
+    solicitud.reservista = reservista;
+    solicitud.poc = poc;
+    console.log("Solicitud en el store: ", solicitud);
+  }
+
+
 });

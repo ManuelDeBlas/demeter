@@ -31,7 +31,7 @@ export const useExpedientesStore = crearStore("expedientes", {
     console.log("Eliminando solicitud del expediente:", solicitud);
     let urlExpediente = this.elementoAbierto._links.self.href.split("/");
     let expedienteId = urlExpediente[urlExpediente.length - 1];
-    let urlSolicitud = this.elementoAbierto._links.self.href.split("/");
+    let urlSolicitud = solicitud._links.self.href.split("/");
     let solicitudId = urlSolicitud[urlSolicitud.length - 1];
     patchEntidad(
       `${API_HOST}/expedientes/${expedienteId}/desasignar-solicitud/${solicitudId}`

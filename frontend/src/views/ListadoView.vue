@@ -19,15 +19,16 @@
         this.seleccionFiltro = "";
       },
     },
-    // mounted() {
-    //         this.config.store().cargarElementos();
-    //   },
+    // created() {
+    //   this.config.store().cargarElementos();
+    // },
     computed: {
       elementos() {
         return this.config.store().elementos;
       },
       elementosFiltrados() {
         let elementosFiltrados = this.elementos;
+        console.log("Elementos filtrados:", elementosFiltrados);
         if (this.seleccionFiltro) {
           elementosFiltrados = this.elementos.filter(
             (elemento) => elemento.estado === this.seleccionFiltro

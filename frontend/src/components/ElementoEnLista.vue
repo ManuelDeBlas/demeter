@@ -36,9 +36,9 @@
       <div class="container text-center">
         <div class="row justify-content-between align-items-center">
           <div class="col-md-6 text-start">
-            <!-- <div class="mb-0" v-if="tipoListado === 'solicitudes'">
-              {{ elemento.reservista.dni }}
-              &nbsp; {{ elemento.reservista.empleo }} &nbsp;
+            <div class="mb-0" v-if="tipoListado === 'solicitudes'">
+              DNI: <strong>{{ elemento.reservista.dni }}&nbsp; </strong> &nbsp;
+              {{ elemento.reservista.empleo }} &nbsp;
               {{ elemento.reservista.apellido1 }} &nbsp;
               {{ elemento.reservista.apellido2 }}
               &nbsp;
@@ -46,7 +46,7 @@
             </div>
             <div class="mb-0" v-if="tipoListado === 'expedientes'">
               {{ elemento.numeroExpediente }}
-            </div> -->
+            </div>
             <div
               class="mb-0"
               v-if="
@@ -54,18 +54,19 @@
               "
             >
               Estado: <strong>{{ elemento.estado }}</strong> Tipo:
-              <strong>{{ elemento.tipoSolicitud }}</strong>
+              {{ elemento.tipoSolicitud }}
             </div>
-            <p
-              class="mb-0"
-              v-if="tipoListado === 'reservistas' || tipoListado === 'pocs'"
-            >
-              <strong>{{ elemento.dni }}&nbsp; </strong>
-              <strong>{{ elemento.empleo }}&nbsp; </strong>
-              <strong>{{ elemento.apellido1 }}&nbsp; </strong>
-              <strong>{{ elemento.apellido2 }},&nbsp; </strong>
-              <strong>{{ elemento.nombre }}</strong>
-            </p>
+            <div class="mb-0" v-if="tipoListado === 'pocs'">
+              {{ elemento.empleo }}&nbsp; {{ elemento.apellido1 }}&nbsp;
+              {{ elemento.apellido2 }},&nbsp;
+              {{ elemento.nombre }}
+            </div>
+            <div class="mb-0" v-if="tipoListado === 'reservistas'">
+              DNI: <strong>{{ elemento.dni }}&nbsp; </strong>
+              {{ elemento.empleo }}&nbsp; {{ elemento.apellido1 }}&nbsp;
+              {{ elemento.apellido2 }},&nbsp;
+              {{ elemento.nombre }}
+            </div>
           </div>
           <div class="col-md-6 text-end">
             <div class="d-flex justify-content-end align-items-center gap-3">
@@ -85,3 +86,38 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .elemento-en-lista {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #3d7275, #81c784);
+    color: white;
+  }
+
+  .card-header {
+    background-color: #59bec2;
+    padding: 15px;
+    font-size: 1.25rem;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .mb-0 {
+    margin-bottom: 10px;
+  }
+
+  .abrir-icono {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .abrir-icono:hover {
+    transform: scale(1.2);
+    color: #ffffff;
+  }
+</style>

@@ -26,7 +26,6 @@ export const useExpedientesStore = crearStore("expedientes", {
     this.elementoAbierto.solicitudes.push(solicitud);
     solicitud.expediente = this.elementoAbierto;
     solicitud.estado = "ACEPTADA_PENDIENTE_PUBLICACION";
-    this.cargarElementos();
   },
   eliminarSolicitudDeExpediente(solicitud) {
     console.log("Eliminando solicitud del expediente:", solicitud);
@@ -48,7 +47,7 @@ export const useExpedientesStore = crearStore("expedientes", {
   },
   async cargarSolicitudesEnExpediente() {
     // Este método asocia los objetos 'solicitud' del store 'useSolicitudesStore' con el expediente
-    if (!this.elementoAbierto.solicitudes) {
+    if (this.elementoAbierto !== null && !this.elementoAbierto.solicitudes) {
       this.elementoAbierto.solicitudes = [];
       try {
         // Descargar de la API las solicitudes del expediente abierto

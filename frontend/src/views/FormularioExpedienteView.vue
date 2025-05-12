@@ -24,7 +24,8 @@
         if (expediente === null) {
           expediente = {
             numeroExpediente: "",
-            estado: "",
+            tipoSolicitud: "",
+            estado: "ABIERTO",
             solicitudes: [],
           };
           this.editando = false;
@@ -57,11 +58,11 @@
         );
       },
       enviarFormulario() {
-        // if (this.editando) {
-        //   // this.editarElemento(this.expedienteAbierto);
-        // } else {
-        //   this.anadirElemento(this.expedienteAbierto);
-        // }
+        if (this.editando) {
+          // this.editarElemento(this.expedienteAbierto);
+        } else {
+          this.anadirElemento(this.expedienteAbierto);
+        }
         console.log(this.nuevoListadoSolicitudes);
         console.log(this.antiguoListadoSolicitudes);
         // Envío de los cambios realizados a la API
@@ -103,6 +104,7 @@
 
       // Asignar directamente las solicitudes a nuevoListadoSolicitudes
       this.nuevoListadoSolicitudes = [...this.expedienteAbierto.solicitudes];
+      console.log(this.expedienteAbierto.solicitudes);
     },
   };
 </script>
@@ -121,8 +123,24 @@
             v-model="expedienteAbierto.numeroExpediente"
             type="text"
             class="form-control w-50 mx-auto"
-            :readonly="editando"
+            :disabled="editando"
           />
+        </div>
+                <div class="mb-3">
+          <label class="form-label">Tipo de Solicitud:</label>
+          <select
+            v-model="expedienteAbierto.tipoSolicitud"
+            class="form-select w-50 mx-auto"
+            :disabled="editando"
+          >
+            <option value="FC">
+              Formación continuada
+            </option>
+            <option value="EX">Activación ampliada</option>
+            <option value="PS">
+              Prestación servicios unidad
+            </option>
+          </select>
         </div>
         <div class="mb-3">
           <label class="form-label">Estado:</label>
@@ -130,7 +148,7 @@
             v-model="expedienteAbierto.estado"
             type="text"
             class="form-control w-50 mx-auto"
-            readonly
+            :disabled="!editando"
           />
         </div>
         <div class="mb-3">
@@ -141,7 +159,9 @@
               v-for="solicitud in solicitudesDisponibles"
               :key="solicitud._links.self.href"
               :value="solicitud"
-            >
+            > DNI: {{ solicitud.reservista.dni }}
+            , Inicio: {{ solicitud.fechaInicio }}
+            , Fin: {{ solicitud.fechaFin }}
               {{ solicitud.nombreUco }}
             </option>
           </select>

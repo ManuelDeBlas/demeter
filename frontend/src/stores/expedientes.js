@@ -1,5 +1,6 @@
 import { crearStore } from "@/stores/fabricaStore";
-import { patchEntidad, API_HOST } from "@/stores/api-service";
+import { useSolicitudesStore } from "@/stores/solicitudes";
+import { get, patchEntidad, API_HOST } from "@/stores/api-service";
 
 export const getNombreDAO = (tipoSolicitud) => {
   const tiposSolicitudes = {
@@ -44,5 +45,47 @@ export const useExpedientesStore = crearStore("expedientes", {
     }
     solicitud.expediente = null;
     solicitud.estado = "PENDIENTE_EVALUACION";
+  },
+  async cargarSolicitudesEnExpediente() {
+    // Este método asocia los objetos 'solicitud' del store 'useSolicitudesStore' con el expediente
+    if (!this.elementoAbierto.solicitudes) {
+      this.elementoAbierto.solicitudes = [];
+      try {
+        // Descargar de la API las solicitudes del expediente abierto
+        const resSolicitudesAPI = await get(
+          useExpedientesStore().elementoAbierto._links.solicitudes.href
+        );
+        // Obtener cuáles son los href de las solicitudes pertenecientes a este expediente
+        console.log("Solicitudes de la API:", resSolicitudesAPI);
+        try {
+          let solicitudesAPIhref =
+            resSolicitudesAPI.data._embedded[
+              getNombreDAO(useExpedientesStore().elementoAbierto.tipoSolicitud)
+            ].map((s) => s._links.self.href) || [];
+          // Almacenar en este expediente los objetos del store solicitudes que le corresponden
+          for (let solicitudEnStore of useSolicitudesStore().elementos) {
+            if (
+              !solicitudEnStore.expediente &&
+              solicitudesAPIhref.includes(solicitudEnStore._links.self.href)
+            ) {
+              console.log("ASIGNACION");
+              // Si la solicitud no tiene expediente asignado y está en el listado de solicitudes del expediente
+              const solicitud = useSolicitudesStore().elementos.find(
+                (s) => s._links.self.href === solicitudEnStore._links.self.href
+              );
+              if (solicitud) {
+                this.elementoAbierto.solicitudes.push(solicitud);
+                solicitud.expediente = this.elementoAbierto;
+              }
+            }
+          }        } catch (error) {
+          console.log(
+            "El listado de solicitudes de este expediente está vacío."
+          );
+        }
+      } catch (error) {
+        console.error("Error al cargar las solicitudes:", error);
+      }
+    }
   },
 });

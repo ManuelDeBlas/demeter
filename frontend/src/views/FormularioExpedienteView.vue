@@ -32,10 +32,10 @@
         return expediente;
       },
       solicitudesDisponibles() {
-        return this.solicitudes.filter(
+        return useSolicitudesStore().elementos.filter(
           (s) =>
-            !this.nuevoListadoSolicitudes.some(
-              (ns) => ns._links.self.href === s._links.self.href
+            !this.expedienteAbierto.solicitudes.some(
+              (es) => es._links.self.href === s._links.self.href
             ) &&
             s.estado === "PENDIENTE_EVALUACION" &&
             s.tipoSolicitud === this.expedienteAbierto.tipoSolicitud
@@ -97,27 +97,12 @@
       },
     },
     async created() {
-      try {
-        // Descargar de la API las solicitudes del expediente abierto
-        const resSolicitudes = await get(
-          useExpedientesStore().elementoAbierto._links.solicitudes.href
-        );
-        const solicitudes =
-          resSolicitudes.data._embedded[
-            getNombreDAO(useExpedientesStore().elementoAbierto.tipoSolicitud)
-          ] || [];
+      await useExpedientesStore().cargarSolicitudesEnExpediente();
+      // Crear una copia independiente para antiguoListadoSolicitudes
+      this.antiguoListadoSolicitudes = [...this.expedienteAbierto.solicitudes];
 
-        // Asignar las solicitudes al expediente abierto
-        useExpedientesStore().elementoAbierto.solicitudes = solicitudes;
-
-        // Crear una copia independiente para antiguoListadoSolicitudes
-        this.antiguoListadoSolicitudes = [...solicitudes];
-
-        // Asignar directamente las solicitudes a nuevoListadoSolicitudes
-        this.nuevoListadoSolicitudes = [...solicitudes];
-      } catch (error) {
-        console.error("Error al cargar las solicitudes:", error);
-      }
+      // Asignar directamente las solicitudes a nuevoListadoSolicitudes
+      this.nuevoListadoSolicitudes = [...this.expedienteAbierto.solicitudes];
     },
   };
 </script>

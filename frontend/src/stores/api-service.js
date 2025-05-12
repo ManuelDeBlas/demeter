@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const API_HOST =
-  "http://localhost:8080/api";
+  "https://demeter-72fd40c612e8.herokuapp.com/api";
 
 function llamadaAPI(method, body, path) {
   let config = {

@@ -28,8 +28,8 @@ public class ExpedienteServicio {
   /**
    * Constructor que inyecta los DAOs y el servicio de correo electrónico.
    * 
-   * @param expedienteDAO DAO para gestionar expedientes.
-   * @param solicitudDAO DAO para gestionar solicitudes.
+   * @param expedienteDAO       DAO para gestionar expedientes.
+   * @param solicitudDAO        DAO para gestionar solicitudes.
    * @param emailSenderServicio Servicio para enviar correos electrónicos.
    */
   @Autowired
@@ -44,7 +44,7 @@ public class ExpedienteServicio {
    * Asigna una solicitud a un expediente y envía una notificación.
    * 
    * @param expedienteId ID del expediente.
-   * @param solicitudId ID de la solicitud.
+   * @param solicitudId  ID de la solicitud.
    */
   public void asignarSolicitudConNotificacion(Long expedienteId, Long solicitudId) {
     ExpedienteSolicitud resultado = obtenerExpedienteYSolicitud(expedienteId, solicitudId);
@@ -53,7 +53,8 @@ public class ExpedienteServicio {
     expedienteDAO.asignarSolicitudAExpediente(expediente, solicitud);
     solicitudDAO.save(solicitud);
     String asunto = "Solicitud asignada a expediente";
-    String mensaje = "La solicitud con ID " + solicitudId + " ha sido asignada al expediente con número "
+    String mensaje = "La solicitud entre las fechas " + solicitud.getFechaInicio() + " y " + solicitud.getFechaFin()
+        + " para el reservista con DNI: " + solicitud.getReservista() + " ha sido asignada al expediente con número "
         + expediente.getNumeroExpediente() + " y su estado ha cambiado a " + solicitud.getEstado() + ".";
     emailSenderServicio.enviarEmail(solicitud.getPoc().getEmailCorporativo(), asunto, mensaje);
   }
@@ -62,7 +63,7 @@ public class ExpedienteServicio {
    * Desasigna una solicitud de un expediente y envía una notificación.
    * 
    * @param expedienteId ID del expediente.
-   * @param solicitudId ID de la solicitud.
+   * @param solicitudId  ID de la solicitud.
    */
   public void desasignarSolicitudConNotificacion(Long expedienteId, Long solicitudId) {
     ExpedienteSolicitud resultado = obtenerExpedienteYSolicitud(expedienteId, solicitudId);

@@ -72,8 +72,9 @@ public class ExpedienteServicio {
     expedienteDAO.eliminarSolicitudDeExpediente(expediente, solicitud);
     solicitudDAO.save(solicitud);
     String asunto = "Solicitud desasignada del expediente";
-    String mensaje = "La solicitud con ID " + solicitudId + " ha sido desasignada al expediente con número "
-        + expediente.getNumeroExpediente() + " y su estado ha cambiado a " + solicitud.getEstado() + ".";
+    String mensaje = "La solicitud entre las fechas " + solicitud.getFechaInicio() + " y " + solicitud.getFechaFin()
+    + " para el reservista con DNI: " + solicitud.getReservista() + " ha sido desasignada al expediente con número "
+    + expediente.getNumeroExpediente() + " y su estado ha cambiado a " + solicitud.getEstado() + ".";
     emailSenderServicio.enviarEmail(solicitud.getPoc().getEmailCorporativo(), asunto, mensaje);
   }
 

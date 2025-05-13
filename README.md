@@ -22,7 +22,7 @@ Será una aplicación web.
     2. Librería: https://github.com/ManuelDeBlas/secres
 7. **Despliegue** en Internet:
     1. API: TBD
-    2. Web: TBD
+    2. Web: https://demeter-secres.netlify.app/#/inicio
 
 ## Interfaz de usuario
 

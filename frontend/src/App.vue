@@ -9,8 +9,6 @@
   export default {
     components: { NavBar },
     async mounted() {
-      console.log("Cargando datos iniciales...");
-
       const expedientes = useExpedientesStore();
       const pocs = usePocsStore();
       const reservistas = useReservistasStore();
@@ -22,8 +20,13 @@
         reservistas.cargarElementos(),
         solicitudes.cargarElementos(),
       ]);
-
-      solicitudes.obtenerReservista();
+      await Promise.all([
+        expedientes.cargarSolicitudesEnExpedienteAlIniciar(),
+        pocs.crearListadoSolicitudes(),
+        reservistas.crearListadoSolicitudes(),
+        solicitudes.cargarReservistaYPocEnSolicitudAlIniciar(),
+      ]);
+      ("Datos cargados");
     },
   };
 </script>

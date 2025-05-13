@@ -1,13 +1,17 @@
 <script>
   import ElementoEnLista from "@/components/ElementoEnLista.vue";
+  import { getListadoConfig } from "@/router/listadoConfig";
 
   export default {
     props: {
       tipoListado: String,
-      config: Object,
+      // config: Object,
     },
     components: {
       ElementoEnLista,
+    },
+    created() {
+      this.config = getListadoConfig(this.tipoListado);
     },
     data() {
       return {
@@ -19,16 +23,12 @@
         this.seleccionFiltro = "";
       },
     },
-    // created() {
-    //   this.config.store().cargarElementos();
-    // },
     computed: {
       elementos() {
         return this.config.store().elementos;
       },
       elementosFiltrados() {
         let elementosFiltrados = this.elementos;
-        console.log("Elementos filtrados:", elementosFiltrados);
         if (this.seleccionFiltro) {
           elementosFiltrados = this.elementos.filter(
             (elemento) => elemento.estado === this.seleccionFiltro
@@ -67,7 +67,6 @@
       >
         <elemento-en-lista
           :tipoListado="tipoListado"
-          :config="config"
           :elemento="elemento"
         ></elemento-en-lista>
       </div>

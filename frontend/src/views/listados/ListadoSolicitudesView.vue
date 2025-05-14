@@ -1,36 +1,27 @@
 <script>
-  import ElementoEnLista from "@/components/ElementoEnLista.vue";
+  import { ESTADOS_SOLICITUD } from "@/constants/app";
+  import { useSolicitudesStore } from "@/stores/solicitudes";
+  import SolicitudEnListadoSolicitudes from "@/components/componentes-en-lista/SolicitudEnListadoSolicitudes.vue";
 
   export default {
-    props: {
-      tipoListado: String,
-      config: Object,
-    },
     components: {
-      ElementoEnLista,
+      SolicitudEnListadoSolicitudes,
     },
     data() {
       return {
         seleccionFiltro: "",
+        ESTADOS_SOLICITUD: ESTADOS_SOLICITUD,
       };
     },
-    watch: {
-      tipoListado() {
-        this.seleccionFiltro = "";
-      },
-    },
-    // created() {
-    //   this.config.store().cargarElementos();
-    // },
     computed: {
-      elementos() {
-        return this.config.store().elementos;
+      solicitudes() {
+        return useSolicitudesStore().elementos;
       },
       elementosFiltrados() {
-        let elementosFiltrados = this.elementos;
+        let elementosFiltrados = this.solicitudes;
         console.log("Elementos filtrados:", elementosFiltrados);
         if (this.seleccionFiltro) {
-          elementosFiltrados = this.elementos.filter(
+          elementosFiltrados = this.solicitudes.filter(
             (elemento) => elemento.estado === this.seleccionFiltro
           );
         }
@@ -39,8 +30,8 @@
     },
     methods: {
       anadirElemento() {
-        this.config.store().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
-        this.$router.push({ path: `/formulario/${this.tipoListado}` });
+        useSolicitudesStore().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
+        this.$router.push({ path: "/formulario/solicitud" });
       },
     },
   };
@@ -48,28 +39,26 @@
 
 <template>
   <div class="container">
-    <h1 class="titulo p-4">Lista de {{ tipoListado }}</h1>
+    <h1 class="titulo p-4">Lista de Solicitudes</h1>
     <button type="button" class="btn btn-success mb-3" @click="anadirElemento">
       Nuevo
     </button>
     <label class="block mb-2 font-bold">Filtrar:</label>
     <select v-model="seleccionFiltro" class="border p-2 rounded mb-4">
       <option value="">Todas</option>
-      <option v-for="estado in config.estados" :key="estado" :value="estado">
+      <option v-for="estado in ESTADOS_SOLICITUD" :key="estado" :value="estado">
         {{ estado }}
       </option>
     </select>
     <ul>
       <div
-        v-for="elemento in elementosFiltrados"
-        :key="elemento._links.self.href"
+        v-for="solicitud in elementosFiltrados"
+        :key="solicitud._links.self.href"
         class="mb-3"
       >
-        <elemento-en-lista
-          :tipoListado="tipoListado"
-          :config="config"
-          :elemento="elemento"
-        ></elemento-en-lista>
+        <solicitud-en-listado-solicitudes
+          :solicitud="solicitud"
+        ></solicitud-en-listado-solicitudes>
       </div>
     </ul>
   </div>

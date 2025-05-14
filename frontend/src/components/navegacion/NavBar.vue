@@ -18,12 +18,12 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/listado/solicitudes">Solicitudes</router-link>
           </li>
-          <!-- <li class="nav-item">
+          <li class="nav-item">
             <router-link class="nav-link" to="/listado/reservistas">Reservistas</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/listado/pocs">POCs</router-link>
-          </li> -->
+          </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/listado/expedientes">Expedientes</router-link>
           </li>

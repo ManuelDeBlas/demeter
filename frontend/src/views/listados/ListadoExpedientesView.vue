@@ -5,13 +5,9 @@
   export default {
     props: {
       tipoListado: String,
-      // config: Object,
     },
     components: {
       ElementoEnLista,
-    },
-    created() {
-      this.config = getListadoConfig(this.tipoListado);
     },
     data() {
       return {
@@ -25,7 +21,7 @@
     },
     computed: {
       elementos() {
-        return this.config.store().elementos;
+        return useExpedientesStore().elementos;
       },
       elementosFiltrados() {
         let elementosFiltrados = this.elementos;

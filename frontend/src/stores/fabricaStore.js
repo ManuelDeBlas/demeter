@@ -1,6 +1,7 @@
+import { API_BASE_URL } from "@/config/app";
 import { defineStore } from "pinia";
 import { getNombreDAO } from "@/utils/utils";
-import { API_HOST, get, post, deleteEntidad, put } from "@/stores/api-service";
+import { get, post, deleteEntidad, put } from "@/utils/api-service";
 
 export function crearStore(nombreColeccion, accionesAdicionales = {}) {
   return defineStore(nombreColeccion, {
@@ -10,7 +11,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
     }),
     actions: {
       async cargarElementos() {
-        await get(API_HOST + "/" + nombreColeccion)
+        await get(API_BASE_URL + "/" + nombreColeccion)
           .then((response) => {
             if (response.data._embedded) {
               const embedded = response.data._embedded;
@@ -35,7 +36,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
         try {
           const respuesta = await post(
             nuevoElemento,
-            API_HOST + "/" + nombreColeccion
+            API_BASE_URL + "/" + nombreColeccion
           );
           if (respuesta.status === 201) {
             const elementoAgregado = {

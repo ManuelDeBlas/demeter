@@ -3,8 +3,6 @@
   import { useExpedientesStore } from "@/stores/expedientes";
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import { mapState, mapActions } from "pinia";
-  // import { getNombreDAO } from "@/utils/utils";
-  import { getListadoConfig } from "@/router/listadoConfig";
 
   export default {
     name: "FormularioExpedienteView",
@@ -12,7 +10,6 @@
     data() {
       return {
         editando: true,
-        config: getListadoConfig("solicitudes"),
         seleccionSolicitud: "",
         antiguoListadoSolicitudes: [],
         nuevoListadoSolicitudes: [],
@@ -184,12 +181,10 @@
                 :key="solicitud._links.self.href"
                 class="d-flex align-items-center justify-content-between mb-3"
               >
-                <elemento-en-lista
-                  :tipoListado="'solicitudes'"
-                  :config="config"
-                  :elemento="solicitud"
+                <solicitud-en-formulario-expediente
+                  :solicitud="solicitud"
                   class="flex-grow-1"
-                ></elemento-en-lista>
+                ></solicitud-en-formulario-expediente>
                 <button
                   type="button"
                   class="btn btn-danger ms-3"

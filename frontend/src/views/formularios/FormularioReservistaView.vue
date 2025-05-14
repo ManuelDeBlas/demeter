@@ -1,4 +1,3 @@
-<!-- filepath: c:\Users\Manuelo\git\demeter\frontend\src\views\FormularioReservistaView.vue -->
 <script>
   import { useReservistasStore } from "@/stores/reservistas";
   import { mapActions } from "pinia";
@@ -15,9 +14,9 @@
     computed: {
       reservistaAbierto: {
         get() {
-          if (!this.store.elementoAbierto) {
+          if (!useReservistasStore().elementoAbierto) {
             this.editando = false;
-            this.store.elementoAbierto = {
+            useReservistasStore().elementoAbierto = {
               nombre: "",
               apellido1: "",
               apellido2: "",
@@ -30,10 +29,10 @@
               subdelegacionDefensa: "",
             };
           }
-          return this.store.elementoAbierto;
+          return useReservistasStore().elementoAbierto;
         },
         set(value) {
-          this.store.elementoAbierto = value;
+          useReservistasStore().elementoAbierto = value;
         },
       },
     },
@@ -63,9 +62,6 @@
         this.mostrarModal = false;
         this.$router.push({ path: "/listado/pocs" });
       },
-    },
-    created() {
-      this.store = useReservistasStore();
     },
   };
 </script>

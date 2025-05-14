@@ -1,5 +1,6 @@
+import { API_BASE_URL } from "@/config/app";
 import { crearStore } from "@/stores/fabricaStore";
-import { API_HOST, get, post, put } from "@/stores/api-service";
+import { get, post, put } from "@/utils/api-service";
 import { useReservistasStore } from "@/stores/reservistas";
 import { usePocsStore } from "@/stores/pocs";
 import { getNombreDAO } from "@/utils/utils";
@@ -28,7 +29,7 @@ export const useSolicitudesStore = crearStore("solicitudes", {
     solicitudParaLaAPI.poc = solicitud.poc._links.self.href;
     const respuesta = await post(
       solicitudParaLaAPI,
-      `${API_HOST}/${getNombreDAO(solicitud.tipoSolicitud)}`
+      `${API_BASE_URL}/${getNombreDAO(solicitud.tipoSolicitud)}`
     );
     solicitud._links = respuesta.data._links;
     this.elementos.unshift(solicitud);

@@ -1,6 +1,7 @@
+import { API_BASE_URL } from "@/config/app";
 import { crearStore } from "@/stores/fabricaStore";
 import { useSolicitudesStore } from "@/stores/solicitudes";
-import { get, patchEntidad, API_HOST } from "@/stores/api-service";
+import { get, patchEntidad } from "@/utils/api-service";
 
 export const useExpedientesStore = crearStore("expedientes", {
   agregarSolicitudAExpediente(solicitud) {
@@ -10,7 +11,7 @@ export const useExpedientesStore = crearStore("expedientes", {
     let urlSolicitud = solicitud._links.self.href.split("/");
     let solicitudId = urlSolicitud[urlSolicitud.length - 1];
     patchEntidad(
-      `${API_HOST}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
+      `${API_BASE_URL}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
     );
     (this.elementoAbierto.solicitudes);
     ("Solicitud a agregar:", solicitud);
@@ -24,7 +25,7 @@ export const useExpedientesStore = crearStore("expedientes", {
     let urlSolicitud = solicitud._links.self.href.split("/");
     let solicitudId = urlSolicitud[urlSolicitud.length - 1];
     patchEntidad(
-      `${API_HOST}/expedientes/${expedienteId}/desasignar-solicitud/${solicitudId}`
+      `${API_BASE_URL}/expedientes/${expedienteId}/desasignar-solicitud/${solicitudId}`
     );
     const indice = this.elementoAbierto.solicitudes.findIndex(
       (e) => e._links.self.href === solicitud._links.self.href

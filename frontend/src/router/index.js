@@ -1,40 +1,51 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import { getListadoConfig } from "@/router/listadoConfig";
 
 const routes = [
   { path: "/", redirect: "/inicio" },
   {
     path: "/inicio",
-    component: () => import("@/views/InicioView.vue"),
     name: "inicio",
+    component: () => import("@/views/InicioView.vue"),
   },
   {
-    path: "/listado/:tipoListado",
-    component: () => import("@/views/ListadoView.vue"),
-    props: (route) => ({
-      tipoListado: route.params.tipoListado,
-      // config: getListadoConfig(route.params.tipoListado),
-    }),
+    path: "/listado/solicitudes",
+    name: "ListadoSolicitudesView",
+    component: () => import("@/views/listados/ListadoSolicitudesView.vue"),
+  },
+  {
+    path: "/listado/reservistas",
+    name: "ListadoReservistasView",
+    component: () => import("@/views/listados/ListadoReservistasView.vue"),
+  },
+  {
+    path: "/listado/pocs",
+    name: "ListadoPocsView",
+    component: () => import("@/views/listados/ListadoPocsView.vue"),
+  },
+  {
+    path: "/listado/expedientes",
+    name: "ListadoExpedientesView",
+    component: () => import("@/views/listados/ListadoExpedientesView.vue"),
   },
     {
-    path: "/formulario/reservistas",
+    path: "/formulario/reservista",
     name: "FormularioReservistaView",
-    component: () => import("@/views/FormularioReservistaView.vue"),
+    component: () => import("@/views/formularios/FormularioReservistaView.vue"),
   },
       {
-    path: "/formulario/pocs",
+    path: "/formulario/poc",
     name: "FormularioPocView",
-    component: () => import("@/views/FormularioPocView.vue"),
+    component: () => import("@/views/formularios/FormularioPocView.vue"),
   },
   {
-    path: "/formulario/solicitudes",
+    path: "/formulario/solicitude",
     name: "FormularioSolicitudView",
-    component: () => import("@/views/FormularioSolicitudView.vue"),
+    component: () => import("@/views/formularios/FormularioSolicitudView.vue"),
   },
   {
-    path: "/formulario/expedientes",
+    path: "/formulario/expediente",
     name: "FormularioExpedienteView",
-    component: () => import("@/views/FormularioExpedienteView.vue"),
+    component: () => import("@/views/formularios/FormularioExpedienteView.vue"),
   },
   {
     path: "/:pathMatch(.*)*",

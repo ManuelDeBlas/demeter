@@ -1,46 +1,20 @@
 <script>
-  import ElementoEnLista from "@/components/ElementoEnLista.vue";
+  import { useReservistasStore } from "@/stores/reservistas";
+  import ReservistaEnListadoReservistas from "@/components/componentes-en-lista/ReservistaEnListadoReservistas.vue";
 
   export default {
-    props: {
-      tipoListado: String,
-      config: Object,
-    },
     components: {
-      ElementoEnLista,
+      ReservistaEnListadoReservistas,
     },
-    data() {
-      return {
-        seleccionFiltro: "",
-      };
-    },
-    watch: {
-      tipoListado() {
-        this.seleccionFiltro = "";
-      },
-    },
-    // created() {
-    //   this.config.store().cargarElementos();
-    // },
     computed: {
       elementos() {
-        return this.config.store().elementos;
-      },
-      elementosFiltrados() {
-        let elementosFiltrados = this.elementos;
-        console.log("Elementos filtrados:", elementosFiltrados);
-        if (this.seleccionFiltro) {
-          elementosFiltrados = this.elementos.filter(
-            (elemento) => elemento.estado === this.seleccionFiltro
-          );
-        }
-        return elementosFiltrados;
+        return useReservistasStore().elementos;
       },
     },
     methods: {
       anadirElemento() {
-        this.config.store().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
-        this.$router.push({ path: `/formulario/${this.tipoListado}` });
+        useReservistasStore().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
+        this.$router.push({ path: "/formulario/reservista" });
       },
     },
   };
@@ -48,28 +22,19 @@
 
 <template>
   <div class="container">
-    <h1 class="titulo p-4">Lista de {{ tipoListado }}</h1>
+    <h1 class="titulo p-4">Lista de Reservistas</h1>
     <button type="button" class="btn btn-success mb-3" @click="anadirElemento">
       Nuevo
     </button>
-    <label class="block mb-2 font-bold">Filtrar:</label>
-    <select v-model="seleccionFiltro" class="border p-2 rounded mb-4">
-      <option value="">Todas</option>
-      <option v-for="estado in config.estados" :key="estado" :value="estado">
-        {{ estado }}
-      </option>
-    </select>
     <ul>
       <div
-        v-for="elemento in elementosFiltrados"
-        :key="elemento._links.self.href"
+        v-for="reservista in elementos"
+        :key="reservista._links.self.href"
         class="mb-3"
       >
-        <elemento-en-lista
-          :tipoListado="tipoListado"
-          :config="config"
-          :elemento="elemento"
-        ></elemento-en-lista>
+        <reservista-en-listado-reservistas
+          :reservista="reservista"
+        ></reservista-en-listado-reservistas>
       </div>
     </ul>
   </div>

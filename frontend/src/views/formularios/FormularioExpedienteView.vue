@@ -1,18 +1,21 @@
 <script>
-  import ElementoEnLista from "@/components/ElementoEnLista.vue";
+  import { ESTADOS_EXPEDIENTE } from "@/constants/app";
+  import { formatearAtributoEnElFrontend } from "@/utils/utils";
+  import SolicitudEnFormularioExpediente from "@/components/componentes-en-formulario/SolicitudEnFormularioExpediente.vue";
   import { useExpedientesStore } from "@/stores/expedientes";
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import { mapState, mapActions } from "pinia";
 
   export default {
     name: "FormularioExpedienteView",
-    components: { ElementoEnLista },
+    components: { SolicitudEnFormularioExpediente },
     data() {
       return {
         editando: true,
         seleccionSolicitud: "",
         antiguoListadoSolicitudes: [],
         nuevoListadoSolicitudes: [],
+        ESTADOS_EXPEDIENTE: ESTADOS_EXPEDIENTE,
       };
     },
     computed: {
@@ -45,6 +48,7 @@
       ...mapState(useSolicitudesStore, { solicitudes: "elementos" }),
     },
     methods: {
+      formatearAtributoEnElFrontend,
       ...mapActions(useExpedientesStore, [
         "anadirElemento",
         "editarElemento",
@@ -101,7 +105,6 @@
 
       // Asignar directamente las solicitudes a nuevoListadoSolicitudes
       this.nuevoListadoSolicitudes = [...this.expedienteAbierto.solicitudes];
-      (this.expedienteAbierto.solicitudes);
     },
   };
 </script>
@@ -110,7 +113,7 @@
   <div
     class="formulario-con-fondo d-flex justify-content-center align-items-center"
   >
-    <div class="card text-center">
+    <div class="card card-ancha text-center">
       <div class="card-header fw-bold fs-5">
         <h2 v-if="editando">Editar expediente</h2>
         <h2 v-else>Crear nuevo expediente</h2>
@@ -143,12 +146,19 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Estado:</label>
-            <input
+            <select
               v-model="expedienteAbierto.estado"
-              type="text"
               class="form-control w-50 mx-auto"
               :disabled="!editando"
-            />
+            >
+              <option
+                v-for="estado in ESTADOS_EXPEDIENTE"
+                :key="estado"
+                :value="estado"
+              >
+                {{ formatearAtributoEnElFrontend(estado) }}
+              </option>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Solicitudes: </label>

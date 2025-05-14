@@ -1,46 +1,20 @@
 <script>
-  import ElementoEnLista from "@/components/ElementoEnLista.vue";
+  import { usePocsStore } from "@/stores/pocs";
+  import PocEnListadoPocs from "@/components/componentes-en-lista/PocEnListadoPocs.vue";
 
   export default {
-    props: {
-      tipoListado: String,
-      config: Object,
-    },
     components: {
-      ElementoEnLista,
+      PocEnListadoPocs,
     },
-    data() {
-      return {
-        seleccionFiltro: "",
-      };
-    },
-    watch: {
-      tipoListado() {
-        this.seleccionFiltro = "";
-      },
-    },
-    // created() {
-    //   this.config.store().cargarElementos();
-    // },
     computed: {
       elementos() {
-        return this.config.store().elementos;
-      },
-      elementosFiltrados() {
-        let elementosFiltrados = this.elementos;
-        console.log("Elementos filtrados:", elementosFiltrados);
-        if (this.seleccionFiltro) {
-          elementosFiltrados = this.elementos.filter(
-            (elemento) => elemento.estado === this.seleccionFiltro
-          );
-        }
-        return elementosFiltrados;
+        return usePocsStore().elementos;
       },
     },
     methods: {
       anadirElemento() {
-        this.config.store().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
-        this.$router.push({ path: `/formulario/${this.tipoListado}` });
+        usePocsStore().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
+        this.$router.push({ path: "/formulario/poc" });
       },
     },
   };
@@ -48,28 +22,21 @@
 
 <template>
   <div class="container">
-    <h1 class="titulo p-4">Lista de {{ tipoListado }}</h1>
-    <button type="button" class="btn btn-success mb-3" @click="anadirElemento">
-      Nuevo
-    </button>
-    <label class="block mb-2 font-bold">Filtrar:</label>
-    <select v-model="seleccionFiltro" class="border p-2 rounded mb-4">
-      <option value="">Todas</option>
-      <option v-for="estado in config.estados" :key="estado" :value="estado">
-        {{ estado }}
-      </option>
-    </select>
+    <h1 class="titulo p-4">Lista de POCs</h1>
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <button type="button" class="btn btn-warning" @click="anadirElemento">
+        Nuevo POC
+      </button>
+    </div>
     <ul>
       <div
-        v-for="elemento in elementosFiltrados"
-        :key="elemento._links.self.href"
+        v-for="poc in elementos"
+        :key="poc._links.self.href"
         class="mb-3"
       >
-        <elemento-en-lista
-          :tipoListado="tipoListado"
-          :config="config"
-          :elemento="elemento"
-        ></elemento-en-lista>
+        <poc-en-listado-pocs
+          :poc="poc"
+        ></poc-en-listado-pocs>
       </div>
     </ul>
   </div>

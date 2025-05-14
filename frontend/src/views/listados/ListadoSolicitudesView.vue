@@ -1,5 +1,6 @@
 <script>
   import { ESTADOS_SOLICITUD } from "@/constants/app";
+  import { formatearAtributoEnElFrontend } from "@/utils/utils";
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import SolicitudEnListadoSolicitudes from "@/components/componentes-en-lista/SolicitudEnListadoSolicitudes.vue";
 
@@ -19,7 +20,6 @@
       },
       elementosFiltrados() {
         let elementosFiltrados = this.solicitudes;
-        console.log("Elementos filtrados:", elementosFiltrados);
         if (this.seleccionFiltro) {
           elementosFiltrados = this.solicitudes.filter(
             (elemento) => elemento.estado === this.seleccionFiltro
@@ -29,6 +29,7 @@
       },
     },
     methods: {
+      formatearAtributoEnElFrontend,
       anadirElemento() {
         useSolicitudesStore().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
         this.$router.push({ path: "/formulario/solicitud" });
@@ -40,16 +41,22 @@
 <template>
   <div class="container">
     <h1 class="titulo p-4">Lista de Solicitudes</h1>
-    <button type="button" class="btn btn-success mb-3" @click="anadirElemento">
-      Nuevo
-    </button>
-    <label class="block mb-2 font-bold">Filtrar:</label>
-    <select v-model="seleccionFiltro" class="border p-2 rounded mb-4">
-      <option value="">Todas</option>
-      <option v-for="estado in ESTADOS_SOLICITUD" :key="estado" :value="estado">
-        {{ estado }}
-      </option>
-    </select>
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <button type="button" class="btn btn-warning" @click="anadirElemento">
+        Nueva Solicitud
+      </button>
+      <label class="mb-0 fw-bold">Filtrar:</label>
+      <select v-model="seleccionFiltro" class="form-select w-auto">
+        <option value="">Todas</option>
+        <option
+          v-for="estado in ESTADOS_SOLICITUD"
+          :key="estado"
+          :value="estado"
+        >
+          {{ formatearAtributoEnElFrontend(estado) }}
+        </option>
+      </select>
+    </div>
     <ul>
       <div
         v-for="solicitud in elementosFiltrados"

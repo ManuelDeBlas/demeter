@@ -1,6 +1,6 @@
 <script>
   import { useSolicitudesStore } from "@/stores/solicitudes";
-  import { formatearAtributoEnElFront } from "@/utils/utils";
+  import { formatearAtributoEnElFrontend } from "@/utils/utils";
 
   export default {
     props: ["solicitud"],
@@ -9,7 +9,7 @@
         useSolicitudesStore().elementoAbierto = this.solicitud; // Guarda el elemento en el store para editarlo
         this.$router.push({ name: "FormularioSolicitudView" });
       },
-      formatearAtributoEnElFront,
+      formatearAtributoEnElFrontend,
     },
   };
 </script>
@@ -22,18 +22,19 @@
         <div class="row justify-content-between align-items-center">
           <div class="col-md-6 text-start">
             <div class="mb-0">
-              DNI:
-              <strong>{{ solicitud.reservista.dni }}&nbsp; </strong> &nbsp;
-              {{ solicitud.reservista.empleo }} &nbsp;
-              {{ solicitud.reservista.apellido1 }} &nbsp;
-              {{ solicitud.reservista.apellido2 }}
-              &nbsp;
-              {{ solicitud.reservista.nombre }}&nbsp; Estado:
+              DNI: {{ solicitud.reservista.dni }}<br />
+              <strong>
+                {{ solicitud.reservista.empleo }}
+                {{ solicitud.reservista.nombre }}
+                {{ solicitud.reservista.apellido1 }}
+                {{ solicitud.reservista.apellido2 }}</strong
+              ><br />
+              Estado:
               <strong>{{
-                formatearAtributoEnElFront(solicitud.estado)
-              }}</strong>
-              Tipo:
-              {{ formatearAtributoEnElFront(solicitud.tipoSolicitud) }}
+                formatearAtributoEnElFrontend(solicitud.estado)
+              }}</strong
+              ><br />
+              Tipo: {{ formatearAtributoEnElFrontend(solicitud.tipoSolicitud) }}
             </div>
           </div>
           <div class="col-md-6 text-end">

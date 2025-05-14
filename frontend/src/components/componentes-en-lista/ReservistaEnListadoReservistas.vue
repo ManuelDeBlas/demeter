@@ -5,7 +5,7 @@
     props: ["reservista"],
     methods: {
       abrirElemento() {
-        useReservistasStore().elementoAbierto = this.elemento; // Guarda el elemento en el store para editarlo
+        useReservistasStore().elementoAbierto = this.reservista; // Guarda el elemento en el store para editarlo
         this.$router.push({ path: "/formulario/reservista" });
       },
     },
@@ -20,10 +20,13 @@
         <div class="row justify-content-between align-items-center">
           <div class="col-md-6 text-start">
             <div class="mb-0">
-              DNI: <strong>{{ reservista.dni }}&nbsp; </strong>
-              {{ reservista.empleo }}&nbsp; {{ reservista.apellido1 }}&nbsp;
-              {{ reservista.apellido2 }},&nbsp;
-              {{ reservista.nombre }}
+              <strong>
+                {{ reservista.empleo }}
+                {{ reservista.nombre }}
+                {{ reservista.apellido1 }}
+                {{ reservista.apellido2 }}</strong
+              ><br />
+              DNI: {{ reservista.dni }}<br />
             </div>
           </div>
           <div class="col-md-6 text-end">

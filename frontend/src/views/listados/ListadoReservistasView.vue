@@ -23,9 +23,11 @@
 <template>
   <div class="container">
     <h1 class="titulo p-4">Lista de Reservistas</h1>
-    <button type="button" class="btn btn-success mb-3" @click="anadirElemento">
-      Nuevo
-    </button>
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <button type="button" class="btn btn-warning" @click="anadirElemento">
+        Nuevo Reservista
+      </button>
+    </div>
     <ul>
       <div
         v-for="reservista in elementos"

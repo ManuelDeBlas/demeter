@@ -53,12 +53,12 @@
       },
       reservistaFormateado() {
         return this.solicitudAbierta.reservista
-          ? `${this.solicitudAbierta.reservista.dni} ${this.solicitudAbierta.reservista.empleo} ${this.solicitudAbierta.reservista.apellido1} ${this.solicitudAbierta.reservista.apellido2}, ${this.solicitudAbierta.reservista.nombre}`
+          ? `${this.solicitudAbierta.reservista.dni} ${this.solicitudAbierta.reservista.empleo} ${this.solicitudAbierta.reservista.nombre} ${this.solicitudAbierta.reservista.apellido1} ${this.solicitudAbierta.reservista.apellido2}`
           : "";
       },
       pocFormateado() {
         return this.solicitudAbierta.poc
-          ? `${this.solicitudAbierta.poc.empleo} ${this.solicitudAbierta.poc.apellido1} ${this.solicitudAbierta.poc.apellido2}, ${this.solicitudAbierta.poc.nombre}`
+          ? `${this.solicitudAbierta.poc.empleo} ${this.solicitudAbierta.poc.nombre} ${this.solicitudAbierta.poc.apellido1} ${this.solicitudAbierta.poc.apellido2}`
           : "";
       },
     },
@@ -89,12 +89,10 @@
             await this.putSolicitud(this.solicitudAbierta);
             this.mensajeModal = `Solicitud editada correctamente`;
           } else {
-                        (
-              "Solicitud enviada en el store desde el formulario:",
-              this.solicitudAbierta
-            );
+            "Solicitud enviada en el store desde el formulario:",
+              this.solicitudAbierta;
             const respuesta = await this.postSolicitud(this.solicitudAbierta);
-            ("Respuesta del servidor:", respuesta);
+            "Respuesta del servidor:", respuesta;
 
             this.mensajeModal = `Solicitud añadida correctamente`;
           }
@@ -126,7 +124,7 @@
   <div
     class="formulario-con-fondo d-flex justify-content-center align-items-center"
   >
-    <div class="card text-center">
+    <div class="card text-center card-ancha">
       <div class="card-header fw-bold fs-5">
         <h2 v-if="editando">Editar solicitud</h2>
         <h2 v-else>Crear nueva solicitud</h2>
@@ -410,10 +408,3 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-  .card {
-    margin: 20px auto;
-    max-width: 600px;
-  }
-</style>

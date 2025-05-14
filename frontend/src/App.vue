@@ -26,7 +26,6 @@
         reservistas.crearListadoSolicitudes(),
         solicitudes.cargarReservistaYPocEnSolicitudAlIniciar(),
       ]);
-      ("Datos cargados");
     },
   };
 </script>
@@ -100,4 +99,9 @@
     min-height: 100vh;
     padding: 2rem;
   }
+
+  .card-ancha {
+  width: 100%;
+  max-width: 900px;
+}
 </style>

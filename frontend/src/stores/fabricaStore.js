@@ -19,7 +19,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
             }
           })
           .catch((error) => {
-            (error);
+            error;
           });
       },
       recuperarObjetoDelStore(href) {
@@ -50,29 +50,18 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
           console.error("Error: ", error);
         }
       },
-      async eliminarElemento(hrefAEliminar) {
-        (
-          `En el store ${nombreColeccion} recibo este href a eliminar: `,
-          hrefAEliminar
-        );
+      async eliminarElemento(objeto) {
+        const hrefAEliminar = objeto._links.self.href;
         const respuesta = await deleteEntidad(hrefAEliminar);
         const indice = this.elementos.findIndex(
           (elemento) => elemento._links.self.href === hrefAEliminar
-        );
-        (
-          `En el store ${nombreColeccion} el índice del elemento a eliminar es: ${indice}`
         );
         if (indice !== -1) {
           this.elementos.splice(indice, 1);
         }
         return respuesta;
       },
-      editarElemento(elementoEditado) {
-        return "Esta función se implementará en el futuro";
-        (
-          `En el store ${nombreColeccion} recibo este elemento editado: `,
-          elementoEditado
-        );
+      async editarElemento(elementoEditado) {
         const indice = this.elementos.findIndex(
           (elemento) =>
             elemento._links.self.href === elementoEditado._links.self.href
@@ -80,6 +69,13 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
         if (indice !== -1) {
           this.elementos[indice] = elementoEditado;
         }
+        await put(elementoEditado, elementoEditado._links.self.href)
+          .then((response) => {
+            return response;
+          })
+          .catch((error) => {
+            return error;
+          });
       },
       ...accionesAdicionales,
     },

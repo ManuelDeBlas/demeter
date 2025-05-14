@@ -46,11 +46,11 @@
         try {
           if (this.editando) {
             let respuesta = await this.editarElemento(this.reservistaAbierto);
-            this.mensajeModal = `Solicitud editada correctamente`;
+            this.mensajeModal = `Reservista editado correctamente`;
           } else {
-            (this.reservistaAbierto);
+            this.reservistaAbierto;
             let respuesta = await this.anadirElemento(this.reservistaAbierto);
-            this.mensajeModal = `Solicitud añadida correctamente`;
+            this.mensajeModal = `Reservista añadido correctamente`;
           }
         } catch (error) {
           this.mensajeModal = `Error al procesar la solicitud: ${error.message}`;
@@ -60,112 +60,124 @@
       },
       cerrarModal() {
         this.mostrarModal = false;
-        this.$router.push({ path: "/listado/pocs" });
+        this.$router.push({ path: "/listado/reservistas" });
       },
     },
   };
 </script>
 
 <template>
-  <div class="card text-center">
-    <div class="card-header fw-bold fs-5">
-      <h2 v-if="editando">Editar reservista</h2>
-      <h2 v-else>Crear nuevo reservista</h2>
-    </div>
-    <div class="card-body">
-      <form @submit.prevent="enviarFormulario">
-        <div class="mb-3">
-          <label class="form-label">Nombre:</label>
-          <input
-            v-model="reservistaAbierto.nombre"
-            type="text"
-            class="form-control w-50 mx-auto"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Primer Apellido:</label>
-          <input
-            v-model="reservistaAbierto.apellido1"
-            type="text"
-            class="form-control w-50 mx-auto"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Segundo Apellido:</label>
-          <input
-            v-model="reservistaAbierto.apellido2"
-            type="text"
-            class="form-control w-50 mx-auto"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Empleo:</label>
-          <input
-            v-model="reservistaAbierto.empleo"
-            type="text"
-            class="form-control w-50 mx-auto"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">DNI:</label>
-          <input
-            v-model="reservistaAbierto.dni"
-            type="text"
-            class="form-control w-50 mx-auto"
-            required
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Teléfono Particular:</label>
-          <input
-            v-model="reservistaAbierto.telefonoParticular"
-            type="text"
-            class="form-control w-50 mx-auto"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Fecha Fin Compromiso:</label>
-          <input
-            v-model="reservistaAbierto.fechaFinCompromiso"
-            type="date"
-            class="form-control w-50 mx-auto"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Días Consumidos:</label>
-          <input
-            v-model.number="reservistaAbierto.diasConsumidos"
-            type="number"
-            class="form-control w-50 mx-auto"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Localidad de Residencia:</label>
-          <input
-            v-model="reservistaAbierto.localidadResidencia"
-            type="text"
-            class="form-control w-50 mx-auto"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Subdelegación de Defensa:</label>
-          <input
-            v-model="reservistaAbierto.subdelegacionDefensa"
-            type="text"
-            class="form-control w-50 mx-auto"
-          />
-        </div>
-        <div class="d-flex justify-content-between">
-          <button v-if="editando" type="submit" class="btn btn-primary">
-            Guardar cambios
-          </button>
-          <button v-else type="submit" class="btn btn-success">
-            Crear reservista
-          </button>
-        </div>
-      </form>
+  <div
+    class="formulario-con-fondo d-flex justify-content-center align-items-center"
+  >
+    <div class="card text-center card-ancha">
+      <div class="card-header fw-bold fs-5">
+        <h2 v-if="editando">Editar reservista</h2>
+        <h2 v-else>Crear nuevo reservista</h2>
+      </div>
+      <div class="card-body">
+        <form @submit.prevent="enviarFormulario">
+          <div class="mb-3">
+            <label class="form-label">Nombre:</label>
+            <input
+              v-model="reservistaAbierto.nombre"
+              type="text"
+              class="form-control w-50 mx-auto"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Primer Apellido:</label>
+            <input
+              v-model="reservistaAbierto.apellido1"
+              type="text"
+              class="form-control w-50 mx-auto"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Segundo Apellido:</label>
+            <input
+              v-model="reservistaAbierto.apellido2"
+              type="text"
+              class="form-control w-50 mx-auto"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Empleo:</label>
+            <input
+              v-model="reservistaAbierto.empleo"
+              type="text"
+              class="form-control w-50 mx-auto"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">DNI:</label>
+            <input
+              v-model="reservistaAbierto.dni"
+              type="text"
+              class="form-control w-50 mx-auto"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Teléfono Particular:</label>
+            <input
+              v-model="reservistaAbierto.telefonoParticular"
+              type="text"
+              class="form-control w-50 mx-auto"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Fecha Fin Compromiso:</label>
+            <input
+              v-model="reservistaAbierto.fechaFinCompromiso"
+              type="date"
+              class="form-control w-50 mx-auto"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Días Consumidos:</label>
+            <input
+              v-model.number="reservistaAbierto.diasConsumidos"
+              type="number"
+              class="form-control w-50 mx-auto"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Localidad de Residencia:</label>
+            <input
+              v-model="reservistaAbierto.localidadResidencia"
+              type="text"
+              class="form-control w-50 mx-auto"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Subdelegación de Defensa:</label>
+            <input
+              v-model="reservistaAbierto.subdelegacionDefensa"
+              type="text"
+              class="form-control w-50 mx-auto"
+            />
+          </div>
+          <div class="d-flex justify-content-between">
+            <button v-if="editando" type="submit" class="btn btn-primary">
+              Guardar cambios
+            </button>
+            <button v-else type="submit" class="btn btn-success">
+              Crear reservista
+            </button>
+            <!-- <button
+              v-if="editando"
+              type="button"
+              class="btn btn-danger mt-2"
+              @click="eliminarElemento(this.reservistaAbierto)"
+            >
+              Eliminar Reservista
+            </button> -->
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 

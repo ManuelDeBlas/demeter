@@ -7,7 +7,7 @@ export function getNombreDAO(tipoSolicitud) {
   return tiposSolicitudes[tipoSolicitud];
 }
 
-export function formatearAtributoEnElFront(atributo) {
+export function formatearAtributoEnElFrontend(atributo) {
   const nombresFront = {
     PS: "Prestación servicio unidad",
     FC: "Formación continuada",

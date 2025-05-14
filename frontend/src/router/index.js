@@ -38,7 +38,7 @@ const routes = [
     component: () => import("@/views/formularios/FormularioPocView.vue"),
   },
   {
-    path: "/formulario/solicitude",
+    path: "/formulario/solicitud",
     name: "FormularioSolicitudView",
     component: () => import("@/views/formularios/FormularioSolicitudView.vue"),
   },

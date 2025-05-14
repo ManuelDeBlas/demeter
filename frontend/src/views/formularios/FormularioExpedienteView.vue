@@ -1,10 +1,10 @@
 <script>
   import ElementoEnLista from "@/components/ElementoEnLista.vue";
-  import { useExpedientesStore, getNombreDAO } from "@/stores/expedientes";
+  import { useExpedientesStore } from "@/stores/expedientes";
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import { mapState, mapActions } from "pinia";
+  // import { getNombreDAO } from "@/utils/utils";
   import { getListadoConfig } from "@/router/listadoConfig";
-  import { get } from "@/stores/api-service.js";
 
   export default {
     name: "FormularioExpedienteView",
@@ -38,6 +38,9 @@
             !this.expedienteAbierto.solicitudes.some(
               (es) => es._links.self.href === s._links.self.href
             ) &&
+            !this.nuevoListadoSolicitudes.some(
+              (ns) => ns._links.self.href === s._links.self.href
+            ) &&
             s.estado === "PENDIENTE_EVALUACION" &&
             s.tipoSolicitud === this.expedienteAbierto.tipoSolicitud
         );
@@ -63,8 +66,6 @@
         } else {
           this.anadirElemento(this.expedienteAbierto);
         }
-        console.log(this.nuevoListadoSolicitudes);
-        console.log(this.antiguoListadoSolicitudes);
         // Envío de los cambios realizados a la API
         this.antiguoListadoSolicitudes
           .filter(
@@ -98,13 +99,12 @@
       },
     },
     async created() {
-      await useExpedientesStore().cargarSolicitudesEnExpediente();
       // Crear una copia independiente para antiguoListadoSolicitudes
       this.antiguoListadoSolicitudes = [...this.expedienteAbierto.solicitudes];
 
       // Asignar directamente las solicitudes a nuevoListadoSolicitudes
       this.nuevoListadoSolicitudes = [...this.expedienteAbierto.solicitudes];
-      console.log(this.expedienteAbierto.solicitudes);
+      (this.expedienteAbierto.solicitudes);
     },
   };
 </script>

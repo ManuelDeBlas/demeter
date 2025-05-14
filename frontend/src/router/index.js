@@ -13,7 +13,7 @@ const routes = [
     component: () => import("@/views/ListadoView.vue"),
     props: (route) => ({
       tipoListado: route.params.tipoListado,
-      config: getListadoConfig(route.params.tipoListado),
+      // config: getListadoConfig(route.params.tipoListado),
     }),
   },
     {

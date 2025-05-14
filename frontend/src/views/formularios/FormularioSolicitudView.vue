@@ -4,7 +4,6 @@
   import { usePocsStore } from "@/stores/pocs";
   import { useUcosStore } from "@/stores/ucos";
   import { mapActions } from "pinia";
-  import { get } from "@/stores/api-service";
 
   export default {
     name: "FormularioSolicitudView",
@@ -24,9 +23,9 @@
     computed: {
       solicitudAbierta: {
         get() {
-          if (!this.store.elementoAbierto) {
+          if (!useSolicitudesStore().elementoAbierto) {
             this.editando = false;
-            this.store.elementoAbierto = {
+            useSolicitudesStore().elementoAbierto = {
               nombreUco: "",
               ciu: "",
               reservista: null,
@@ -37,10 +36,10 @@
               estado: "PENDIENTE_EVALUACION",
             };
           }
-          return this.store.elementoAbierto;
+          return useSolicitudesStore().elementoAbierto;
         },
         set(value) {
-          this.store.elementoAbierto = value;
+          useSolicitudesStore().elementoAbierto = value;
         },
       },
       reservistas() {
@@ -53,22 +52,21 @@
         return useUcosStore().ucos;
       },
       reservistaFormateado() {
-        return this.reservista
-          ? `${this.reservista.dni} ${this.reservista.empleo} ${this.reservista.apellido1} ${this.reservista.apellido2}, ${this.reservista.nombre}`
+        return this.solicitudAbierta.reservista
+          ? `${this.solicitudAbierta.reservista.dni} ${this.solicitudAbierta.reservista.empleo} ${this.solicitudAbierta.reservista.apellido1} ${this.solicitudAbierta.reservista.apellido2}, ${this.solicitudAbierta.reservista.nombre}`
           : "";
       },
       pocFormateado() {
-        return this.poc
-          ? `${this.poc.empleo} ${this.poc.apellido1} ${this.poc.apellido2}, ${this.poc.nombre}`
+        return this.solicitudAbierta.poc
+          ? `${this.solicitudAbierta.poc.empleo} ${this.solicitudAbierta.poc.apellido1} ${this.solicitudAbierta.poc.apellido2}, ${this.solicitudAbierta.poc.nombre}`
           : "";
       },
     },
     methods: {
       ...mapActions(useSolicitudesStore, [
-        "anadirElemento",
-        "editarElemento",
+        "putSolicitud",
         "eliminarElemento",
-        "guardarSolicitudEnAPI",
+        "postSolicitud",
       ]),
       seleccionarUco(uco) {
         this.solicitudAbierta.nombreUco = uco.nombreUco;
@@ -77,36 +75,27 @@
       },
       seleccionarReservista(reservista) {
         this.reservista = reservista;
-        this.solicitudAbierta.reservista = `/reservistas/${reservista._links.self.href
-          .split("/")
-          .pop()}`;
+        this.solicitudAbierta.reservista = reservista;
         this.mostrarModalReservistas = false;
       },
       seleccionarPoc(poc) {
         this.poc = poc;
-        this.solicitudAbierta.poc = `/pocs/${poc._links.self.href
-          .split("/")
-          .pop()}`;
+        this.solicitudAbierta.poc = poc;
         this.mostrarModalPocs = false;
       },
       async enviarFormulario() {
         try {
           if (this.editando) {
-            await this.editarElemento(this.solicitudAbierta);
-            await useSolicitudesStore().cargarElementos();
+            await this.putSolicitud(this.solicitudAbierta);
             this.mensajeModal = `Solicitud editada correctamente`;
           } else {
-            await this.guardarSolicitudEnAPI(
-              this.solicitudAbierta,
-              this.reservista,
-              this.poc
-            );
-            this.solicitudAbierta.poc = this.poc;
-            this.solicitudAbierta.reservista = this.reservista;
-            console.log(
-              "Solicitud guardada en el store desde el formulario:",
+                        (
+              "Solicitud enviada en el store desde el formulario:",
               this.solicitudAbierta
             );
+            const respuesta = await this.postSolicitud(this.solicitudAbierta);
+            ("Respuesta del servidor:", respuesta);
+
             this.mensajeModal = `Solicitud añadida correctamente`;
           }
         } catch (error) {
@@ -129,17 +118,6 @@
         this.mostrarModal = false;
         this.$router.push({ path: "/listado/solicitudes" });
       },
-    },
-    async created() {
-      this.store = useSolicitudesStore();
-      if (this.editando == true) {
-        const reservistaObj = await get(
-          this.solicitudAbierta._links.reservista.href
-        );
-        this.reservista = reservistaObj.data;
-        const pocObj = await get(this.solicitudAbierta._links.poc.href);
-        this.poc = pocObj.data;
-      }
     },
   };
 </script>

@@ -49,7 +49,7 @@
             let respuesta = await this.editarElemento(this.reservistaAbierto);
             this.mensajeModal = `Solicitud editada correctamente`;
           } else {
-            console.log(this.reservistaAbierto);
+            (this.reservistaAbierto);
             let respuesta = await this.anadirElemento(this.reservistaAbierto);
             this.mensajeModal = `Solicitud añadida correctamente`;
           }

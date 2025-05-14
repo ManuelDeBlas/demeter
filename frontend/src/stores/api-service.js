@@ -17,7 +17,6 @@ function llamadaAPI(method, body, path) {
 }
 
 export function get(url) {
-  console.log("En apiservice ", url);
   return llamadaAPI("get", null, url);
 }
 
@@ -25,17 +24,14 @@ export function post(data, url) {
   return llamadaAPI("post", data, url);
 }
 
-export function deleteEntidad(entidad) {
-  console.log("En apiservice, antes de delete: ", entidad);
-  return llamadaAPI("delete", null, entidad);
+export function deleteEntidad(url) {
+  return llamadaAPI("delete", null, url);
 }
 
-export function putEntidad(entidad, data) {
-  console.log("En apiservice, antes de put: ", entidad);
-  return llamadaAPI("put", data, entidad);
+export function put(objeto, url) {
+  return llamadaAPI("put", objeto, url);
 }
 
-export function patchEntidad(entidad, data) {
-  console.log("En apiservice, antes de patch: ", entidad);
-  return llamadaAPI("patch", data, entidad);
+export function patchEntidad(url, data) {
+  return llamadaAPI("patch", data, url);
 }

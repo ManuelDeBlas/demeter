@@ -1,7 +1,8 @@
 package es.mde.entidades;
 
 import java.util.List;
-import es.mde.secres.ReservistaImpl;
+
+import es.mde.secres.Reservista;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +24,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "RESERVISTAS")
-public class ReservistaConId extends ReservistaImpl {
+public class ReservistaConId extends Reservista {
 
   /**
    * Identificador único del reservista.
@@ -33,11 +34,11 @@ public class ReservistaConId extends ReservistaImpl {
   @Column(unique = true)
   private Long id;
 
-  /**
-   * Lista de solicitudes asociadas al reservista.
-   */
-  @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "reservista")
-  private List<SolicitudConId> solicitudesConId;
+//  /**
+//   * Lista de solicitudes asociadas al reservista.
+//   */
+//  @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "reservista")
+//  private List<SolicitudConId> solicitudesConId;
 
   /**
    * Obtiene el identificador único del reservista.
@@ -57,23 +58,23 @@ public class ReservistaConId extends ReservistaImpl {
     this.id = id;
   }
 
-  /**
-   * Obtiene la lista de solicitudes asociadas al reservista.
-   * 
-   * @return la lista de solicitudes.
-   */
-  public List<SolicitudConId> getSolicitudesConId() {
-    return solicitudesConId;
-  }
-
-  /**
-   * Establece la lista de solicitudes asociadas al reservista.
-   * 
-   * @param solicitudesConId la lista de solicitudes a establecer.
-   */
-  public void setSolicitudesConId(List<SolicitudConId> solicitudesConId) {
-    this.solicitudesConId = solicitudesConId;
-  }
+//  /**
+//   * Obtiene la lista de solicitudes asociadas al reservista.
+//   * 
+//   * @return la lista de solicitudes.
+//   */
+//  public List<SolicitudConId> getSolicitudesConId() {
+//    return solicitudesConId;
+//  }
+//
+//  /**
+//   * Establece la lista de solicitudes asociadas al reservista.
+//   * 
+//   * @param solicitudesConId la lista de solicitudes a establecer.
+//   */
+//  public void setSolicitudesConId(List<SolicitudConId> solicitudesConId) {
+//    this.solicitudesConId = solicitudesConId;
+//  }
 
   /**
    * Constructor por defecto.

@@ -27,7 +27,6 @@ import jakarta.persistence.Transient;
 @Table(name = "SOLICITUDES")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "TIPO")
-//@EntityListeners(SolicitudListener.class)
 public abstract class SolicitudConId extends SolicitudImpl {
 
   /**
@@ -37,19 +36,17 @@ public abstract class SolicitudConId extends SolicitudImpl {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
-  @ManyToOne(targetEntity = PocConId.class)
-  private PocConId poc;
-  @ManyToOne(targetEntity = ReservistaConId.class)
-  private ReservistaConId reservista;
-  @ManyToOne(targetEntity = ExpedienteConId.class)
-  private ExpedienteConId expediente;
-  @Transient
-  private Estados estadoAnterior;
+//  @ManyToOne(targetEntity = ReservistaConId.class)
+//  private ReservistaConId reservista;
+//  @ManyToOne(targetEntity = ExpedienteConId.class)
+//  private ExpedienteConId expediente;
+//  @Transient
+//  private Estados estadoAnterior;
   
-  @PostLoad
-  public void guardarEstadoPrevio() {
-    this.estadoAnterior = this.getEstado();
-  }
+//  @PostLoad
+//  public void guardarEstadoPrevio() {
+//    this.estadoAnterior = this.getEstado();
+//  }
 
   public Long getId() {
     return id;
@@ -64,45 +61,28 @@ public abstract class SolicitudConId extends SolicitudImpl {
     this.id = id;
   }
 
-  /**
-   * Obtiene el estado actual de la solicitud.
-   * 
-   * @return el estado de la solicitud.
-   */
-  public PocConId getPoc() {
-    return poc;
-  }
+//  public ReservistaConId getReservista() {
+//    return reservista;
+//  }
+//
+//  public void setReservista(ReservistaConId reservista) {
+//    this.reservista = reservista;
+//  }
+//
+//  public ExpedienteConId getExpediente() {
+//    return expediente;
+//  }
+//
+//  /**
+//   * Establece el expediente al que pertenece la solicitud.
+//   * 
+//   * @param expediente el expediente a asociar.
+//   */
+//  public void setExpediente(ExpedienteConId expediente) {
+//    this.expediente = expediente;
+//  }
 
-  /**
-   * Establece el estado actual de la solicitud.
-   * 
-   * @param estado el estado a establecer.
-   */
-  public void setPoc(PocConId poc) {
-    this.poc = poc;
-  }
-
-  public ReservistaConId getReservista() {
-    return reservista;
-  }
-
-  public void setReservista(ReservistaConId reservista) {
-    this.reservista = reservista;
-  }
-
-  public ExpedienteConId getExpediente() {
-    return expediente;
-  }
-
-  /**
-   * Establece el expediente al que pertenece la solicitud.
-   * 
-   * @param expediente el expediente a asociar.
-   */
-  public void setExpediente(ExpedienteConId expediente) {
-    this.expediente = expediente;
-  }
-
+  // TODO no guarda el reservista
   /**
    * Constructor por defecto.
    */

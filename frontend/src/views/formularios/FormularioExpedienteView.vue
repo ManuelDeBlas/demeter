@@ -127,7 +127,7 @@
               type="text"
               class="form-control w-50 mx-auto"
               :disabled="editando"
-              pattern="^T64(PS|EX|FC)A(ENE|FEB|MAR|ABR|MAY|JUN|JUL|AGO|SEP|OCT|NOV|DIC)25[1-9][0-9]*$"
+              pattern="^T64(PS|EX|FC)A(ENE|FEB|MAR|ABR|MAY|JUN|JUL|AGO|SEP|OCT|NOV|DIC)([0-9]{2})[1-9][0-9]*$"
               title="Formato: T64 seguido de PS, EX o FC, luego A, el mes (ej. ENE), el año (25) y el número de expediente que corresponda (ej. 1). Ejemplo completo: T64PSAENE251"
               required
             />

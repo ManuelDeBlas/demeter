@@ -19,9 +19,13 @@
 			<basic name="telefonoPoc" />
 			<basic name="cargoEnLaUnidadPoc" />
 			<many-to-one name="reservista"
-				target-entity="es.mde.entidades.ReservistaConId" />
+				target-entity="es.mde.entidades.ReservistaConId">
+				<join-column name="reservista_id" />
+			</many-to-one>
 			<many-to-one name="expediente"
-				target-entity="es.mde.entidades.ExpedienteConId" />
+				target-entity="es.mde.entidades.ExpedienteConId">
+				<join-column name="expediente_id" />
+			</many-to-one>
 		</attributes>
 
 	</mapped-superclass>

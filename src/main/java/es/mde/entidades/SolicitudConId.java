@@ -1,14 +1,17 @@
 package es.mde.entidades;
 
+import es.mde.secres.Expediente;
 import es.mde.secres.SolicitudImpl;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.Table;
@@ -36,10 +39,13 @@ public abstract class SolicitudConId extends SolicitudImpl {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
-//  @ManyToOne(targetEntity = ReservistaConId.class)
-//  private ReservistaConId reservista;
-//  @ManyToOne(targetEntity = ExpedienteConId.class)
-//  private ExpedienteConId expediente;
+  
+  @ManyToOne(targetEntity = ReservistaConId.class, fetch = FetchType.LAZY)
+  @JoinColumn(name = "RESERVISTA")
+  private ReservistaConId reservista;
+  @ManyToOne(targetEntity = ExpedienteConId.class, fetch = FetchType.LAZY)
+  @JoinColumn(name = "EXPEDIENTE")
+  private ExpedienteConId expediente;
 //  @Transient
 //  private Estados estadoAnterior;
   
@@ -61,28 +67,27 @@ public abstract class SolicitudConId extends SolicitudImpl {
     this.id = id;
   }
 
-//  public ReservistaConId getReservista() {
-//    return reservista;
-//  }
-//
-//  public void setReservista(ReservistaConId reservista) {
-//    this.reservista = reservista;
-//  }
-//
-//  public ExpedienteConId getExpediente() {
-//    return expediente;
-//  }
-//
-//  /**
-//   * Establece el expediente al que pertenece la solicitud.
-//   * 
-//   * @param expediente el expediente a asociar.
-//   */
-//  public void setExpediente(ExpedienteConId expediente) {
-//    this.expediente = expediente;
-//  }
+  public ReservistaConId getReservista() {
+    return reservista;
+  }
 
-  // TODO no guarda el reservista
+  public void setReservista(ReservistaConId reservista) {
+    this.reservista = reservista;
+  }
+
+  public ExpedienteConId getExpediente() {
+    return expediente;
+  }
+
+  /**
+   * Establece el expediente al que pertenece la solicitud.
+   * 
+   * @param expediente el expediente a asociar.
+   */
+  public void setExpediente(ExpedienteConId expediente) {
+    this.expediente = expediente;
+  }
+
   /**
    * Constructor por defecto.
    */

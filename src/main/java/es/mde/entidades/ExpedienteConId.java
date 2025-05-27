@@ -68,5 +68,22 @@ public class ExpedienteConId extends Expediente {
 
   public ExpedienteConId() {
   }
+  
+  @Override
+  @OneToMany(targetEntity = SolicitudConId.class)
+  public Collection<Solicitud> getSolicitudes() {
+    return super.getSolicitudes();
+}
+
+  
+  public void addSolicitudConId(SolicitudConId solicitud) {
+    getSolicitudes().add(solicitud);
+    solicitud.setExpediente(this);
+  }
+
+  public void removeSolicitud(SolicitudConId solicitud) {
+    getSolicitudes().remove(solicitud);
+    solicitud.setExpediente(null);
+  }
 
 }

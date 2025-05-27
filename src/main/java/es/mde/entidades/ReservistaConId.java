@@ -1,11 +1,14 @@
 package es.mde.entidades;
 
+import java.util.Collection;
 import es.mde.secres.Reservista;
+import es.mde.secres.Solicitud;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -55,14 +58,16 @@ public class ReservistaConId extends Reservista {
     this.id = id;
   }
 
-//  /**
-//   * Obtiene la lista de solicitudes asociadas al reservista.
-//   * 
-//   * @return la lista de solicitudes.
-//   */
-//  public List<SolicitudConId> getSolicitudesConId() {
-//    return solicitudesConId;
-//  }
+  /**
+   * Obtiene la lista de solicitudes asociadas al reservista.
+   * 
+   * @return la lista de solicitudes.
+   */
+  @Override
+  @OneToMany(targetEntity = SolicitudConId.class)
+  public Collection<Solicitud> getSolicitudes() {
+    return super.getSolicitudes();
+  }
 //
 //  /**
 //   * Establece la lista de solicitudes asociadas al reservista.
@@ -72,6 +77,11 @@ public class ReservistaConId extends Reservista {
 //  public void setSolicitudesConId(List<SolicitudConId> solicitudesConId) {
 //    this.solicitudesConId = solicitudesConId;
 //  }
+  
+  public void addSolicitudConId(SolicitudConId solicitud) {
+    super.getSolicitudes().add(solicitud);
+    solicitud.setReservista(this);
+}
 
   /**
    * Constructor por defecto.

@@ -14,7 +14,29 @@ import es.mde.entidades.SolicitudConId;
  */
 public interface ExpedienteDAOCustom {
 
-  void asignarSolicitudAExpediente(ExpedienteConId expediente, SolicitudConId solicitud);
+//  void asignarSolicitudAExpediente(ExpedienteConId expediente, SolicitudConId solicitud);
   
-  void eliminarSolicitudDeExpediente(ExpedienteConId expediente, SolicitudConId solicitud);
+//  void eliminarSolicitudDeExpediente(ExpedienteConId expediente, SolicitudConId solicitud);
+
+//  /**
+//   * Asigna una solicitud a un expediente.
+//   * 
+//   * Este método agrega la solicitud al expediente, guarda los cambios en la base de datos
+//   * y registra la operación en los logs.
+//   * 
+//   * @param expediente El expediente al que se asignará la solicitud.
+//   * @param solicitud La solicitud que se asignará al expediente.
+//   */
+//  void asignarSolicitudAExpediente(Long expedienteId, Long solicitudId);
+//
+//  /**
+//   * Elimina una solicitud de un expediente.
+//   * 
+//   * Este método elimina la solicitud del expediente, guarda los cambios en la base de datos
+//   * y registra la operación en los logs.
+//   * 
+//   * @param expediente El expediente del que se eliminará la solicitud.
+//   * @param solicitud La solicitud que se eliminará del expediente.
+//   */
+//  void eliminarSolicitudDeExpediente(Long expedienteId, Long solicitudId);
 }

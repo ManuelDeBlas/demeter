@@ -16,8 +16,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
- * Representa un expediente con un identificador único.
- * Extiende la funcionalidad de la clase {@link Expediente}.
+ * Representa un expediente con un identificador único. Extiende la
+ * funcionalidad de la clase {@link Expediente}.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0
@@ -40,7 +40,11 @@ public class PresupuestoConId extends Presupuesto {
     return id;
   }
 
+  public void setId(Long id) {
+    this.id = id;
+  }
+
   public PresupuestoConId() {
   }
-  
+
 }

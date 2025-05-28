@@ -8,4 +8,6 @@ import es.mde.entidades.PresupuestoConId;
 @RepositoryRestResource(path = "presupuestos", itemResourceRel = "presupuesto", collectionResourceRel = "presupuestos")
 public interface PresupuestoDAO extends JpaRepository<PresupuestoConId, Long> {
 
+  PresupuestoConId getByAnho(int anho);
+
 }

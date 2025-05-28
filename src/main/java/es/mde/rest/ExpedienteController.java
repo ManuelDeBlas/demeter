@@ -47,7 +47,7 @@ public class ExpedienteController {
   public ResponseEntity<String> asignarSolicitud(@PathVariable Long expedienteId, @PathVariable Long solicitudId) {
     ResponseEntity<String> respuesta = null;
     try {
-      expedienteServicio.asignarSolicitudConNotificacion(expedienteId, solicitudId);
+      expedienteServicio.asignarSolicitudAExpediente(expedienteId, solicitudId);
       respuesta = ResponseEntity
           .ok("Solicitud " + solicitudId + " asignada correctamente al expediente " + expedienteId);
     } catch (Exception e) {
@@ -71,7 +71,7 @@ public class ExpedienteController {
   public ResponseEntity<String> desasignarSolicitud(@PathVariable Long expedienteId, @PathVariable Long solicitudId) {
     ResponseEntity<String> respuesta = null;
     try {
-      expedienteServicio.desasignarSolicitudConNotificacion(expedienteId, solicitudId);
+      expedienteServicio.desasignarSolicitudDeExpediente(expedienteId, solicitudId);
       respuesta = ResponseEntity
           .ok("Solicitud " + solicitudId + " desasignada correctamente del expediente " + expedienteId);
     } catch (Exception e) {

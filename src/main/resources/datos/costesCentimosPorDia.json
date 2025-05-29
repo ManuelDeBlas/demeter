@@ -1,14 +1,14 @@
 [
-  { "clave": "capitan", "centimos": 10000 },
-  { "clave": "teniente-navio", "centimos": 10000 },
-  { "clave": "teniente", "centimos": 9000 },
-  { "clave": "alferez-navio", "centimos": 9000 },
-  { "clave": "alferez", "centimos": 8000 },
-  { "clave": "alferez-fragata", "centimos": 8000 },
-  { "clave": "brigada", "centimos": 7000 },
-  { "clave": "sargento1", "centimos": 6000 },
-  { "clave": "sargento", "centimos": 5000 },
-  { "clave": "cabo1", "centimos": 4500 },
-  { "clave": "cabo", "centimos": 4000 },
-  { "clave": "soldado", "centimos": 3500 }
+  { "empleo": "capitan", "centimos": 10000 },
+  { "empleo": "teniente-navio", "centimos": 10000 },
+  { "empleo": "teniente", "centimos": 9000 },
+  { "empleo": "alferez-navio", "centimos": 9000 },
+  { "empleo": "alferez", "centimos": 8000 },
+  { "empleo": "alferez-fragata", "centimos": 8000 },
+  { "empleo": "brigada", "centimos": 7000 },
+  { "empleo": "sargento1", "centimos": 6000 },
+  { "empleo": "sargento", "centimos": 5000 },
+  { "empleo": "cabo1", "centimos": 4500 },
+  { "empleo": "cabo", "centimos": 4000 },
+  { "empleo": "soldado", "centimos": 3500 }
 ]

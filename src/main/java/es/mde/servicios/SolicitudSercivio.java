@@ -33,14 +33,15 @@ public class SolicitudSercivio {
 
   private int calcularCosteCentimos(Solicitud solicitud) {
     int costeCentimos = 0;
+    // TODO no funciona bien
     if (solicitud.getTipoSolicitud().equals("FC")) {
       FormacionContinuadaConId formacionContinuada = (FormacionContinuadaConId) solicitud;
-      int smi = costeFormacionContinuadaDAO.findByClave("smi-centimos");
-      float cantidadSmi = costeFormacionContinuadaDAO.findByClave(formacionContinuada.getEscala());
+      int smi = costeFormacionContinuadaDAO.findValorByClave("smi-centimos");
+      float cantidadSmi = costeFormacionContinuadaDAO.findValorByClave(formacionContinuada.getEscala());
       float duracion = formacionContinuada.getDuracionMeses();
       costeCentimos = (int) (smi * cantidadSmi * duracion);
     } else {
-      int costeDiaCentimos = costePorDiaDAO.findCentimosByClave(solicitud.getReservista().getEmpleo());
+      int costeDiaCentimos = costePorDiaDAO.findCentimosByEmpleo(solicitud.getReservista().getEmpleo());
       int duracion = solicitud.getDiasDuracion();
       costeCentimos = Math.toIntExact(duracion * costeDiaCentimos);
     }

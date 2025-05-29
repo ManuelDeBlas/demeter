@@ -8,6 +8,6 @@ import es.mde.entidades.CosteFormacionContinuada;
 @RepositoryRestResource(path = "costes-fc", itemResourceRel = "coste-fc", collectionResourceRel = "costes-fc")
 public interface CosteFormacionContinuadaDAO extends JpaRepository<CosteFormacionContinuada, Long> {
 
-  int findByClave(String string);
+  int findValorByClave(String string);
 
 }

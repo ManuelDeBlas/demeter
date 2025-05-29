@@ -18,8 +18,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 /**
- * Representa una solicitud.
- * Contiene información sobre el estado, las fechas y el expediente al que pertenece.
+ * Representa una solicitud. Contiene información sobre el estado, las fechas y
+ * el expediente al que pertenece.
  * 
  * Esta entidad está mapeada a la tabla "SOLICITUDES" en la base de datos.
  * 
@@ -39,16 +39,18 @@ public abstract class SolicitudConId extends SolicitudImpl {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
-  
+
   @ManyToOne(targetEntity = ReservistaConId.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "RESERVISTA")
   private ReservistaConId reservista;
   @ManyToOne(targetEntity = ExpedienteConId.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "EXPEDIENTE")
   private ExpedienteConId expediente;
+
+  private int costeCentimos;
 //  @Transient
 //  private Estados estadoAnterior;
-  
+
 //  @PostLoad
 //  public void guardarEstadoPrevio() {
 //    this.estadoAnterior = this.getEstado();
@@ -88,9 +90,20 @@ public abstract class SolicitudConId extends SolicitudImpl {
     this.expediente = expediente;
   }
 
+  @Override
+  public int getCosteCentimos() {
+    return costeCentimos;
+  }
+
+  @Override
+  public void setCosteCentimos(int costeCentimos) {
+    this.costeCentimos = costeCentimos;
+  }
+
   /**
    * Constructor por defecto.
    */
   public SolicitudConId() {
   }
+
 }

@@ -81,7 +81,7 @@ public class ExpedienteServicio {
       throw new IllegalArgumentException("El tipo de la solicitud (" + solicitud.getTipoSolicitud()
           + ") no coincide con el tipo del expediente (" + expediente.getTipoSolicitud() + ")");
     }
-    int costeCentimosSolicitud = getCosteCentimosSolicitud(solicitud);
+    int costeCentimosSolicitud = solicitud.getCosteCentimos();
     if (solicitud.isPagaSecres() && presupuesto.getCantidadCentimos() < costeCentimosSolicitud) {
       throw new IllegalArgumentException("La SECRES no dispone de suficiente presupuesto en el año "
           + expediente.getAnho() + ". Aumente el presupuesto disponible hasta "
@@ -122,7 +122,7 @@ public class ExpedienteServicio {
       solicitud.setExpediente(null);
       solicitud.setEstado(Estados.PENDIENTE_EVALUACION);
       if (solicitud.isPagaSecres()) {
-        int costeCentimosSolicitud = getCosteCentimosSolicitud(solicitud);
+        int costeCentimosSolicitud = solicitud.getCosteCentimos();
         presupuesto.setCantidadCentimos(presupuesto.getCantidadCentimos() + costeCentimosSolicitud);
       }
     } else {
@@ -156,24 +156,6 @@ public class ExpedienteServicio {
       throw new IllegalArgumentException("No existe presupuesto para el año " + anho);
     }
     return new EntidadesAModificar(expediente, solicitud, presupuesto);
-  }
-
-  private int getCosteCentimosSolicitud(SolicitudConId solicitud) {
-    int costeCentimos = 0;
-    if (solicitud.getTipoSolicitud().equals("FC")) {
-      FormacionContinuadaConId formacionContinuada = (FormacionContinuadaConId) solicitud;
-      // TODO 
-//      int smi = costePorDiaDAO.findCentimosByClave("smi-centimos");
-//      float cantidadSmi = costePorDiaDAO.findCentimosByClave(formacionContinuada.getEscala());
-      float duracion = formacionContinuada.getDuracionMeses();
-      costeCentimos = (int) (smi * cantidadSmi * duracion);
-    } else {
-      int costeDiaCentimos = costePorDiaDAO.findCentimosByClave(solicitud.getReservista().getEmpleo());
-      int duracion = solicitud.getDiasDuracion();
-      costeCentimos = Math.toIntExact(duracion * costeDiaCentimos);
-    }
-
-    return costeCentimos;
   }
 
   private void guardarCambios(ExpedienteConId expediente, SolicitudConId solicitud,

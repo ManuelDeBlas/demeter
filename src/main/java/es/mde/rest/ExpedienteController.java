@@ -1,19 +1,28 @@
 package es.mde.rest;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.PersistentEntityResource;
+import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import es.mde.repositorios.ExpedienteDAO;
+import es.mde.repositorios.ExpedienteDAOCustom;
 import es.mde.servicios.ExpedienteServicio;
 
 /**
- * Controlador REST para gestionar los expedientes. Proporciona endpoints para asignar y desasignar
- * solicitudes.
+ * Controlador REST para gestionar los expedientes. Proporciona endpoints para
+ * asignar y desasignar solicitudes.
  * 
- * Este controlador utiliza el servicio {@link ExpedienteServicio} para realizar las operaciones
- * relacionadas con los expedientes.
+ * Este controlador utiliza el servicio {@link ExpedienteServicio} para realizar
+ * las operaciones relacionadas con los expedientes.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0
@@ -21,7 +30,8 @@ import es.mde.servicios.ExpedienteServicio;
 @RepositoryRestController
 public class ExpedienteController {
 
-  private ExpedienteServicio expedienteServicio;
+  private final ExpedienteServicio expedienteServicio;
+  private final ExpedienteDAO expedienteDAO;
 
   /**
    * Constructor que inyecta el servicio de expedientes.
@@ -29,18 +39,25 @@ public class ExpedienteController {
    * @param expedienteServicio Servicio para la lógica de negocio de expedientes.
    */
   @Autowired
-  public ExpedienteController(ExpedienteServicio expedienteServicio) {
+  public ExpedienteController(ExpedienteServicio expedienteServicio, ExpedienteDAO expedienteDAO) {
     this.expedienteServicio = expedienteServicio;
+    this.expedienteDAO = expedienteDAO;
+  }
+
+  @GetMapping("/coste-expediente/{numeroExpediente}")
+  public int getCosteCentimosExpedienteByNumeroExpediente(@PathVariable("numeroExpediente") String numeroExpediente) {
+
+    return expedienteDAO.getCosteCentimosExpedienteByNumeroExpediente(numeroExpediente);
   }
 
   /**
    * Asigna una solicitud a un expediente.
    * 
-   * Este endpoint permite asignar una solicitud a un expediente específico. Además, se envía una
-   * notificación tras completar la operación.
+   * Este endpoint permite asignar una solicitud a un expediente específico.
+   * Además, se envía una notificación tras completar la operación.
    * 
    * @param expedienteId ID del expediente al que se asignará la solicitud.
-   * @param solicitudId ID de la solicitud que se asignará.
+   * @param solicitudId  ID de la solicitud que se asignará.
    * @return Respuesta HTTP con el resultado de la operación.
    */
   @PatchMapping("/expedientes/{expedienteId}/asignar-solicitud/{solicitudId}")
@@ -48,11 +65,9 @@ public class ExpedienteController {
       @PathVariable("solicitudId") Long solicitudId) {
     ResponseEntity<String> respuestaEntity = null;
     try {
-      respuestaEntity = ResponseEntity
-          .ok(expedienteServicio.asignarSolicitudAExpediente(expedienteId, solicitudId));
+      respuestaEntity = ResponseEntity.ok(expedienteServicio.asignarSolicitudAExpediente(expedienteId, solicitudId));
     } catch (Exception e) {
-      respuestaEntity =
-          ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+      respuestaEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
     return respuestaEntity;
@@ -61,11 +76,11 @@ public class ExpedienteController {
   /**
    * Desasigna una solicitud de un expediente.
    * 
-   * Este endpoint permite desasignar una solicitud de un expediente específico. Además, se envía
-   * una notificación tras completar la operación.
+   * Este endpoint permite desasignar una solicitud de un expediente específico.
+   * Además, se envía una notificación tras completar la operación.
    * 
    * @param expedienteId ID del expediente del que se desasignará la solicitud.
-   * @param solicitudId ID de la solicitud que se desasignará.
+   * @param solicitudId  ID de la solicitud que se desasignará.
    * @return Respuesta HTTP con el resultado de la operación.
    */
   @PatchMapping("/expedientes/{expedienteId}/desasignar-solicitud/{solicitudId}")
@@ -76,8 +91,7 @@ public class ExpedienteController {
       respuestaEntity = ResponseEntity
           .ok(expedienteServicio.desasignarSolicitudDeExpediente(expedienteId, solicitudId));
     } catch (Exception e) {
-      respuestaEntity =
-          ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+      respuestaEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
     return respuestaEntity;

@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import es.mde.servicios.ExpedienteServicio;
 
 /**
- * Controlador REST para gestionar los expedientes.
- * Proporciona endpoints para asignar y desasignar solicitudes.
+ * Controlador REST para gestionar los expedientes. Proporciona endpoints para asignar y desasignar
+ * solicitudes.
  * 
- * Este controlador utiliza el servicio {@link ExpedienteServicio} para realizar
- * las operaciones relacionadas con los expedientes.
+ * Este controlador utiliza el servicio {@link ExpedienteServicio} para realizar las operaciones
+ * relacionadas con los expedientes.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0
@@ -36,49 +36,51 @@ public class ExpedienteController {
   /**
    * Asigna una solicitud a un expediente.
    * 
-   * Este endpoint permite asignar una solicitud a un expediente específico.
-   * Además, se envía una notificación tras completar la operación.
+   * Este endpoint permite asignar una solicitud a un expediente específico. Además, se envía una
+   * notificación tras completar la operación.
    * 
    * @param expedienteId ID del expediente al que se asignará la solicitud.
    * @param solicitudId ID de la solicitud que se asignará.
    * @return Respuesta HTTP con el resultado de la operación.
    */
   @PatchMapping("/expedientes/{expedienteId}/asignar-solicitud/{solicitudId}")
-  public ResponseEntity<String> asignarSolicitud(@PathVariable Long expedienteId, @PathVariable Long solicitudId) {
-    ResponseEntity<String> respuesta = null;
+  public ResponseEntity<String> asignarSolicitud(@PathVariable("expedienteId") Long expedienteId,
+      @PathVariable("solicitudId") Long solicitudId) {
+    ResponseEntity<String> respuestaEntity = null;
     try {
-      expedienteServicio.asignarSolicitudConNotificacion(expedienteId, solicitudId);
-      respuesta = ResponseEntity
-          .ok("Solicitud " + solicitudId + " asignada correctamente al expediente " + expedienteId);
+      respuestaEntity = ResponseEntity
+          .ok(expedienteServicio.asignarSolicitudAExpediente(expedienteId, solicitudId));
     } catch (Exception e) {
-      respuesta = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+      respuestaEntity =
+          ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
-    return respuesta;
+    return respuestaEntity;
   }
 
   /**
    * Desasigna una solicitud de un expediente.
    * 
-   * Este endpoint permite desasignar una solicitud de un expediente específico.
-   * Además, se envía una notificación tras completar la operación.
+   * Este endpoint permite desasignar una solicitud de un expediente específico. Además, se envía
+   * una notificación tras completar la operación.
    * 
    * @param expedienteId ID del expediente del que se desasignará la solicitud.
    * @param solicitudId ID de la solicitud que se desasignará.
    * @return Respuesta HTTP con el resultado de la operación.
    */
   @PatchMapping("/expedientes/{expedienteId}/desasignar-solicitud/{solicitudId}")
-  public ResponseEntity<String> desasignarSolicitud(@PathVariable Long expedienteId, @PathVariable Long solicitudId) {
-    ResponseEntity<String> respuesta = null;
+  public ResponseEntity<String> desasignarSolicitud(@PathVariable("expedienteId") Long expedienteId,
+      @PathVariable("solicitudId") Long solicitudId) {
+    ResponseEntity<String> respuestaEntity = null;
     try {
-      expedienteServicio.desasignarSolicitudConNotificacion(expedienteId, solicitudId);
-      respuesta = ResponseEntity
-          .ok("Solicitud " + solicitudId + " desasignada correctamente del expediente " + expedienteId);
+      respuestaEntity = ResponseEntity
+          .ok(expedienteServicio.desasignarSolicitudDeExpediente(expedienteId, solicitudId));
     } catch (Exception e) {
-      respuesta = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+      respuestaEntity =
+          ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
-    return respuesta;
+    return respuestaEntity;
   }
 
 }

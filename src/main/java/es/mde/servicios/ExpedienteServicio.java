@@ -7,109 +7,157 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.mde.entidades.ExpedienteConId;
+import es.mde.entidades.PresupuestoConId;
 import es.mde.entidades.SolicitudConId;
 import es.mde.repositorios.ExpedienteDAO;
+import es.mde.repositorios.PresupuestoDAO;
 import es.mde.repositorios.SolicitudDAO;
 import es.mde.secres.Solicitud;
 import es.mde.secres.Solicitud.Estados;
+import es.mde.util.StringUtils;
 
 /**
- * Servicio para gestionar la lógica de negocio relacionada con los expedientes.
- * Incluye operaciones para asignar y desasignar solicitudes con notificaciones.
+ * Servicio para gestionar la lógica de negocio relacionada con los expedientes. Incluye operaciones
+ * para asignar y desasignar solicitudes con notificaciones.
  * 
  * @version 1.0
  */
 @Service
 public class ExpedienteServicio {
-  private record ExpedienteSolicitud(ExpedienteConId expediente, SolicitudConId solicitud) {
+  private record EntidadesAModificar(ExpedienteConId expediente, SolicitudConId solicitud,
+      PresupuestoConId presupuesto) {
   }
 
   private final ExpedienteDAO expedienteDAO;
-  private SolicitudDAO solicitudDAO;
-//  private final EmailSenderServicio emailSenderServicio;
+  private final SolicitudDAO solicitudDAO;
+  private final PresupuestoDAO presupuestoDAO;
+  private final EmailSenderServicio emailSenderServicio;
 
   /**
    * Constructor que inyecta los DAOs y el servicio de correo electrónico.
    * 
-   * @param expedienteDAO       DAO para gestionar expedientes.
-   * @param solicitudDAO        DAO para gestionar solicitudes.
+   * @param expedienteDAO DAO para gestionar expedientes.
+   * @param solicitudDAO DAO para gestionar solicitudes.
    * @param emailSenderServicio Servicio para enviar correos electrónicos.
    */
   @Autowired
-  public ExpedienteServicio(ExpedienteDAO expedienteDAO, SolicitudDAO solicitudDAO
-//      ,EmailSenderServicio emailSenderServicio
-      ) {
+  public ExpedienteServicio(ExpedienteDAO expedienteDAO, SolicitudDAO solicitudDAO,
+      PresupuestoDAO presupuestoDAO, EmailSenderServicio emailSenderServicio) {
     this.expedienteDAO = expedienteDAO;
     this.solicitudDAO = solicitudDAO;
-//    this.emailSenderServicio = emailSenderServicio;
+    this.presupuestoDAO = presupuestoDAO;
+    this.emailSenderServicio = emailSenderServicio;
   }
 
   /**
    * Asigna una solicitud a un expediente y envía una notificación.
    * 
    * @param expedienteId ID del expediente.
-   * @param solicitudId  ID de la solicitud.
+   * @param solicitudId ID de la solicitud.
+   * @return
    */
-  public void asignarSolicitudConNotificacion(Long expedienteId, Long solicitudId) {
-    ExpedienteSolicitud resultado = obtenerExpedienteYSolicitud(expedienteId, solicitudId);
-    ExpedienteConId expediente = resultado.expediente();
-    SolicitudConId solicitud = resultado.solicitud();
-    if (solicitud.getExpediente() != null) {
+  public String asignarSolicitudAExpediente(Long expedienteId, Long solicitudId) {
+    EntidadesAModificar entidadesAModificar = obtenerEntidades(expedienteId, solicitudId);
+    ExpedienteConId expediente = entidadesAModificar.expediente();
+    SolicitudConId solicitud = entidadesAModificar.solicitud();
+    PresupuestoConId presupuesto = entidadesAModificar.presupuesto();
+    if (expediente.getAnho() != solicitud.getFechaInicio().getYear()) {
       throw new IllegalArgumentException(
-          "Esta solicitud ya está asignada al expediente " + solicitud.getExpediente().getNumeroExpediente()
-              + ". Elimínela de su expediente antes de asignarla a otro.");
+          "No se pudo agregar la solicitud al expediente ya que el año de la solicitud ("
+              + solicitud.getFechaInicio().getYear() + ") no es igual al año del expediente ("
+              + expediente.getAnho() + ")");
     }
-    if (Objects.equals(solicitud.getTipoSolicitud(), expediente.getTipoSolicitud())) {
-      expediente.addSolicitudConId(solicitud);
-      solicitud.setExpediente(expediente);
-      solicitud.setEstado(Estados.ACEPTADA_PENDIENTE_PUBLICACION);
-    } else {
+    if (solicitud.getExpediente() != null) {
+      throw new IllegalArgumentException("Esta solicitud ya está asignada al expediente "
+          + solicitud.getExpediente().getNumeroExpediente()
+          + ". Elimínela de su expediente antes de asignarla a otro.");
+    }
+    if (!Objects.equals(solicitud.getTipoSolicitud(), expediente.getTipoSolicitud())) {
       throw new IllegalArgumentException("El tipo de la solicitud (" + solicitud.getTipoSolicitud()
           + ") no coincide con el tipo del expediente (" + expediente.getTipoSolicitud() + ")");
     }
-    expedienteDAO.save(expediente);
-    solicitudDAO.save(solicitud);
-//    String asunto = "Solicitud asignada a expediente";
-//    String mensaje = "La solicitud entre las fechas " + solicitud.getFechaInicio() + " y " + solicitud.getFechaFin()
-//        + " para el reservista con DNI: " + solicitud.getReservista().getDni() + " ha sido asignada al expediente con número "
-//        + expediente.getNumeroExpediente() + " y su estado ha cambiado a " + solicitud.getEstado() + ".";
-//    emailSenderServicio.enviarEmail(solicitud.getPoc().getEmailCorporativo(), asunto, mensaje);
+    if (solicitud.isPagaSecres()
+        && presupuesto.getCantidadCentimos() < solicitud.getCosteCentimos()) {
+      throw new IllegalArgumentException("La SECRES no dispone de suficiente presupuesto en el año "
+          + expediente.getAnho() + ". Aumente el presupuesto disponible hasta "
+          + StringUtils.centimosToEurosString(solicitud.getCosteCentimos())
+          + " € o cambie al pagador de la solicitud para poder asignarla a un expediente.");
+    }
+    expediente.addSolicitudConId(solicitud);
+    solicitud.setExpediente(expediente);
+    if (solicitud.isPagaSecres()) {
+      presupuesto
+          .setCantidadCentimos(presupuesto.getCantidadCentimos() - solicitud.getCosteCentimos());
+    }
+    solicitud.setEstado(Estados.ACEPTADA_PENDIENTE_PUBLICACION);
+    guardarCambios(expediente, solicitud, presupuesto);
+    String respuesta = "Solicitud del reservista " + solicitud.getReservista().getDni()
+        + " asignada al expediente " + expediente.getNumeroExpediente() + ".";
+    emailSenderServicio.enviarEmail(solicitud.getEmailPoc(), "Solicitud asiganada al expediente",
+        respuesta);
+
+    return respuesta + " correctamente. El presupuesto restante para el año "
+        + presupuesto.getAnho() + " es de "
+        + StringUtils.centimosToEurosString(presupuesto.getCantidadCentimos()) + " €.";
   }
 
   /**
    * Desasigna una solicitud de un expediente y envía una notificación.
    * 
    * @param expedienteId ID del expediente.
-   * @param solicitudId  ID de la solicitud.
+   * @param solicitudId ID de la solicitud.
+   * @return
    */
-  public void desasignarSolicitudConNotificacion(Long expedienteId, Long solicitudId) {
-    ExpedienteSolicitud resultado = obtenerExpedienteYSolicitud(expedienteId, solicitudId);
-    ExpedienteConId expediente = resultado.expediente();
-    SolicitudConId solicitud = resultado.solicitud();
+  public String desasignarSolicitudDeExpediente(Long expedienteId, Long solicitudId) {
+    EntidadesAModificar entidadesAModificar = obtenerEntidades(expedienteId, solicitudId);
+    ExpedienteConId expediente = entidadesAModificar.expediente();
+    SolicitudConId solicitud = entidadesAModificar.solicitud();
+    PresupuestoConId presupuesto = entidadesAModificar.presupuesto();
     if (expediente.getSolicitudes().contains(solicitud)) {
       expediente.removeSolicitud(solicitud);
       solicitud.setExpediente(null);
       solicitud.setEstado(Estados.PENDIENTE_EVALUACION);
+      if (solicitud.isPagaSecres()) {
+        presupuesto
+            .setCantidadCentimos(presupuesto.getCantidadCentimos() + solicitud.getCosteCentimos());
+      }
     } else {
-      throw new IllegalArgumentException(
-          "El expediente " + expediente.getNumeroExpediente() + " no contiene la solicitud que se quiere eliminar.");
+      throw new IllegalArgumentException("El expediente " + expediente.getNumeroExpediente()
+          + " no contiene la solicitud que se quiere eliminar.");
     }
-    expedienteDAO.save(expediente);
-    solicitudDAO.save(solicitud);
-//    String asunto = "Solicitud desasignada del expediente";
-//    String mensaje = "La solicitud entre las fechas " + solicitud.getFechaInicio() + " y " + solicitud.getFechaFin()
-//    + " para el reservista con DNI: " + solicitud.getReservista().getDni() + " ha sido desasignada al expediente con número "
-//    + expediente.getNumeroExpediente() + " y su estado ha cambiado a " + solicitud.getEstado() + ".";
-//    emailSenderServicio.enviarEmail(solicitud.getPoc().getEmailCorporativo(), asunto, mensaje);
+    guardarCambios(expediente, solicitud, presupuesto);
+    String respuesta = "Solicitud del reservista " + solicitud.getReservista().getDni()
+        + " desasignada del expediente " + expediente.getNumeroExpediente() + ".";
+    emailSenderServicio.enviarEmail(solicitud.getEmailPoc(),
+        "Solicitud desasiganada del expediente", respuesta);
+
+    return respuesta + "correctamente. El presupuesto restante para el año " + presupuesto.getAnho()
+        + " es de " + StringUtils.centimosToEurosString(presupuesto.getCantidadCentimos()) + " €.";
   }
 
-  private ExpedienteSolicitud obtenerExpedienteYSolicitud(Long expedienteId, Long solicitudId) {
+  private EntidadesAModificar obtenerEntidades(Long expedienteId, Long solicitudId) {
     Optional<ExpedienteConId> expedienteOpt = expedienteDAO.findById(expedienteId);
     Optional<SolicitudConId> solicitudOpt = solicitudDAO.findById(solicitudId);
-    if (expedienteOpt.isEmpty() || solicitudOpt.isEmpty()) {
-      throw new IllegalArgumentException("Expediente o solicitud no encontrado");
+    if (solicitudOpt.isEmpty()) {
+      throw new IllegalArgumentException("Solicitud no encontrada");
     }
-    return new ExpedienteSolicitud(expedienteOpt.get(), solicitudOpt.get());
+    if (expedienteOpt.isEmpty()) {
+      throw new IllegalArgumentException("Expediente no encontrado");
+    }
+    SolicitudConId solicitud = solicitudOpt.get();
+    ExpedienteConId expediente = expedienteOpt.get();
+    int anho = expediente.getAnho();
+    PresupuestoConId presupuesto = presupuestoDAO.getByAnho(anho);
+    if (presupuesto == null) {
+      throw new IllegalArgumentException("No existe presupuesto para el año " + anho);
+    }
+    return new EntidadesAModificar(expediente, solicitud, presupuesto);
   }
 
+  private void guardarCambios(ExpedienteConId expediente, SolicitudConId solicitud,
+      PresupuestoConId presupuesto) {
+    expedienteDAO.save(expediente);
+    solicitudDAO.save(solicitud);
+    presupuestoDAO.save(presupuesto);
+  }
 }

@@ -8,15 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "COSTES")
-public class Coste {
+@Table(name = "COSTES_POR_DIA")
+public class CostePorDia {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
 
-  private String clave;
+  private String empleo;
   private int centimos;
 
   /**
@@ -37,12 +37,12 @@ public class Coste {
     this.id = id;
   }
 
-  public String getClave() {
-    return clave;
+  public String getEmpleo() {
+    return empleo;
   }
 
-  public void setClave(String clave) {
-    this.clave = clave;
+  public void setEmpleo(String empleo) {
+    this.empleo = empleo;
   }
 
   public int getCentimos() {
@@ -53,6 +53,6 @@ public class Coste {
     this.centimos = centimos;
   }
 
-  public Coste() {}
+  public CostePorDia() {}
 
 }

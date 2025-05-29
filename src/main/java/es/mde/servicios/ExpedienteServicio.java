@@ -6,12 +6,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import es.mde.entidades.CostePorDia;
 import es.mde.entidades.ExpedienteConId;
 import es.mde.entidades.FormacionContinuadaConId;
 import es.mde.entidades.PresupuestoConId;
 import es.mde.entidades.SolicitudConId;
-import es.mde.repositorios.CosteDAO;
+import es.mde.repositorios.CostePorDiaDAO;
 import es.mde.repositorios.ExpedienteDAO;
 import es.mde.repositorios.PresupuestoDAO;
 import es.mde.repositorios.SolicitudDAO;
@@ -34,7 +34,7 @@ public class ExpedienteServicio {
   private final ExpedienteDAO expedienteDAO;
   private final SolicitudDAO solicitudDAO;
   private final PresupuestoDAO presupuestoDAO;
-  private final CosteDAO costeDAO;
+  private final CostePorDiaDAO costePorDiaDAO;
   private final EmailSenderServicio emailSenderServicio;
 
   /**
@@ -46,11 +46,11 @@ public class ExpedienteServicio {
    */
   @Autowired
   public ExpedienteServicio(ExpedienteDAO expedienteDAO, SolicitudDAO solicitudDAO,
-      PresupuestoDAO presupuestoDAO, CosteDAO costeDAO, EmailSenderServicio emailSenderServicio) {
+      PresupuestoDAO presupuestoDAO, CostePorDiaDAO costePorDiaDAO, EmailSenderServicio emailSenderServicio) {
     this.expedienteDAO = expedienteDAO;
     this.solicitudDAO = solicitudDAO;
     this.presupuestoDAO = presupuestoDAO;
-    this.costeDAO = costeDAO;
+    this.costePorDiaDAO = costePorDiaDAO;
     this.emailSenderServicio = emailSenderServicio;
   }
 
@@ -162,12 +162,13 @@ public class ExpedienteServicio {
     int costeCentimos = 0;
     if (solicitud.getTipoSolicitud().equals("FC")) {
       FormacionContinuadaConId formacionContinuada = (FormacionContinuadaConId) solicitud;
-      int smi = costeDAO.findCentimosByClave("smi-centimos");
-      float cantidadSmi = costeDAO.findCentimosByClave(formacionContinuada.getEscala());
+      // TODO 
+//      int smi = costePorDiaDAO.findCentimosByClave("smi-centimos");
+//      float cantidadSmi = costePorDiaDAO.findCentimosByClave(formacionContinuada.getEscala());
       float duracion = formacionContinuada.getDuracionMeses();
       costeCentimos = (int) (smi * cantidadSmi * duracion);
     } else {
-      int costeDiaCentimos = costeDAO.findCentimosByClave(solicitud.getReservista().getEmpleo());
+      int costeDiaCentimos = costePorDiaDAO.findCentimosByClave(solicitud.getReservista().getEmpleo());
       int duracion = solicitud.getDiasDuracion();
       costeCentimos = Math.toIntExact(duracion * costeDiaCentimos);
     }

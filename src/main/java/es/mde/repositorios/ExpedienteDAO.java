@@ -17,4 +17,6 @@ import es.mde.entidades.ExpedienteConId;
 @RepositoryRestResource(path = "expedientes", itemResourceRel = "expediente", collectionResourceRel = "expedientes")
 public interface ExpedienteDAO extends JpaRepository<ExpedienteConId, Long>, ExpedienteDAOCustom {
 
+  ExpedienteConId getByNumeroExpediente(String numeroExpediente);
+
 }

@@ -1,14 +1,17 @@
 package es.mde.servicios;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import es.mde.entidades.CostePorDia;
 import es.mde.entidades.ExpedienteConId;
+import es.mde.entidades.FormacionContinuadaConId;
 import es.mde.entidades.PresupuestoConId;
 import es.mde.entidades.SolicitudConId;
+import es.mde.repositorios.CostePorDiaDAO;
 import es.mde.repositorios.ExpedienteDAO;
 import es.mde.repositorios.PresupuestoDAO;
 import es.mde.repositorios.SolicitudDAO;
@@ -31,6 +34,7 @@ public class ExpedienteServicio {
   private final ExpedienteDAO expedienteDAO;
   private final SolicitudDAO solicitudDAO;
   private final PresupuestoDAO presupuestoDAO;
+  private final CostePorDiaDAO costePorDiaDAO;
   private final EmailSenderServicio emailSenderServicio;
 
   /**
@@ -42,10 +46,11 @@ public class ExpedienteServicio {
    */
   @Autowired
   public ExpedienteServicio(ExpedienteDAO expedienteDAO, SolicitudDAO solicitudDAO,
-      PresupuestoDAO presupuestoDAO, EmailSenderServicio emailSenderServicio) {
+      PresupuestoDAO presupuestoDAO, CostePorDiaDAO costePorDiaDAO, EmailSenderServicio emailSenderServicio) {
     this.expedienteDAO = expedienteDAO;
     this.solicitudDAO = solicitudDAO;
     this.presupuestoDAO = presupuestoDAO;
+    this.costePorDiaDAO = costePorDiaDAO;
     this.emailSenderServicio = emailSenderServicio;
   }
 
@@ -76,23 +81,22 @@ public class ExpedienteServicio {
       throw new IllegalArgumentException("El tipo de la solicitud (" + solicitud.getTipoSolicitud()
           + ") no coincide con el tipo del expediente (" + expediente.getTipoSolicitud() + ")");
     }
-    if (solicitud.isPagaSecres()
-        && presupuesto.getCantidadCentimos() < solicitud.getCosteCentimos()) {
+    int costeCentimosSolicitud = solicitud.getCosteCentimos();
+    if (solicitud.isPagaSecres() && presupuesto.getCantidadCentimos() < costeCentimosSolicitud) {
       throw new IllegalArgumentException("La SECRES no dispone de suficiente presupuesto en el año "
           + expediente.getAnho() + ". Aumente el presupuesto disponible hasta "
-          + StringUtils.centimosToEurosString(solicitud.getCosteCentimos())
+          + StringUtils.centimosToEurosString(costeCentimosSolicitud)
           + " € o cambie al pagador de la solicitud para poder asignarla a un expediente.");
     }
     expediente.addSolicitudConId(solicitud);
     solicitud.setExpediente(expediente);
     if (solicitud.isPagaSecres()) {
-      presupuesto
-          .setCantidadCentimos(presupuesto.getCantidadCentimos() - solicitud.getCosteCentimos());
+      presupuesto.setCantidadCentimos(presupuesto.getCantidadCentimos() - costeCentimosSolicitud);
     }
     solicitud.setEstado(Estados.ACEPTADA_PENDIENTE_PUBLICACION);
     guardarCambios(expediente, solicitud, presupuesto);
     String respuesta = "Solicitud del reservista " + solicitud.getReservista().getDni()
-        + " asignada al expediente " + expediente.getNumeroExpediente() + ".";
+        + " asignada al expediente " + expediente.getNumeroExpediente();
     emailSenderServicio.enviarEmail(solicitud.getEmailPoc(), "Solicitud asiganada al expediente",
         respuesta);
 
@@ -118,8 +122,8 @@ public class ExpedienteServicio {
       solicitud.setExpediente(null);
       solicitud.setEstado(Estados.PENDIENTE_EVALUACION);
       if (solicitud.isPagaSecres()) {
-        presupuesto
-            .setCantidadCentimos(presupuesto.getCantidadCentimos() + solicitud.getCosteCentimos());
+        int costeCentimosSolicitud = solicitud.getCosteCentimos();
+        presupuesto.setCantidadCentimos(presupuesto.getCantidadCentimos() + costeCentimosSolicitud);
       }
     } else {
       throw new IllegalArgumentException("El expediente " + expediente.getNumeroExpediente()
@@ -127,7 +131,7 @@ public class ExpedienteServicio {
     }
     guardarCambios(expediente, solicitud, presupuesto);
     String respuesta = "Solicitud del reservista " + solicitud.getReservista().getDni()
-        + " desasignada del expediente " + expediente.getNumeroExpediente() + ".";
+        + " desasignada del expediente " + expediente.getNumeroExpediente();
     emailSenderServicio.enviarEmail(solicitud.getEmailPoc(),
         "Solicitud desasiganada del expediente", respuesta);
 

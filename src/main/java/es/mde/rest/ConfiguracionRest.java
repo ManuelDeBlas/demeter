@@ -25,6 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import es.mde.entidades.ExpedienteConId;
+import es.mde.entidades.SolicitudConId;
 
 /**
  * Configuracion de uso generalizado para distintos proyectos Spring Data Rest. Proporciona las
@@ -48,6 +49,7 @@ public class ConfiguracionRest {
       RepositoryRestConfiguration config) {
     Map<Class<?>, Class<?>> controllersRegistrados = new HashMap<>();
     controllersRegistrados.put(ExpedienteConId.class, ExpedienteController.class);
+    controllersRegistrados.put(SolicitudConId.class, SolicitudController.class);
 
     return new RepresentationModelProcessor<RepositorySearchesResource>() {
 

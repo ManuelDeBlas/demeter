@@ -10,9 +10,5 @@
   { "clave": "sargento", "centimos": 5000 },
   { "clave": "cabo1", "centimos": 4500 },
   { "clave": "cabo", "centimos": 4000 },
-  { "clave": "soldado", "centimos": 3500 },
-  { "clave": "smi-centimo", "centimos": 118400 },
-  { "clave": "tropa", "centimos": 2 },
-  { "clave": "suboficial", "centimos": 2.5 },
-  { "clave": "oficial", "centimos": 3 }
+  { "clave": "soldado", "centimos": 3500 }
 ]

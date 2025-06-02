@@ -2,6 +2,7 @@ package es.mde.servicios;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import es.mde.entidades.ActivacionAmpliadaConId;
@@ -13,6 +14,7 @@ import es.mde.repositorios.CosteFormacionContinuadaDAO;
 import es.mde.repositorios.CostePorDiaDAO;
 import es.mde.repositorios.SolicitudDAO;
 import es.mde.secres.Solicitud;
+import es.mde.util.SolicitudUtil;
 import jakarta.persistence.EntityManager;
 
 @Service
@@ -23,6 +25,9 @@ public class PSyEXServicio {
   private final SolicitudDAO solicitudDAO;
   private final CostePorDiaDAO costePorDiaDAO;
   private final EntityManager entityManager;
+  
+  @Value("${maximo-dias-activacion}")
+  private int maximoDiasActivacion;
 
   public PSyEXServicio(SolicitudDAO solicitudDAO, CostePorDiaDAO costePorDiaDAO, EntityManager entityManager) {
     this.solicitudDAO = solicitudDAO;
@@ -34,6 +39,7 @@ public class PSyEXServicio {
   public PrestacionServiciosUnidadConId crearPS(PrestacionServiciosUnidadConId prestacionServiciosUnidad) {
     ReservistaConId ref = entityManager.getReference(ReservistaConId.class, prestacionServiciosUnidad.getReservista().getId());
     prestacionServiciosUnidad.setReservista(ref);
+    SolicitudUtil.comprobarViabilidadSolicitud(prestacionServiciosUnidad, maximoDiasActivacion);
     prestacionServiciosUnidad.setCosteCentimos(calcularCosteCentimos(prestacionServiciosUnidad));
 
     return solicitudDAO.save(prestacionServiciosUnidad);

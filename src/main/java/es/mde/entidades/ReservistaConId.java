@@ -1,6 +1,9 @@
 package es.mde.entidades;
 
 import java.util.Collection;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import es.mde.secres.Reservista;
 import es.mde.secres.Solicitud;
 import jakarta.persistence.Column;
@@ -65,6 +68,7 @@ public class ReservistaConId extends Reservista {
    */
   @Override
   @OneToMany(targetEntity = SolicitudConId.class)
+  @JsonIgnore
   public Collection<Solicitud> getSolicitudes() {
     return super.getSolicitudes();
   }

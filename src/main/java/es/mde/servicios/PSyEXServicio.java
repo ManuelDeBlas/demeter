@@ -29,97 +29,33 @@ public class PSyEXServicio {
   private final SolicitudServicio solicitudServicio;
   private final ObjectMapper objectMapper;
 
-
-
-  public PSyEXServicio(SolicitudDAO solicitudDAO, CostePorDiaDAO costePorDiaDAO,
-      SolicitudServicio solicitudServicio, ObjectMapper objetMapper) {
+  public PSyEXServicio(SolicitudDAO solicitudDAO, CostePorDiaDAO costePorDiaDAO, SolicitudServicio solicitudServicio,
+      ObjectMapper objetMapper) {
     this.solicitudDAO = solicitudDAO;
     this.costePorDiaDAO = costePorDiaDAO;
     this.solicitudServicio = solicitudServicio;
     this.objectMapper = objetMapper;
   }
 
-
-  public PrestacionServiciosUnidadConId crearPS(
-      PrestacionServiciosUnidadConId prestacionServiciosUnidad) {
+  public PrestacionServiciosUnidadConId crearPS(PrestacionServiciosUnidadConId prestacionServiciosUnidad) {
     solicitudServicio.comprobarViabilidadSolicitud(prestacionServiciosUnidad);
-//    int anhoInicio = prestacionServiciosUnidad.getFechaInicio().getYear();
-//    int anhoFin = prestacionServiciosUnidad.getFechaFin().getYear();
-//    List<PrestacionServiciosUnidadConId> respuesta = null;
-//    if (anhoInicio != anhoFin) {
-//      try {
-//        PrestacionServiciosUnidadConId solicitudAnhoInicio =
-//            objectMapper.readValue(objectMapper.writeValueAsString(prestacionServiciosUnidad),
-//                PrestacionServiciosUnidadConId.class);
-//        solicitudAnhoInicio.setFechaFin(LocalDate.of(anhoInicio, 12, 31));
-//        solicitudAnhoInicio.setCosteCentimos(calcularCosteCentimos(solicitudAnhoInicio));
-//        solicitudDAO.save(solicitudAnhoInicio);
-//
-//        PrestacionServiciosUnidadConId solicitudAnhoFin =
-//            objectMapper.readValue(objectMapper.writeValueAsString(prestacionServiciosUnidad),
-//                PrestacionServiciosUnidadConId.class);
-//        solicitudAnhoFin.setFechaInicio(LocalDate.of(anhoFin, 1, 1));
-//        solicitudAnhoFin.setCosteCentimos(calcularCosteCentimos(solicitudAnhoFin));
-//        solicitudDAO.save(solicitudAnhoFin);
-//
-//        respuesta = List.of(solicitudAnhoInicio, solicitudAnhoFin);
-//      } catch (JsonProcessingException e) {
-//        throw new RuntimeException("Error al clonar la prestación", e);
-//      }
-//    } else {
-      prestacionServiciosUnidad.setCosteCentimos(calcularCosteCentimos(prestacionServiciosUnidad));
-      PrestacionServiciosUnidadConId guardado = solicitudDAO.save(prestacionServiciosUnidad);
-//      respuesta = List.of(guardado);
-//    }
+    prestacionServiciosUnidad.setCosteCentimos(calcularCosteCentimos(prestacionServiciosUnidad));
+    PrestacionServiciosUnidadConId guardado = solicitudDAO.save(prestacionServiciosUnidad);
 
-//    return respuesta;
-      return guardado;
+    return guardado;
   }
 
   public ActivacionAmpliadaConId crearEX(ActivacionAmpliadaConId activacionAmpliadaConId) {
     solicitudServicio.comprobarViabilidadSolicitud(activacionAmpliadaConId);
+    activacionAmpliadaConId.setCosteCentimos(calcularCosteCentimos(activacionAmpliadaConId));
+    ActivacionAmpliadaConId guardado = solicitudDAO.save(activacionAmpliadaConId);
 
-//    int anhoInicio = activacionAmpliadaConId.getFechaInicio().getYear();
-//    int anhoFin = activacionAmpliadaConId.getFechaFin().getYear();
-
-//    List<ActivacionAmpliadaConId> resultado;
-
-//    if (anhoInicio != anhoFin) {
-//      try {
-//        ActivacionAmpliadaConId solicitudAnhoInicio =
-//            objectMapper.readValue(objectMapper.writeValueAsString(activacionAmpliadaConId),
-//                ActivacionAmpliadaConId.class);
-//        solicitudAnhoInicio.setFechaFin(LocalDate.of(anhoInicio, 12, 31));
-//        solicitudAnhoInicio.setCosteCentimos(calcularCosteCentimos(solicitudAnhoInicio));
-//        solicitudDAO.save(solicitudAnhoInicio);
-//
-//        ActivacionAmpliadaConId solicitudAnhoFin =
-//            objectMapper.readValue(objectMapper.writeValueAsString(activacionAmpliadaConId),
-//                ActivacionAmpliadaConId.class);
-//        solicitudAnhoFin.setFechaInicio(LocalDate.of(anhoFin, 1, 1));
-//        solicitudAnhoFin.setCosteCentimos(calcularCosteCentimos(solicitudAnhoFin));
-//        solicitudDAO.save(solicitudAnhoFin);
-//
-//        resultado = List.of(solicitudAnhoInicio, solicitudAnhoFin);
-//      } catch (JsonProcessingException e) {
-//        throw new RuntimeException("Error al clonar la activación", e);
-//      }
-//    } else {
-      activacionAmpliadaConId.setCosteCentimos(calcularCosteCentimos(activacionAmpliadaConId));
-      ActivacionAmpliadaConId guardado = solicitudDAO.save(activacionAmpliadaConId);
-//      log.warn);
-//      resultado = List.of(guardado);
-//    }
-//
-      return guardado;
-//    return resultado;
+    return guardado;
   }
-
 
   private int calcularCosteCentimos(SolicitudConId solicitud) {
     int costeCentimos = 0;
-    int costeDiaCentimos =
-        costePorDiaDAO.findByEmpleo(solicitud.getReservista().getEmpleo()).getCentimos();
+    int costeDiaCentimos = costePorDiaDAO.findByEmpleo(solicitud.getReservista().getEmpleo()).getCentimos();
     int duracion = solicitud.getDiasDuracion();
     costeCentimos = Math.toIntExact(duracion * costeDiaCentimos);
     log.warn(String.valueOf(costeCentimos));

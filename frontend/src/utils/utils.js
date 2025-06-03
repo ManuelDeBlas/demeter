@@ -9,7 +9,7 @@ export function getNombreDAO(tipoSolicitud) {
 
 export function getId(url) {
     const urlATrozos = url.split("/");
-    return urlATrozos[urlATrozos.length - 1];
+    return parseInt(urlATrozos[urlATrozos.length - 1]);
 }
 
 export function formatearAtributoEnElFrontend(atributo) {

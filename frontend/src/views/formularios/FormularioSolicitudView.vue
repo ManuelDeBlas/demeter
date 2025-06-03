@@ -16,7 +16,8 @@
         mensajeModal: "",
         uco: null,
         reservista: null,
-        envioPendiente: false,
+        inicio: null,
+        fin: null,
       };
     },
     computed: {
@@ -70,18 +71,14 @@
       },
       async enviarFormulario() {
         try {
-          // TODO hacer 2 solicitudes independientes
-          const inicio = new Date(this.solicitudAbierta.fechaInicio);
-          const fin = new Date(this.solicitudAbierta.fechaFin);
-          if (
-            inicio.getFullYear() !== fin.getFullYear() &&
-            !this.envioPendiente
-          ) {
+          this.inicio = new Date(this.solicitudAbierta.fechaInicio);
+          this.fin = new Date(this.solicitudAbierta.fechaFin);
+          if (this.inicio.getFullYear() !== this.fin.getFullYear()) {
             this.mostrarModalConfirmacion = true;
             return;
           }
           if (this.editando) {
-            await this.putSolicitud(this.solicitudAbierta);
+            const respuesta = await this.putSolicitud(this.solicitudAbierta);
             this.mensajeModal = `Solicitud editada correctamente`;
           } else {
             const respuesta = await this.postSolicitud(this.solicitudAbierta);
@@ -94,10 +91,40 @@
           this.envioPendiente = false;
         }
       },
-      confirmarEnvio() {
+      async enviarDosSolicitudes() {
         this.mostrarModalConfirmacion = false;
-        this.envioPendiente = true;
-        this.enviarFormulario();
+
+        try {
+          const finPrimerTramo = new Date(this.inicio.getFullYear(), 11, 32);
+          const inicioSegundoTramo = new Date(this.fin.getFullYear(), 0, 2);
+
+          const solicitud1 = { ...this.solicitudAbierta };
+          const solicitud2 = { ...this.solicitudAbierta };
+
+          solicitud1.fechaInicio = this.inicio.toISOString().split("T")[0];
+          solicitud1.fechaFin = finPrimerTramo.toISOString().split("T")[0];
+
+          solicitud2.fechaInicio = inicioSegundoTramo
+            .toISOString()
+            .split("T")[0];
+          solicitud2.fechaFin = this.fin.toISOString().split("T")[0];
+
+          console.log("solicitiudes", solicitud1, solicitud2);
+          if (this.editando) {
+            await this.putSolicitud(solicitud1);
+            await this.putSolicitud(solicitud2);
+            this.mensajeModal = "Solicitudes editadas correctamente.";
+          } else {
+            await this.postSolicitud(solicitud1);
+            await this.postSolicitud(solicitud2);
+            this.mensajeModal = "Solicitudes añadidas correctamente.";
+          }
+        } catch (error) {
+          this.mensajeModal = `Error al procesar las solicitudes: ${error.message}`;
+        } finally {
+          this.mostrarModal = true;
+          this.envioPendiente = false;
+        }
       },
       cancelarEnvio() {
         this.mostrarModalConfirmacion = false;
@@ -206,15 +233,6 @@
               <option value="PS">Prestación servicios unidad</option>
             </select>
           </div>
-
-          <div v-if="solicitudAbierta.tipoSolicitud === 'FC'" class="mb-3">
-            <label class="form-label">Tiempo máximo:</label>
-            <input
-              v-model.number="solicitudAbierta.tiempoMaximo"
-              type="number"
-              class="form-control mx-auto"
-            />
-          </div>
           <div v-if="solicitudAbierta.tipoSolicitud === 'FC'" class="mb-3">
             <label class="form-label">Escala:</label>
             <input
@@ -230,15 +248,6 @@
               class="form-control mx-auto"
             ></textarea>
           </div>
-          <div v-if="solicitudAbierta.tipoSolicitud === 'PS'" class="mb-3">
-            <label class="form-label">Tiempo máximo:</label>
-            <input
-              v-model="solicitudAbierta.tiempoMaximo"
-              type="number"
-              class="form-control mx-auto"
-            />
-          </div>
-
           <div class="d-flex justify-content-between">
             <button v-if="editando" type="submit" class="btn btn-primary">
               Guardar cambios
@@ -391,7 +400,11 @@
           >
             Cancelar
           </button>
-          <button type="button" class="btn btn-primary" @click="confirmarEnvio">
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="enviarDosSolicitudes"
+          >
             Continuar
           </button>
         </div>

@@ -23,13 +23,11 @@ public class SolicitudServicio {
   }
 
   public void comprobarViabilidadSolicitud(SolicitudConId solicitud) {
-    ReservistaConId reservista =
-        entityManager.getReference(ReservistaConId.class, solicitud.getReservista().getId());
-    if (solicitud.getDiasDuracion() + reservista
-        .getDiasConsumidos(solicitud.getFechaInicio().getYear()) > maximoDiasActivacion) {
+    ReservistaConId reservista = entityManager.getReference(ReservistaConId.class, solicitud.getReservista().getId());
+    if (solicitud.getDiasDuracion()
+        + reservista.getDiasConsumidos(solicitud.getFechaInicio().getYear()) > maximoDiasActivacion) {
       throw new IllegalArgumentException("El reservista cuenta con "
-          + String.valueOf(maximoDiasActivacion
-              - reservista.getDiasConsumidos(solicitud.getFechaInicio().getYear()))
+          + String.valueOf(maximoDiasActivacion - reservista.getDiasConsumidos(solicitud.getFechaInicio().getYear()))
           + " dias disponibles y la activación dura " + solicitud.getDiasDuracion() + " dias");
     }
 
@@ -38,18 +36,16 @@ public class SolicitudServicio {
         || fechaFinCompromiso.isAfter(solicitud.getFechaInicio()))
         && (fechaFinCompromiso.isEqual(solicitud.getFechaFin())
             || fechaFinCompromiso.isBefore(solicitud.getFechaFin()))) {
-      throw new IllegalArgumentException("La fecha de fin de compromiso del reservista ("
-          + fechaFinCompromiso + ") transcurre durante la activación");
+      throw new IllegalArgumentException(
+          "La fecha de fin de compromiso del reservista (" + fechaFinCompromiso + ") transcurre durante la activación");
     }
-    LocalDate fechaCaducidadReconocmientoMedico =
-        reservista.getFechaCaducidadReconocimientoMedico();
+    LocalDate fechaCaducidadReconocmientoMedico = reservista.getFechaCaducidadReconocimientoMedico();
     if ((fechaCaducidadReconocmientoMedico.isEqual(solicitud.getFechaInicio())
         || fechaCaducidadReconocmientoMedico.isAfter(solicitud.getFechaInicio()))
         && (fechaCaducidadReconocmientoMedico.isEqual(solicitud.getFechaFin())
             || fechaCaducidadReconocmientoMedico.isBefore(solicitud.getFechaFin()))) {
-      throw new IllegalArgumentException(
-          "La fecha de caducidad del reconocimiento medico del reservista ("
-              + fechaCaducidadReconocmientoMedico + ") transcurre durante la activación");
+      throw new IllegalArgumentException("La fecha de caducidad del reconocimiento medico del reservista ("
+          + fechaCaducidadReconocmientoMedico + ") transcurre durante la activación");
     }
     reservista.addSolicitudConId(solicitud);
   }

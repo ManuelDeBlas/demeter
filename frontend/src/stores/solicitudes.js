@@ -20,26 +20,28 @@ export const useSolicitudesStore = crearStore("solicitudes", {
   async postSolicitud(solicitud) {
     console.log("postSolicitud", solicitud);
     const solicitudParaLaAPI = { ...solicitud };
-    solicitudParaLaAPI.reservista = { id: getId(solicitud.reservista._links.self.href) };
+    solicitudParaLaAPI.reservista = {
+      id: getId(solicitud.reservista._links.self.href),
+    };
     console.log("Solicitud para la API:", solicitudParaLaAPI);
-    const respuesta = await post(
-      solicitudParaLaAPI,
-      `${API_BASE_URL}/${getNombreDAO(solicitud.tipoSolicitud)}`
-    );
-    console.log("Respuesta de la API:", respuesta);
-    solicitud._links = respuesta.data._links;
-    this.elementos.unshift(solicitud);
-    return respuesta;
+    try {
+      const respuesta = await post(
+        solicitudParaLaAPI,
+        `${API_BASE_URL}/${getNombreDAO(solicitud.tipoSolicitud)}`
+      );
+      solicitud._links = respuesta.data._links;
+      this.elementos.unshift(solicitud);
+      return respuesta;
+    } catch (error) {
+      console.error("Error: ", error);
+    }
   },
   async putSolicitud(solicitud) {
-    ("putSolicitud", solicitud);
+    "putSolicitud", solicitud;
     const solicitudParaLaAPI = { ...solicitud };
     solicitudParaLaAPI.reservista = solicitud.reservista._links.self.href;
-    const respuesta = await put(
-      solicitudParaLaAPI,
-      solicitud._links.self.href
-    );
-    (respuesta);
+    const respuesta = await put(solicitudParaLaAPI, solicitud._links.self.href);
+    respuesta;
     return respuesta;
-  }
+  },
 });

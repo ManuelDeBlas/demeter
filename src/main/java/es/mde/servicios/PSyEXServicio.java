@@ -40,76 +40,79 @@ public class PSyEXServicio {
   }
 
 
-  public List<PrestacionServiciosUnidadConId> crearPS(
+  public PrestacionServiciosUnidadConId crearPS(
       PrestacionServiciosUnidadConId prestacionServiciosUnidad) {
     solicitudServicio.comprobarViabilidadSolicitud(prestacionServiciosUnidad);
-    int anhoInicio = prestacionServiciosUnidad.getFechaInicio().getYear();
-    int anhoFin = prestacionServiciosUnidad.getFechaFin().getYear();
-    List<PrestacionServiciosUnidadConId> respuesta = null;
-    if (anhoInicio != anhoFin) {
-      try {
-        PrestacionServiciosUnidadConId solicitudAnhoInicio =
-            objectMapper.readValue(objectMapper.writeValueAsString(prestacionServiciosUnidad),
-                PrestacionServiciosUnidadConId.class);
-        solicitudAnhoInicio.setFechaFin(LocalDate.of(anhoInicio, 12, 31));
-        solicitudAnhoInicio.setCosteCentimos(calcularCosteCentimos(solicitudAnhoInicio));
-        solicitudDAO.save(solicitudAnhoInicio);
-
-        PrestacionServiciosUnidadConId solicitudAnhoFin =
-            objectMapper.readValue(objectMapper.writeValueAsString(prestacionServiciosUnidad),
-                PrestacionServiciosUnidadConId.class);
-        solicitudAnhoFin.setFechaInicio(LocalDate.of(anhoFin, 1, 1));
-        solicitudAnhoFin.setCosteCentimos(calcularCosteCentimos(solicitudAnhoFin));
-        solicitudDAO.save(solicitudAnhoFin);
-
-        respuesta = List.of(solicitudAnhoInicio, solicitudAnhoFin);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Error al clonar la prestación", e);
-      }
-    } else {
+//    int anhoInicio = prestacionServiciosUnidad.getFechaInicio().getYear();
+//    int anhoFin = prestacionServiciosUnidad.getFechaFin().getYear();
+//    List<PrestacionServiciosUnidadConId> respuesta = null;
+//    if (anhoInicio != anhoFin) {
+//      try {
+//        PrestacionServiciosUnidadConId solicitudAnhoInicio =
+//            objectMapper.readValue(objectMapper.writeValueAsString(prestacionServiciosUnidad),
+//                PrestacionServiciosUnidadConId.class);
+//        solicitudAnhoInicio.setFechaFin(LocalDate.of(anhoInicio, 12, 31));
+//        solicitudAnhoInicio.setCosteCentimos(calcularCosteCentimos(solicitudAnhoInicio));
+//        solicitudDAO.save(solicitudAnhoInicio);
+//
+//        PrestacionServiciosUnidadConId solicitudAnhoFin =
+//            objectMapper.readValue(objectMapper.writeValueAsString(prestacionServiciosUnidad),
+//                PrestacionServiciosUnidadConId.class);
+//        solicitudAnhoFin.setFechaInicio(LocalDate.of(anhoFin, 1, 1));
+//        solicitudAnhoFin.setCosteCentimos(calcularCosteCentimos(solicitudAnhoFin));
+//        solicitudDAO.save(solicitudAnhoFin);
+//
+//        respuesta = List.of(solicitudAnhoInicio, solicitudAnhoFin);
+//      } catch (JsonProcessingException e) {
+//        throw new RuntimeException("Error al clonar la prestación", e);
+//      }
+//    } else {
       prestacionServiciosUnidad.setCosteCentimos(calcularCosteCentimos(prestacionServiciosUnidad));
       PrestacionServiciosUnidadConId guardado = solicitudDAO.save(prestacionServiciosUnidad);
-      respuesta = List.of(guardado);
-    }
+//      respuesta = List.of(guardado);
+//    }
 
-    return respuesta;
+//    return respuesta;
+      return guardado;
   }
 
-  public List<ActivacionAmpliadaConId> crearEX(ActivacionAmpliadaConId activacionAmpliadaConId) {
+  public ActivacionAmpliadaConId crearEX(ActivacionAmpliadaConId activacionAmpliadaConId) {
     solicitudServicio.comprobarViabilidadSolicitud(activacionAmpliadaConId);
 
-    int anhoInicio = activacionAmpliadaConId.getFechaInicio().getYear();
-    int anhoFin = activacionAmpliadaConId.getFechaFin().getYear();
+//    int anhoInicio = activacionAmpliadaConId.getFechaInicio().getYear();
+//    int anhoFin = activacionAmpliadaConId.getFechaFin().getYear();
 
-    List<ActivacionAmpliadaConId> resultado;
+//    List<ActivacionAmpliadaConId> resultado;
 
-    if (anhoInicio != anhoFin) {
-      try {
-        ActivacionAmpliadaConId solicitudAnhoInicio =
-            objectMapper.readValue(objectMapper.writeValueAsString(activacionAmpliadaConId),
-                ActivacionAmpliadaConId.class);
-        solicitudAnhoInicio.setFechaFin(LocalDate.of(anhoInicio, 12, 31));
-        solicitudAnhoInicio.setCosteCentimos(calcularCosteCentimos(solicitudAnhoInicio));
-        solicitudDAO.save(solicitudAnhoInicio);
-
-        ActivacionAmpliadaConId solicitudAnhoFin =
-            objectMapper.readValue(objectMapper.writeValueAsString(activacionAmpliadaConId),
-                ActivacionAmpliadaConId.class);
-        solicitudAnhoFin.setFechaInicio(LocalDate.of(anhoFin, 1, 1));
-        solicitudAnhoFin.setCosteCentimos(calcularCosteCentimos(solicitudAnhoFin));
-        solicitudDAO.save(solicitudAnhoFin);
-
-        resultado = List.of(solicitudAnhoInicio, solicitudAnhoFin);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Error al clonar la activación", e);
-      }
-    } else {
+//    if (anhoInicio != anhoFin) {
+//      try {
+//        ActivacionAmpliadaConId solicitudAnhoInicio =
+//            objectMapper.readValue(objectMapper.writeValueAsString(activacionAmpliadaConId),
+//                ActivacionAmpliadaConId.class);
+//        solicitudAnhoInicio.setFechaFin(LocalDate.of(anhoInicio, 12, 31));
+//        solicitudAnhoInicio.setCosteCentimos(calcularCosteCentimos(solicitudAnhoInicio));
+//        solicitudDAO.save(solicitudAnhoInicio);
+//
+//        ActivacionAmpliadaConId solicitudAnhoFin =
+//            objectMapper.readValue(objectMapper.writeValueAsString(activacionAmpliadaConId),
+//                ActivacionAmpliadaConId.class);
+//        solicitudAnhoFin.setFechaInicio(LocalDate.of(anhoFin, 1, 1));
+//        solicitudAnhoFin.setCosteCentimos(calcularCosteCentimos(solicitudAnhoFin));
+//        solicitudDAO.save(solicitudAnhoFin);
+//
+//        resultado = List.of(solicitudAnhoInicio, solicitudAnhoFin);
+//      } catch (JsonProcessingException e) {
+//        throw new RuntimeException("Error al clonar la activación", e);
+//      }
+//    } else {
       activacionAmpliadaConId.setCosteCentimos(calcularCosteCentimos(activacionAmpliadaConId));
       ActivacionAmpliadaConId guardado = solicitudDAO.save(activacionAmpliadaConId);
-      resultado = List.of(guardado);
-    }
-
-    return resultado;
+//      log.warn);
+//      resultado = List.of(guardado);
+//    }
+//
+      return guardado;
+//    return resultado;
   }
 
 

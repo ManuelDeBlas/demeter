@@ -29,7 +29,7 @@ public class FormacionContinuadaController {
       @RequestBody FormacionContinuadaConId formacionContinuada) {
     ResponseEntity<?> respuesta;
     try {
-      List<FormacionContinuadaConId> creadas =
+      FormacionContinuadaConId creadas =
           formacionContinuadaServicio.crearSolicitud(formacionContinuada);
 //      for (FormacionContinuadaConId formacionContinuadaCreada : creadas) {
 //        

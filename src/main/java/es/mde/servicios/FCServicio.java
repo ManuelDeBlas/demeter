@@ -36,38 +36,40 @@ public class FCServicio {
     this.objectMapper = objectMapper;
   }
 
-  public List<FormacionContinuadaConId> crearSolicitud(
+  public FormacionContinuadaConId crearSolicitud(
       FormacionContinuadaConId formacionContinuada) {
     solicitudServicio.comprobarViabilidadSolicitud(formacionContinuada);
-    int anhoInicio = formacionContinuada.getFechaInicio().getYear();
-    int anhoFin = formacionContinuada.getFechaFin().getYear();
-    List<FormacionContinuadaConId> resultado;
-
-    if (anhoInicio != anhoFin) {
-      try {
-        FormacionContinuadaConId solicitudAnhoInicio = objectMapper.readValue(
-            objectMapper.writeValueAsString(formacionContinuada), FormacionContinuadaConId.class);
-        solicitudAnhoInicio.setFechaFin(LocalDate.of(anhoInicio, 12, 31));
-        solicitudAnhoInicio.setCosteCentimos(calcularCosteCentimos(solicitudAnhoInicio));
-        solicitudDAO.save(solicitudAnhoInicio);
-
-        FormacionContinuadaConId solicitudAnhoFin = objectMapper.readValue(
-            objectMapper.writeValueAsString(formacionContinuada), FormacionContinuadaConId.class);
-        solicitudAnhoFin.setFechaInicio(LocalDate.of(anhoFin, 1, 1));
-        solicitudAnhoFin.setCosteCentimos(calcularCosteCentimos(solicitudAnhoFin));
-        solicitudDAO.save(solicitudAnhoFin);
-
-        resultado = List.of(solicitudAnhoInicio, solicitudAnhoFin);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Error al clonar la activación", e);
-      }
-    } else {
+//    int anhoInicio = formacionContinuada.getFechaInicio().getYear();
+//    int anhoFin = formacionContinuada.getFechaFin().getYear();
+//    List<FormacionContinuadaConId> resultado;
+//
+//    if (anhoInicio != anhoFin) {
+//      try {
+//        FormacionContinuadaConId solicitudAnhoInicio = objectMapper.readValue(
+//            objectMapper.writeValueAsString(formacionContinuada), FormacionContinuadaConId.class);
+//        solicitudAnhoInicio.setFechaFin(LocalDate.of(anhoInicio, 12, 31));
+//        solicitudAnhoInicio.setCosteCentimos(calcularCosteCentimos(solicitudAnhoInicio));
+//        solicitudDAO.save(solicitudAnhoInicio);
+//
+//        FormacionContinuadaConId solicitudAnhoFin = objectMapper.readValue(
+//            objectMapper.writeValueAsString(formacionContinuada), FormacionContinuadaConId.class);
+//        solicitudAnhoFin.setFechaInicio(LocalDate.of(anhoFin, 1, 1));
+//        solicitudAnhoFin.setCosteCentimos(calcularCosteCentimos(solicitudAnhoFin));
+//        solicitudDAO.save(solicitudAnhoFin);
+//
+//        resultado = List.of(solicitudAnhoInicio, solicitudAnhoFin);
+//      } catch (JsonProcessingException e) {
+//        throw new RuntimeException("Error al clonar la activación", e);
+//      }
+//    } else {
       formacionContinuada.setCosteCentimos(calcularCosteCentimos(formacionContinuada));
       FormacionContinuadaConId guardado = solicitudDAO.save(formacionContinuada);
-      resultado = List.of(guardado);
-    }
-
-    return resultado;
+      
+      return guardado;
+//      resultado = List.of(guardado);
+//    }
+//
+//    return resultado;
   }
 
   private int calcularCosteCentimos(FormacionContinuadaConId formacionContinuada) {

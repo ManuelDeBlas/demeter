@@ -30,7 +30,7 @@ public class PrestacionServiciosController {
   public ResponseEntity<?> crearPrestacionServiciosUnidad(
       @RequestBody PrestacionServiciosUnidadConId prestacionServiciosUnidad) {
     try {
-      List<PrestacionServiciosUnidadConId> creadas =
+      PrestacionServiciosUnidadConId creadas =
           pSyEXServicio.crearPS(prestacionServiciosUnidad);
       return ResponseEntity.status(HttpStatus.CREATED).body(creadas);
     } catch (Exception e) {

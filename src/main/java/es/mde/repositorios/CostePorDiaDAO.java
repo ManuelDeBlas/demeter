@@ -9,6 +9,6 @@ import es.mde.entidades.CostePorDia;
     collectionResourceRel = "costes-por-dia")
 public interface CostePorDiaDAO extends JpaRepository<CostePorDia, Long> {
 
-  int findCentimosByEmpleo(@Param("empleo") String empleo);
+  CostePorDia findByEmpleo(@Param("empleo") String empleo);
 
 }

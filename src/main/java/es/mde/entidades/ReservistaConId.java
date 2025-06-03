@@ -1,6 +1,9 @@
 package es.mde.entidades;
 
 import java.util.Collection;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import es.mde.secres.Reservista;
 import es.mde.secres.Solicitud;
 import jakarta.persistence.Column;
@@ -12,14 +15,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
- * Representa un reservista.
- * Extiende la funcionalidad de {@link ReservistaImpl}.
+ * Representa un reservista. Extiende la funcionalidad de {@link ReservistaImpl}.
  * 
- * Esta entidad está mapeada a la tabla "RESERVISTAS" en la base de datos.
- * Contiene información sobre las solicitudes asociadas al reservista.
+ * Esta entidad está mapeada a la tabla "RESERVISTAS" en la base de datos. Contiene información
+ * sobre las solicitudes asociadas al reservista.
  * 
- * @author
- * Manuel de Blas Pino
+ * @author Manuel de Blas Pino
  * @version 1.0
  */
 @Entity
@@ -34,11 +35,11 @@ public class ReservistaConId extends Reservista {
   @Column(unique = true)
   private Long id;
 
-//  /**
-//   * Lista de solicitudes asociadas al reservista.
-//   */
-//  @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "reservista")
-//  private List<SolicitudConId> solicitudesConId;
+  // /**
+  // * Lista de solicitudes asociadas al reservista.
+  // */
+  // @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "reservista")
+  // private List<SolicitudConId> solicitudesConId;
 
   /**
    * Obtiene el identificador único del reservista.
@@ -65,27 +66,23 @@ public class ReservistaConId extends Reservista {
    */
   @Override
   @OneToMany(targetEntity = SolicitudConId.class)
+  @JsonIgnore
   public Collection<Solicitud> getSolicitudes() {
     return super.getSolicitudes();
   }
-//
-//  /**
-//   * Establece la lista de solicitudes asociadas al reservista.
-//   * 
-//   * @param solicitudesConId la lista de solicitudes a establecer.
-//   */
-//  public void setSolicitudesConId(List<SolicitudConId> solicitudesConId) {
-//    this.solicitudesConId = solicitudesConId;
-//  }
-  
+  //
+  // /**
+  // * Establece la lista de solicitudes asociadas al reservista.
+  // *
+  // * @param solicitudesConId la lista de solicitudes a establecer.
+  // */
+  // public void setSolicitudesConId(List<SolicitudConId> solicitudesConId) {
+  // this.solicitudesConId = solicitudesConId;
+  // }
+
   public void addSolicitudConId(SolicitudConId solicitud) {
     super.getSolicitudes().add(solicitud);
     solicitud.setReservista(this);
-}
+  }
 
-  /**
-   * Constructor por defecto.
-   */
-  public ReservistaConId() {}
-  
 }

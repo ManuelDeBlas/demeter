@@ -7,6 +7,11 @@ export function getNombreDAO(tipoSolicitud) {
   return tiposSolicitudes[tipoSolicitud];
 }
 
+export function getId(url) {
+    const urlATrozos = url.split("/");
+    return parseInt(urlATrozos[urlATrozos.length - 1]);
+}
+
 export function formatearAtributoEnElFrontend(atributo) {
   const nombresFront = {
     PS: "Prestación servicio unidad",

@@ -44,7 +44,4 @@ public class PresupuestoConId extends Presupuesto {
     this.id = id;
   }
 
-  public PresupuestoConId() {
-  }
-
 }

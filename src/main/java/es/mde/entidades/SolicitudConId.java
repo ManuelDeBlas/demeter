@@ -48,13 +48,6 @@ public abstract class SolicitudConId extends SolicitudImpl {
   private ExpedienteConId expediente;
 
   private int costeCentimos;
-//  @Transient
-//  private Estados estadoAnterior;
-
-//  @PostLoad
-//  public void guardarEstadoPrevio() {
-//    this.estadoAnterior = this.getEstado();
-//  }
 
   public Long getId() {
     return id;
@@ -98,12 +91,6 @@ public abstract class SolicitudConId extends SolicitudImpl {
   @Override
   public void setCosteCentimos(int costeCentimos) {
     this.costeCentimos = costeCentimos;
-  }
-
-  /**
-   * Constructor por defecto.
-   */
-  public SolicitudConId() {
   }
 
 }

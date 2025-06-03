@@ -24,7 +24,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import es.mde.entidades.ActivacionAmpliadaConId;
 import es.mde.entidades.ExpedienteConId;
+import es.mde.entidades.FormacionContinuadaConId;
+import es.mde.entidades.PrestacionServiciosUnidadConId;
 import es.mde.entidades.SolicitudConId;
 
 /**
@@ -49,7 +52,9 @@ public class ConfiguracionRest {
       RepositoryRestConfiguration config) {
     Map<Class<?>, Class<?>> controllersRegistrados = new HashMap<>();
     controllersRegistrados.put(ExpedienteConId.class, ExpedienteController.class);
-    controllersRegistrados.put(SolicitudConId.class, SolicitudController.class);
+    controllersRegistrados.put(FormacionContinuadaConId.class, FormacionContinuadaController.class);
+    controllersRegistrados.put(ActivacionAmpliadaConId.class, ActivacionAmpliadaController.class);
+    controllersRegistrados.put(PrestacionServiciosUnidadConId.class, PrestacionServiciosController.class);
 
     return new RepresentationModelProcessor<RepositorySearchesResource>() {
 

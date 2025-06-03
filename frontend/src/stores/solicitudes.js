@@ -2,49 +2,46 @@ import { API_BASE_URL } from "@/config/app";
 import { crearStore } from "@/stores/fabricaStore";
 import { get, post, put } from "@/utils/api-service";
 import { useReservistasStore } from "@/stores/reservistas";
-import { usePocsStore } from "@/stores/pocs";
 import { getNombreDAO } from "@/utils/utils";
+import { getId } from "@/utils/utils";
 
 export const useSolicitudesStore = crearStore("solicitudes", {
-  async cargarReservistaYPocEnSolicitudAlIniciar() {
+  async cargarReservistaEnSolicitudAlIniciar() {
     for (let solicitud of this.elementos) {
       const reservistaAPI = await get(solicitud._links.reservista.href);
-      const pocAPI = await get(solicitud._links.poc.href);
       const reservistaEnStore = useReservistasStore().recuperarObjetoDelStore(
         reservistaAPI.data._links.self.href
       );
-      const pocEnStore = usePocsStore().recuperarObjetoDelStore(
-        pocAPI.data._links.self.href
-      );
       solicitud.reservista = reservistaEnStore;
-      solicitud.poc = pocEnStore;
       // TODO Esto genera una referencia circular.
       // reservistaEnStore.solicitudes.push(solicitud);
-      // pocEnStore.solicitudes.push(solicitud);
     }
   },
   async postSolicitud(solicitud) {
+    console.log("postSolicitud", solicitud);
     const solicitudParaLaAPI = { ...solicitud };
-    solicitudParaLaAPI.reservista = solicitud.reservista._links.self.href;
-    solicitudParaLaAPI.poc = solicitud.poc._links.self.href;
-    const respuesta = await post(
-      solicitudParaLaAPI,
-      `${API_BASE_URL}/${getNombreDAO(solicitud.tipoSolicitud)}`
-    );
-    solicitud._links = respuesta.data._links;
-    this.elementos.unshift(solicitud);
-    return respuesta;
+    solicitudParaLaAPI.reservista = {
+      id: getId(solicitud.reservista._links.self.href),
+    };
+    console.log("Solicitud para la API:", solicitudParaLaAPI);
+    try {
+      const respuesta = await post(
+        solicitudParaLaAPI,
+        `${API_BASE_URL}/${getNombreDAO(solicitud.tipoSolicitud)}`
+      );
+      solicitud._links = respuesta.data._links;
+      this.elementos.unshift(solicitud);
+      return respuesta;
+    } catch (error) {
+      console.error("Error: ", error);
+    }
   },
   async putSolicitud(solicitud) {
-    ("putSolicitud", solicitud);
+    "putSolicitud", solicitud;
     const solicitudParaLaAPI = { ...solicitud };
     solicitudParaLaAPI.reservista = solicitud.reservista._links.self.href;
-    solicitudParaLaAPI.poc = solicitud.poc._links.self.href;
-    const respuesta = await put(
-      solicitudParaLaAPI,
-      solicitud._links.self.href
-    );
-    (respuesta);
+    const respuesta = await put(solicitudParaLaAPI, solicitud._links.self.href);
+    respuesta;
     return respuesta;
-  }
+  },
 });

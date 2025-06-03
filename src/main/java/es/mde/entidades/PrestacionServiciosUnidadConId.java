@@ -31,9 +31,4 @@ public class PrestacionServiciosUnidadConId extends SolicitudConId
     return true;
   }
 
-  /**
-   * Constructor por defecto.
-   */
-  public PrestacionServiciosUnidadConId() {}
-
 }

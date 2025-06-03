@@ -53,9 +53,4 @@ public class FormacionContinuadaConId extends SolicitudConId implements Formacio
     return false;
   }
 
-  /**
-   * Constructor por defecto.
-   */
-  public FormacionContinuadaConId() {}
-
 }

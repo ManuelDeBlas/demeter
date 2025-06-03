@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -89,6 +90,7 @@ public class ConfiguracionPorJava {
    * @return Bean configurado de tipo {@link EntityManager}.
    */
   @Bean
+  @Primary
   public EntityManager entityManager(EntityManagerFactory emf) {
     System.err.println("--- LAS ENTIDADES MAPEADAS SON ---");
     emf.getMetamodel().getEntities().forEach(System.err::println);

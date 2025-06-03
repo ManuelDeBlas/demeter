@@ -53,6 +53,4 @@ public class CostePorDia {
     this.centimos = centimos;
   }
 
-  public CostePorDia() {}
-
 }

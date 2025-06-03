@@ -29,17 +29,6 @@ public class ExpedienteConId extends Expediente {
   @Column(unique = true)
   private Long id;
 
-//  /**
-//   * Colección de solicitudes asociadas al expediente.
-//   */
-//  @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "expediente")
-//  private Collection<SolicitudConId> solicitudes;
-//
-//  /**
-//   * Estado actual del expediente.
-//   */
-//  private String estado;
-
   /**
    * Obtiene el identificador único del expediente.
    * 
@@ -56,17 +45,6 @@ public class ExpedienteConId extends Expediente {
    */
   public void setId(Long id) {
     this.id = id;
-  }
-//
-//  public String getEstado() {
-//    return estado;
-//  }
-//
-//  public void setEstado(String estado) {
-//    this.estado = estado;
-//  }
-
-  public ExpedienteConId() {
   }
   
   @Override

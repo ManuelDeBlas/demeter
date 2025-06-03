@@ -1,14 +1,15 @@
 package es.mde.rest;
 
 import java.net.URI;
-
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import es.mde.entidades.ActivacionAmpliadaConId;
 import es.mde.entidades.FormacionContinuadaConId;
 import es.mde.servicios.FCServicio;
 
@@ -24,12 +25,21 @@ public class FormacionContinuadaController {
   }
 
   @PostMapping("/formaciones-continuadas")
-  public ResponseEntity<FormacionContinuadaConId> crearFormacionContinuada(
+  public ResponseEntity<?> crearFormacionContinuada(
       @RequestBody FormacionContinuadaConId formacionContinuada) {
-    log.warn("se recibe una solicitud");
-    FormacionContinuadaConId creado = formacionContinuadaServicio.crearSolicitud(formacionContinuada);
-    URI uri = URI.create("/solicitudes/" + creado.getId());
+    ResponseEntity<?> respuesta;
+    try {
+      List<FormacionContinuadaConId> creadas =
+          formacionContinuadaServicio.crearSolicitud(formacionContinuada);
+//      for (FormacionContinuadaConId formacionContinuadaCreada : creadas) {
+//        
+//      }
+      respuesta = ResponseEntity.status(HttpStatus.CREATED).body(creadas);
+    } catch (Exception e) {
+      respuesta = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
 
-    return ResponseEntity.created(uri).body(creado);
+    return respuesta;
   }
+
 }

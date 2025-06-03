@@ -100,10 +100,4 @@ public abstract class SolicitudConId extends SolicitudImpl {
     this.costeCentimos = costeCentimos;
   }
 
-  /**
-   * Constructor por defecto.
-   */
-  public SolicitudConId() {
-  }
-
 }

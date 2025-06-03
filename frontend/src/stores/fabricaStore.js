@@ -51,6 +51,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
         }
       },
       async eliminarElemento(objeto) {
+        // const hrefAEliminar = objeto;
         const hrefAEliminar = objeto._links.self.href;
         const respuesta = await deleteEntidad(hrefAEliminar);
         const indice = this.elementos.findIndex(

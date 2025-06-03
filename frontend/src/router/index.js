@@ -18,11 +18,6 @@ const routes = [
     component: () => import("@/views/listados/ListadoReservistasView.vue"),
   },
   {
-    path: "/listado/pocs",
-    name: "ListadoPocsView",
-    component: () => import("@/views/listados/ListadoPocsView.vue"),
-  },
-  {
     path: "/listado/expedientes",
     name: "ListadoExpedientesView",
     component: () => import("@/views/listados/ListadoExpedientesView.vue"),
@@ -31,11 +26,6 @@ const routes = [
     path: "/formulario/reservista",
     name: "FormularioReservistaView",
     component: () => import("@/views/formularios/FormularioReservistaView.vue"),
-  },
-      {
-    path: "/formulario/poc",
-    name: "FormularioPocView",
-    component: () => import("@/views/formularios/FormularioPocView.vue"),
   },
   {
     path: "/formulario/solicitud",

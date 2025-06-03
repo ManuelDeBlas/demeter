@@ -1,7 +1,6 @@
 <script>
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import { useReservistasStore } from "@/stores/reservistas";
-  import { usePocsStore } from "@/stores/pocs";
   import { useUcosStore } from "@/stores/ucos";
   import { mapActions } from "pinia";
 
@@ -12,12 +11,12 @@
         editando: true,
         mostrarModal: false,
         mostrarModalReservistas: false,
-        mostrarModalPocs: false,
         mostrarModalUcos: false,
+        mostrarModalConfirmacion: false,
         mensajeModal: "",
         uco: null,
         reservista: null,
-        poc: null,
+        envioPendiente: false,
       };
     },
     computed: {
@@ -29,7 +28,6 @@
               nombreUco: "",
               ciu: "",
               reservista: null,
-              poc: null,
               fechaInicio: "",
               fechaFin: "",
               tipoSolicitud: "",
@@ -45,20 +43,12 @@
       reservistas() {
         return useReservistasStore().elementos;
       },
-      pocs() {
-        return usePocsStore().elementos;
-      },
       ucos() {
         return useUcosStore().ucos;
       },
       reservistaFormateado() {
         return this.solicitudAbierta.reservista
           ? `${this.solicitudAbierta.reservista.dni} ${this.solicitudAbierta.reservista.empleo} ${this.solicitudAbierta.reservista.nombre} ${this.solicitudAbierta.reservista.apellido1} ${this.solicitudAbierta.reservista.apellido2}`
-          : "";
-      },
-      pocFormateado() {
-        return this.solicitudAbierta.poc
-          ? `${this.solicitudAbierta.poc.empleo} ${this.solicitudAbierta.poc.nombre} ${this.solicitudAbierta.poc.apellido1} ${this.solicitudAbierta.poc.apellido2}`
           : "";
       },
     },
@@ -78,33 +68,44 @@
         this.solicitudAbierta.reservista = reservista;
         this.mostrarModalReservistas = false;
       },
-      seleccionarPoc(poc) {
-        this.poc = poc;
-        this.solicitudAbierta.poc = poc;
-        this.mostrarModalPocs = false;
-      },
       async enviarFormulario() {
         try {
+          // TODO hacer 2 solicitudes independientes
+          const inicio = new Date(this.solicitudAbierta.fechaInicio);
+          const fin = new Date(this.solicitudAbierta.fechaFin);
+          if (
+            inicio.getFullYear() !== fin.getFullYear() &&
+            !this.envioPendiente
+          ) {
+            this.mostrarModalConfirmacion = true;
+            return;
+          }
           if (this.editando) {
             await this.putSolicitud(this.solicitudAbierta);
             this.mensajeModal = `Solicitud editada correctamente`;
           } else {
-            "Solicitud enviada en el store desde el formulario:",
-              this.solicitudAbierta;
             const respuesta = await this.postSolicitud(this.solicitudAbierta);
-            "Respuesta del servidor:", respuesta;
-
             this.mensajeModal = `Solicitud añadida correctamente`;
           }
         } catch (error) {
           this.mensajeModal = `Error al procesar la solicitud: ${error.message}`;
         } finally {
           this.mostrarModal = true;
+          this.envioPendiente = false;
         }
+      },
+      confirmarEnvio() {
+        this.mostrarModalConfirmacion = false;
+        this.envioPendiente = true;
+        this.enviarFormulario();
+      },
+      cancelarEnvio() {
+        this.mostrarModalConfirmacion = false;
+        this.envioPendiente = false;
       },
       async eliminarSolicitud() {
         try {
-          await this.eliminarElemento(this.solicitudAbierta._links.self.href);
+          await this.eliminarElemento(this.solicitudAbierta);
           this.mensajeModal = `Solicitud eliminada correctamente.`;
         } catch (error) {
           this.mensajeModal = `Error al eliminar la solicitud: ${error.message}`;
@@ -121,6 +122,8 @@
 </script>
 
 <template>
+  <div>{{ solicitudAbierta }}</div>
+  <div>{{ editando }}</div>
   <div
     class="formulario-con-fondo d-flex justify-content-center align-items-center"
   >
@@ -173,24 +176,6 @@
                 @click="mostrarModalReservistas = true"
               >
                 Seleccionar Reservista
-              </button>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">POC:</label>
-            <div class="d-flex align-items-center gap-2 mx-auto">
-              <input
-                disabled
-                v-model="pocFormateado"
-                type="text"
-                class="form-control"
-              />
-              <button
-                type="button"
-                class="btn btn-secondary mt-2"
-                @click="mostrarModalPocs = true"
-              >
-                Seleccionar POC
               </button>
             </div>
           </div>
@@ -340,40 +325,6 @@
         </div>
       </div>
     </div>
-
-    <div
-      v-if="mostrarModalPocs"
-      class="modal fade show"
-      tabindex="-1"
-      style="display: block; background-color: rgba(0, 0, 0, 0.5)"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Seleccionar POC</h5>
-            <button
-              type="button"
-              class="btn-close"
-              @click="mostrarModalPocs = false"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <ul class="list-group">
-              <li
-                v-for="poc in pocs"
-                :key="poc.id"
-                class="list-group-item"
-                @click="seleccionarPoc(poc)"
-              >
-                {{ poc.empleo }}&nbsp; {{ poc.apellido1 }}&nbsp;
-                {{ poc.apellido2 }},&nbsp;
-                {{ poc.nombre }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div
@@ -403,6 +354,46 @@
               {{ uco.nombreUco }}&nbsp; (CIU: {{ uco.ciu }})
             </li>
           </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    v-if="mostrarModalConfirmacion"
+    class="modal fade show"
+    tabindex="-1"
+    style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar envío</h5>
+          <button
+            type="button"
+            class="btn-close"
+            @click="cancelarEnvio"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Las fechas de inicio y fin no están en el mismo año natural. Si
+            desea continuar, se crearán dos solicitudes independientes
+            transcurriendo cada una durante su propio año natural. ¿Desea
+            continuar?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click="cancelarEnvio"
+          >
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-primary" @click="confirmarEnvio">
+            Continuar
+          </button>
         </div>
       </div>
     </div>

@@ -9,9 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import es.mde.dtos.SolicitudConLinks;
 import es.mde.entidades.ActivacionAmpliadaConId;
 import es.mde.entidades.FormacionContinuadaConId;
 import es.mde.servicios.FCServicio;
+import es.mde.util.CargadorLinks;
 
 @RepositoryRestController
 public class FormacionContinuadaController {
@@ -27,14 +30,14 @@ public class FormacionContinuadaController {
   @PostMapping("/formaciones-continuadas")
   public ResponseEntity<?> crearFormacionContinuada(
       @RequestBody FormacionContinuadaConId formacionContinuada) {
-    ResponseEntity<?> respuesta;
+    ResponseEntity<?> respuesta = null;
     try {
-      FormacionContinuadaConId creadas =
+      FormacionContinuadaConId creada =
           formacionContinuadaServicio.crearSolicitud(formacionContinuada);
-//      for (FormacionContinuadaConId formacionContinuadaCreada : creadas) {
-//        
-//      }
-      respuesta = ResponseEntity.status(HttpStatus.CREATED).body(creadas);
+      SolicitudConLinks dto = CargadorLinks.cargarLinks(creada);
+      URI selfUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+          .buildAndExpand(creada.getId()).toUri();
+      respuesta = ResponseEntity.created(selfUri).body(dto);
     } catch (Exception e) {
       respuesta = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }

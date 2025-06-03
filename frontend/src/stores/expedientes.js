@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/config/app";
+import { getId } from "@/utils/utils";
 import { crearStore } from "@/stores/fabricaStore";
 import { useSolicitudesStore } from "@/stores/solicitudes";
 import { get, patchEntidad } from "@/utils/api-service";
@@ -6,10 +7,8 @@ import { get, patchEntidad } from "@/utils/api-service";
 export const useExpedientesStore = crearStore("expedientes", {
   agregarSolicitudAExpediente(solicitud) {
     ("Agregando solicitud al expediente:", solicitud);
-    let urlExpediente = this.elementoAbierto._links.self.href.split("/");
-    let expedienteId = urlExpediente[urlExpediente.length - 1];
-    let urlSolicitud = solicitud._links.self.href.split("/");
-    let solicitudId = urlSolicitud[urlSolicitud.length - 1];
+    const expedienteId = getId(this.elementoAbierto._links.self.href);
+    const solicitudId = getId(solicitud._links.self.href);
     patchEntidad(
       `${API_BASE_URL}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
     );
@@ -20,10 +19,8 @@ export const useExpedientesStore = crearStore("expedientes", {
     solicitud.estado = "ACEPTADA_PENDIENTE_PUBLICACION";
   },
   eliminarSolicitudDeExpediente(solicitud) {
-    let urlExpediente = this.elementoAbierto._links.self.href.split("/");
-    let expedienteId = urlExpediente[urlExpediente.length - 1];
-    let urlSolicitud = solicitud._links.self.href.split("/");
-    let solicitudId = urlSolicitud[urlSolicitud.length - 1];
+    const expedienteId = getId(this.elementoAbierto._links.self.href);
+    const solicitudId = getId(solicitud._links.self.href);
     patchEntidad(
       `${API_BASE_URL}/expedientes/${expedienteId}/desasignar-solicitud/${solicitudId}`
     );

@@ -16,7 +16,7 @@
 			<basic name="dni" />
 			<basic name="telefonoParticular" />
 			<basic name="fechaFinCompromiso" />
-			<basic name="diasConsumidos" />
+			<basic name="fechaCaducidadReconocimientoMedico" />
 			<basic name="localidadResidencia" />
 			<basic name="subdelegacionDefensa" />
 			<one-to-many name="solicitudes"

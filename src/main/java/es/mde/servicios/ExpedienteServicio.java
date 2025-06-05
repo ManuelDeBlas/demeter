@@ -131,11 +131,9 @@ public class ExpedienteServicio {
     PresupuestoConId presupuesto = entidadesAModificar.presupuesto();
     if (expediente.getSolicitudes().contains(solicitud)) {
       expediente.removeSolicitud(solicitud);
-      solicitud.setExpediente(null);
-      solicitud.setEstado(Estados.PENDIENTE_EVALUACION);
       if (solicitud.isPagaSecres()) {
-        int costeCentimosSolicitud = solicitud.getCosteCentimos();
-        presupuesto.setCantidadCentimos(presupuesto.getCantidadCentimos() + costeCentimosSolicitud);
+        presupuesto
+            .setCantidadCentimos(presupuesto.getCantidadCentimos() + solicitud.getCosteCentimos());
       }
     } else {
       throw new IllegalArgumentException("El expediente " + expediente.getNumeroExpediente()

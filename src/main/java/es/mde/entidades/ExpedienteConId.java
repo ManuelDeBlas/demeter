@@ -62,6 +62,7 @@ public class ExpedienteConId extends Expediente {
   public void removeSolicitud(SolicitudConId solicitud) {
     getSolicitudes().remove(solicitud);
     solicitud.setExpediente(null);
+    solicitud.setEstado(Estados.PENDIENTE_EVALUACION);      
   }
 
 }

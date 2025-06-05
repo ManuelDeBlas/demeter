@@ -11,8 +11,6 @@
 		<attributes>
 			<basic name="numeroExpediente" />
 			<basic name="estado" />
-			<!-- <basic name="tipoSolicitud" /> -->
-			<basic name="pagaSecres" />
 			<one-to-many name="solicitudes"
 				target-entity="es.mde.entidades.SolicitudConId"
 				mapped-by="expediente" />

@@ -47,6 +47,17 @@ import es.mde.entidades.SolicitudConId;
 @Configuration
 public class ConfiguracionRest {
 
+  /**
+   * Enlaza automaticamente los links de los controladores registrados siguiendo
+   * las <a href=
+   * "https://www.hijosdelspectrum.com/2020/05/codigo-util-clase-configuracionrest.html">instrucciones
+   * </a>
+   * 
+   * @param config {@link RepositoryRestConfiguration} para recuperar al
+   *               {@code basePath}
+   * @return el bean del tipo
+   *         {@code RepresentationModelProcessor<RepositorySearchesResource>}
+   */
   @Bean
   RepresentationModelProcessor<RepositorySearchesResource> addSearchLinks(
       RepositoryRestConfiguration config) {

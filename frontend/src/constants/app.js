@@ -4,4 +4,7 @@ export const ESTADOS_SOLICITUD = [
   "ACEPTADA_PUBLICADA",
   "RECHAZADA",
 ];
+
 export const ESTADOS_EXPEDIENTE = ["ABIERTO", "ENVIADO_AL_BOD", "PUBLICADO"];
+
+export const TIPOS_SOLICITUD = ["PS", "FC", "EX"];

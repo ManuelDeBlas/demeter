@@ -38,7 +38,7 @@
       </div>
       <div class="d-flex align-items-center ms-2">
         <img
-          src="../../assets/logo-demeter.jpeg"
+          src="../../assets/logo_tierra_color.svg"
           alt="Logo-demeter"
           class="logo-img me-2"
         />

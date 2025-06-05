@@ -6,7 +6,7 @@ import { createPinia } from "pinia";
 // Import our custom CSS
 import "@/scss/styles.scss";
 
-// Import all of Bootstrap's JS
+// Bootstrap
 import * as bootstrap from "bootstrap";
 
 // FontAwesome

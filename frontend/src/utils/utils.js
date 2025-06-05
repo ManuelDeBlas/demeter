@@ -23,7 +23,18 @@ export function formatearAtributoEnElFrontend(atributo) {
     RECHAZADA: "Rechazada",
     ABIERTO: "Abierto",
     ENVIADO_AL_BOD: "Enviado al BOD",
-    PUBLICADO: "Publicado",
+    PUBLICADO: "Publicado"
   };
   return nombresFront[atributo];
+}
+
+export function formatearFecha(fecha) {
+  const fechaObj = new Date(fecha);
+  const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  return fechaObj.toLocaleDateString('es-ES', opciones);
+}
+
+export function formatearCentimosAEuros(centimos) {
+  const euros = (centimos / 100).toFixed(2);
+  return `${euros.replace('.', ',')} €`;
 }

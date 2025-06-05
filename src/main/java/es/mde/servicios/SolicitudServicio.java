@@ -15,21 +15,12 @@ public class SolicitudServicio {
 
   private final EntityManager entityManager;
 
-  @Value("${maximo-dias-activacion}")
-  private int maximoDiasActivacion;
-
   public SolicitudServicio(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
 
   public void comprobarViabilidadSolicitud(SolicitudConId solicitud) {
     ReservistaConId reservista = entityManager.getReference(ReservistaConId.class, solicitud.getReservista().getId());
-    if (solicitud.getDiasDuracion()
-        + reservista.getDiasConsumidos(solicitud.getFechaInicio().getYear()) > maximoDiasActivacion) {
-      throw new IllegalArgumentException("El reservista cuenta con "
-          + String.valueOf(maximoDiasActivacion - reservista.getDiasConsumidos(solicitud.getFechaInicio().getYear()))
-          + " dias disponibles y la activación dura " + solicitud.getDiasDuracion() + " dias");
-    }
 
     LocalDate fechaFinCompromiso = reservista.getFechaFinCompromiso();
     if ((fechaFinCompromiso.isEqual(solicitud.getFechaInicio())

@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import es.mde.entidades.CostePorDia;
 import es.mde.entidades.ExpedienteConId;
@@ -37,6 +38,9 @@ public class ExpedienteServicio {
   private final CostePorDiaDAO costePorDiaDAO;
   private final EmailSenderServicio emailSenderServicio;
 
+  @Value("${maximo-dias-activacion}")
+  private int maximoDiasActivacion;
+
   /**
    * Constructor que inyecta los DAOs y el servicio de correo electrónico.
    * 
@@ -46,7 +50,8 @@ public class ExpedienteServicio {
    */
   @Autowired
   public ExpedienteServicio(ExpedienteDAO expedienteDAO, SolicitudDAO solicitudDAO,
-      PresupuestoDAO presupuestoDAO, CostePorDiaDAO costePorDiaDAO, EmailSenderServicio emailSenderServicio) {
+      PresupuestoDAO presupuestoDAO, CostePorDiaDAO costePorDiaDAO,
+      EmailSenderServicio emailSenderServicio) {
     this.expedienteDAO = expedienteDAO;
     this.solicitudDAO = solicitudDAO;
     this.presupuestoDAO = presupuestoDAO;
@@ -80,6 +85,13 @@ public class ExpedienteServicio {
     if (!Objects.equals(solicitud.getTipoSolicitud(), expediente.getTipoSolicitud())) {
       throw new IllegalArgumentException("El tipo de la solicitud (" + solicitud.getTipoSolicitud()
           + ") no coincide con el tipo del expediente (" + expediente.getTipoSolicitud() + ")");
+    }
+    if (solicitud.getDiasDuracion() + solicitud.getReservista()
+        .getDiasConsumidos(solicitud.getFechaInicio().getYear()) > maximoDiasActivacion) {
+      throw new IllegalArgumentException("El reservista cuenta con "
+          + String.valueOf(maximoDiasActivacion
+              - solicitud.getReservista().getDiasConsumidos(solicitud.getFechaInicio().getYear()))
+          + " dias disponibles y la activación dura " + solicitud.getDiasDuracion() + " dias");
     }
     int costeCentimosSolicitud = solicitud.getCosteCentimos();
     if (solicitud.isPagaSecres() && presupuesto.getCantidadCentimos() < costeCentimosSolicitud) {

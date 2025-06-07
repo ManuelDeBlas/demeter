@@ -11,6 +11,8 @@
       return {
         seleccionFiltro: "",
         ESTADOS_EXPEDIENTE: ESTADOS_EXPEDIENTE,
+        paginaActual: 1,
+        registrosPorPagina: 10,
       };
     },
     computed: {
@@ -26,8 +28,12 @@
         }
         return expedientesFiltrados;
       },
-            totalPaginas() {
-        return Math.ceil(this.expedientesFiltrados.length / this.registrosPorPagina) || 1;
+      totalPaginas() {
+        return (
+          Math.ceil(
+            this.expedientesFiltrados.length / this.registrosPorPagina
+          ) || 1
+        );
       },
       inicio() {
         return (this.paginaActual - 1) * this.registrosPorPagina;
@@ -47,7 +53,7 @@
         useExpedientesStore().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
         this.$router.push({ path: "/formulario/expediente" });
       },
-            irAPagina(pagina) {
+      irAPagina(pagina) {
         if (pagina >= 1 && pagina <= this.totalPaginas) {
           this.paginaActual = pagina;
         }
@@ -89,7 +95,7 @@
         ></expediente-en-listado-expedientes>
       </div>
     </ul>
-       <div class="row">
+    <div class="row">
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
@@ -112,7 +118,7 @@
                 <div class="d-flex justify-content-end align-items-center">
                   <p class="mx-3">
                     Mostrando el intervalo {{ inicio + 1 }} - {{ fin }} de
-                    {{ solicitudesFiltradas.length }} registros.
+                    {{ expedientesFiltrados.length }} registros.
                   </p>
                   <ul class="pagination justify-content-end">
                     <li

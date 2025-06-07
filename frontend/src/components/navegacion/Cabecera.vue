@@ -77,8 +77,8 @@
         >
       </li>
       <li>
-        <router-link class="nav-link" to="/formulario/credito-secres"
-          >Crédito SECRES</router-link
+        <router-link class="nav-link" to="/listado/presupuestos-secres"
+          >Presupuestos SECRES</router-link
         >
       </li>
       <li>

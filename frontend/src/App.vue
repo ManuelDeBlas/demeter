@@ -6,23 +6,23 @@
   import { useExpedientesStore } from "@/stores/expedientes.js";
   import { useReservistasStore } from "@/stores/reservistas.js";
   import { useSolicitudesStore } from "@/stores/solicitudes.js";
+  import { usePresupuestosSecresStore } from "@/stores/presupuestos-secres.js";
+  import { useCostesPorDiaStore } from "@/stores/costes-por-dia.js";
 
   export default {
     components: { Cabecera, ProgressSpinner, Footer },
     async mounted() {
-      const expedientes = useExpedientesStore();
-      const reservistas = useReservistasStore();
-      const solicitudes = useSolicitudesStore();
-
       await Promise.all([
-        expedientes.cargarElementos(),
-        reservistas.cargarElementos(),
-        solicitudes.cargarElementos(),
+        useExpedientesStore().cargarElementos(),
+        useReservistasStore().cargarElementos(),
+        useSolicitudesStore().cargarElementos(),
+        usePresupuestosSecresStore().cargarElementos(),
+        useCostesPorDiaStore().cargarElementos(),
       ]);
       await Promise.all([
-        expedientes.cargarSolicitudesEnExpedienteAlIniciar(),
-        reservistas.crearListadoSolicitudes(),
-        solicitudes.cargarReservistaEnSolicitudAlIniciar(),
+        useExpedientesStore().cargarSolicitudesEnExpedienteAlIniciar(),
+        useReservistasStore().crearListadoSolicitudes(),
+        useSolicitudesStore().cargarReservistaEnSolicitudAlIniciar(),
       ]);
     },
   };

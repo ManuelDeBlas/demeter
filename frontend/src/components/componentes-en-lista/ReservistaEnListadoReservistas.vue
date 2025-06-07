@@ -1,5 +1,6 @@
 <script>
   import { useReservistasStore } from "@/stores/reservistas";
+  import { formatearFecha } from "@/utils/utils";
 
   export default {
     props: ["reservista"],
@@ -8,13 +9,13 @@
         useReservistasStore().elementoAbierto = this.reservista; // Guarda el elemento en el store para editarlo
         this.$router.push({ path: "/formulario/reservista" });
       },
+      formatearFecha
     },
   };
 </script>
 
 <template>
   <div class="card text-center">
-    <div class="card-header fw-bold fs-5">Reservista</div>
     <div class="card-body">
       <div class="container text-center">
         <div class="row justify-content-between align-items-center">
@@ -27,6 +28,10 @@
                 {{ reservista.apellido2 }}</strong
               ><br />
               DNI: {{ reservista.dni }}<br />
+              Fecha fin de compromiso: 
+              {{ formatearFecha(reservista.fechaFinCompromiso) }}
+              Fecha caducidad reconocimiento médico:
+              {{ formatearFecha(reservista.fechaCaducidadReconocimientoMedico) }}
             </div>
           </div>
           <div class="col-md-6 text-end">

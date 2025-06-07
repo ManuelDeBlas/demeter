@@ -40,7 +40,6 @@ public class CostesFormacionContinuadaInitializer implements CommandLineRunner {
       List<CosteFormacionContinuada> costes =
           Arrays.asList(objectMapper.readValue(inputStream, CosteFormacionContinuada[].class));
       costeFormacionContinuadaDAO.saveAll(costes);
-      log.info("Costes iniciales FC cargados desde JSON");
     }
   }
 

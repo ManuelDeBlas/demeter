@@ -4,12 +4,14 @@ export function getNombreDAO(tipoSolicitud) {
     FC: "formaciones-continuadas",
     EX: "activaciones-ampliadas",
   };
+
   return tiposSolicitudes[tipoSolicitud];
 }
 
 export function getId(url) {
-    const urlATrozos = url.split("/");
-    return parseInt(urlATrozos[urlATrozos.length - 1]);
+  const urlATrozos = url.split("/");
+
+  return parseInt(urlATrozos[urlATrozos.length - 1]);
 }
 
 export function formatearAtributoEnElFrontend(atributo) {
@@ -25,5 +27,21 @@ export function formatearAtributoEnElFrontend(atributo) {
     ENVIADO_AL_BOD: "Enviado al BOD",
     PUBLICADO: "Publicado",
   };
+
   return nombresFront[atributo];
+}
+
+export function formatearFecha(fecha) {
+  const fechaObj = new Date(fecha);
+  const opciones = { year: "numeric", month: "2-digit", day: "2-digit" };
+
+  return fechaObj.toLocaleDateString("es-ES", opciones);
+}
+
+export function formatearCentimosAEuros(centimos) {
+  const euros = (centimos / 100).toFixed(2);
+  const [entero, decimales] = euros.split(".");
+  const enteroConPuntos = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+  return `${enteroConPuntos},${decimales} €`;
 }

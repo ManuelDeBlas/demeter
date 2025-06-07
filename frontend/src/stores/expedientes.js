@@ -6,14 +6,14 @@ import { get, patchEntidad } from "@/utils/api-service";
 
 export const useExpedientesStore = crearStore("expedientes", {
   agregarSolicitudAExpediente(solicitud) {
-    ("Agregando solicitud al expediente:", solicitud);
+    "Agregando solicitud al expediente:", solicitud;
     const expedienteId = getId(this.elementoAbierto._links.self.href);
     const solicitudId = getId(solicitud._links.self.href);
     patchEntidad(
       `${API_BASE_URL}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
     );
-    (this.elementoAbierto.solicitudes);
-    ("Solicitud a agregar:", solicitud);
+    this.elementoAbierto.solicitudes;
+    "Solicitud a agregar:", solicitud;
     this.elementoAbierto.solicitudes.push(solicitud);
     solicitud.expediente = this.elementoAbierto;
     solicitud.estado = "ACEPTADA_PENDIENTE_PUBLICACION";
@@ -51,6 +51,10 @@ export const useExpedientesStore = crearStore("expedientes", {
         // TODO Esto genera una referencia circular.
         // soliditudEnStore.expediente = expediente;
       }
+      const costeExpediente = await get(
+        `${API_BASE_URL}/expedientes/coste-expediente/${expediente.numeroExpediente}`
+      );
+      expediente.coste = costeExpediente.data;
     }
   },
 });

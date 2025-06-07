@@ -4,6 +4,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import es.mde.entidades.ExpedienteConId;
 import es.mde.entidades.SolicitudConId;
 import es.mde.secres.Solicitud;
@@ -21,6 +23,7 @@ import jakarta.persistence.PersistenceContext;
  * @author Manuel de Blas Pino
  * @version 1.0
  */
+//@Transactional(readOnly = true)
 public class ExpedienteDAOImpl implements ExpedienteDAOCustom {
 
   private static final Logger log = LoggerFactory.getLogger(ExpedienteDAOImpl.class);
@@ -40,7 +43,9 @@ public class ExpedienteDAOImpl implements ExpedienteDAOCustom {
   @Override
   public int getCosteCentimosExpedienteByNumeroExpediente(String numeroExpediente) {
     int costeCentimos = 0;
-    for (Solicitud solicitud : expedienteDAO.getByNumeroExpediente(numeroExpediente).getSolicitudes()) {
+    ExpedienteConId expediente = expedienteDAO.findByNumeroExpediente(numeroExpediente)
+        .orElseThrow(() -> new IllegalArgumentException("Expediente no encontrado: " + numeroExpediente));
+    for (Solicitud solicitud : expediente.getSolicitudes()) {
       costeCentimos += solicitud.getCosteCentimos();
     }
 

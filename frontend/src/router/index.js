@@ -22,7 +22,17 @@ const routes = [
     name: "ListadoExpedientesView",
     component: () => import("@/views/listados/ListadoExpedientesView.vue"),
   },
-    {
+  {
+    path: "/listado/presupuestos-secres",
+    name: "ListadoPresupuestosSecresView",
+    component: () => import("@/views/listados/ListadoPresupuestosSecresView.vue"),
+  },
+  {
+    path: "/listado/costes-por-dia",
+    name: "ListadoCostesPorDiaView",
+    component: () => import("@/views/listados/ListadoCostesPorDiaView.vue"),
+  },
+  {
     path: "/formulario/reservista",
     name: "FormularioReservistaView",
     component: () => import("@/views/formularios/FormularioReservistaView.vue"),

@@ -1,31 +1,32 @@
 <script>
   import { useExpedientesStore } from "@/stores/expedientes";
-  import { formatearAtributoEnElFrontend } from "@/utils/utils";
+  import { formatearAtributoEnElFrontend, formatearCentimosAEuros } from "@/utils/utils";
 
   export default {
     props: ["expediente"],
     methods: {
+      formatearAtributoEnElFrontend,
+      formatearCentimosAEuros,
       abrirElemento() {
         useExpedientesStore().elementoAbierto = this.expediente; // Guarda el elemento en el store para editarlo
         this.$router.push({
           name: "FormularioExpedienteView",
         });
-      },
-      formatearAtributoEnElFrontend
+      }
     },
   };
 </script>
 
 <template>
   <div class="card text-center">
-    <div class="card-header fw-bold fs-5">Expediente {{ expediente.numeroExpediente }}</div>
     <div class="card-body">
       <div class="container text-center">
         <div class="row justify-content-between align-items-center">
           <div class="col-md-6 text-start">
             <div class="mb-0">
-              Estado: <strong>{{ formatearAtributoEnElFrontend(expediente.estado) }}</strong>
-              <br/>Tipo: {{ formatearAtributoEnElFrontend(expediente.tipoSolicitud) }}
+              {{ expediente.numeroExpediente }}
+              <strong>{{ formatearAtributoEnElFrontend(expediente.estado) }}</strong>
+              Coste: {{ formatearCentimosAEuros(expediente.coste) }}
             </div>
           </div>
           <div class="col-md-6 text-end">

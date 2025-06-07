@@ -39,7 +39,6 @@ public class CostesPorDiaInitializer implements CommandLineRunner {
       List<CostePorDia> costes =
           Arrays.asList(objectMapper.readValue(inputStream, CostePorDia[].class));
       costePorDiaDAO.saveAll(costes);
-      log.info("Costes iniciales cargados desde JSON");
     }
   }
 

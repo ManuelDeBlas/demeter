@@ -47,8 +47,6 @@ public abstract class SolicitudConId extends SolicitudImpl {
   @JoinColumn(name = "EXPEDIENTE")
   private ExpedienteConId expediente;
 
-  private int costeCentimos;
-
   public Long getId() {
     return id;
   }
@@ -81,16 +79,6 @@ public abstract class SolicitudConId extends SolicitudImpl {
    */
   public void setExpediente(ExpedienteConId expediente) {
     this.expediente = expediente;
-  }
-
-  @Override
-  public int getCosteCentimos() {
-    return costeCentimos;
-  }
-
-  @Override
-  public void setCosteCentimos(int costeCentimos) {
-    this.costeCentimos = costeCentimos;
   }
 
 }

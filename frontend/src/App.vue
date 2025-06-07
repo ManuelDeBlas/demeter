@@ -1,103 +1,101 @@
 <script>
-  import NavBar from "@/components/navegacion/NavBar.vue";
+  import Cabecera from "@/components/navegacion/Cabecera.vue";
+  import ProgressSpinner from "primevue/progressspinner";
+  import Footer from "@/components/navegacion/Footer.vue";
   import { mapActions } from "pinia";
   import { useExpedientesStore } from "@/stores/expedientes.js";
   import { useReservistasStore } from "@/stores/reservistas.js";
   import { useSolicitudesStore } from "@/stores/solicitudes.js";
+  import { usePresupuestosSecresStore } from "@/stores/presupuestos-secres.js";
+  import { useCostesPorDiaStore } from "@/stores/costes-por-dia.js";
 
   export default {
-    components: { NavBar },
+    components: { Cabecera, ProgressSpinner, Footer },
     async mounted() {
-      const expedientes = useExpedientesStore();
-      const reservistas = useReservistasStore();
-      const solicitudes = useSolicitudesStore();
-
       await Promise.all([
-        expedientes.cargarElementos(),
-        reservistas.cargarElementos(),
-        solicitudes.cargarElementos(),
+        useExpedientesStore().cargarElementos(),
+        useReservistasStore().cargarElementos(),
+        useSolicitudesStore().cargarElementos(),
+        usePresupuestosSecresStore().cargarElementos(),
+        useCostesPorDiaStore().cargarElementos(),
       ]);
       await Promise.all([
-        expedientes.cargarSolicitudesEnExpedienteAlIniciar(),
-        reservistas.crearListadoSolicitudes(),
-        solicitudes.cargarReservistaEnSolicitudAlIniciar(),
+        useExpedientesStore().cargarSolicitudesEnExpedienteAlIniciar(),
+        useReservistasStore().crearListadoSolicitudes(),
+        useSolicitudesStore().cargarReservistaEnSolicitudAlIniciar(),
       ]);
     },
   };
 </script>
 <template>
   <div class="app-container">
-    <NavBar></NavBar>
+    <Cabecera></Cabecera>
     <main>
       <router-view></router-view>
     </main>
+    <footer></footer>
   </div>
 </template>
 
 <style>
-  html,
-  body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
   .app-container {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(135deg, #3d7275, #81c784);
-    color: white;
-    font-family: Arial, sans-serif;
+    min-height: 100vh;
   }
 
-  .inicio-container {
+  .fl {
+    display: flex;
+    flex-direction: row;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  .layout {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #3d7275, #81c784);
-    color: white;
-    text-align: center;
-    font-family: Arial, sans-serif;
-  }
-
-  .header h1 {
-    font-size: 3rem;
-    margin: 0;
-  }
-
-  .subtitle {
-    font-size: 1.5rem;
-    margin: 10px 0 20px;
-  }
-
-  .actions button {
-    background-color: #ffffff;
-    color: #4caf50;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .actions button:hover {
-    background-color: #4caf50;
-    color: white;
-  }
-
-  .formulario-con-fondo {
-    background: linear-gradient(135deg, #3d7275, #81c784);
     min-height: 100vh;
-    padding: 2rem;
   }
 
-  .card-ancha {
-  width: 100%;
-  max-width: 900px;
-}
+  footer {
+    background-color: #f8f9fa;
+    color: #333;
+  }
+
+  .colorPrincipal {
+    color: #fff;
+    background-color: #393621;
+  }
+  .colorPrincipal:hover {
+    color: #7c732f;
+  }
+  .colorSecundario {
+    color: #c4bd86;
+  }
+  .clolorSecundario:hover {
+    color: #979163;
+  }
+  .spinnerColor {
+    color: #c4bd86;
+  }
+  .fuenteEtiqueta {
+    font: 1em sans-serif;
+  }
+  .colorFuenteFooter {
+    color: #fff;
+  }
+  .otrosFuente {
+    color: #000;
+  }
+  .fondofooter {
+    background-color: #393621;
+  }
+  .fondo {
+    background-color: #393621;
+  }
+  .colorAmarillo {
+    background-color: #ffdd00;
+  }
 </style>

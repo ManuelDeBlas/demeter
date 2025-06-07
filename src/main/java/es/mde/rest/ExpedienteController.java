@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.mde.repositorios.ExpedienteDAO;
 import es.mde.repositorios.ExpedienteDAOCustom;
@@ -44,7 +46,8 @@ public class ExpedienteController {
     this.expedienteDAO = expedienteDAO;
   }
 
-  @GetMapping("/coste-expediente/{numeroExpediente}")
+  @GetMapping("/expedientes/coste-expediente/{numeroExpediente}")
+  @ResponseBody
   public int getCosteCentimosExpedienteByNumeroExpediente(@PathVariable("numeroExpediente") String numeroExpediente) {
 
     return expedienteDAO.getCosteCentimosExpedienteByNumeroExpediente(numeroExpediente);

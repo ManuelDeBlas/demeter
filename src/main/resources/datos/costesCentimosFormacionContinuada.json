@@ -1,6 +1,6 @@
 [
   { "clave": "smi-centimos", "valor": 118400 },
-  { "clave": "tropa", "valor": 2 },
-  { "clave": "suboficiales", "valor": 2.5 },
-  { "clave": "oficiales", "valor": 3 }
+  { "clave": "Tropa", "valor": 2 },
+  { "clave": "Suboficiales", "valor": 2.5 },
+  { "clave": "Oficiales", "valor": 3 }
 ]

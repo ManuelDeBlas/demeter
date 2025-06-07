@@ -9,7 +9,9 @@
 	<mapped-superclass class="es.mde.secres.Expediente"
 		access="FIELD">
 		<attributes>
-			<basic name="numeroExpediente" />
+			<basic name="numeroExpediente">
+				<column unique="true"/>
+			</basic>
 			<basic name="estado" />
 			<one-to-many name="solicitudes"
 				target-entity="es.mde.entidades.SolicitudConId"

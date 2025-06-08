@@ -20,9 +20,9 @@
         useCostesPorDiaStore().cargarElementos(),
       ]);
       await Promise.all([
-        useExpedientesStore().cargarSolicitudesEnExpedienteAlIniciar(),
+        useExpedientesStore().cargarSolicitudesEnExpedientes(),
         useReservistasStore().crearListadoSolicitudes(),
-        useSolicitudesStore().cargarReservistaEnSolicitudAlIniciar(),
+        useSolicitudesStore().cargarReservistaEnSolicitudes(),
       ]);
     },
   };

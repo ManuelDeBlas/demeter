@@ -8,6 +8,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
     state: () => ({
       elementos: [],
       elementoAbierto: null,
+      consultando: false,
     }),
     actions: {
       async cargarElementos() {

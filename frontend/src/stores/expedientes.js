@@ -33,7 +33,7 @@ export const useExpedientesStore = crearStore("expedientes", {
     solicitud.expediente = null;
     solicitud.estado = "PENDIENTE_EVALUACION";
   },
-  async cargarSolicitudesEnExpedienteAlIniciar() {
+  async cargarSolicitudesEnExpedientes() {
     for (let expediente of this.elementos) {
       expediente.solicitudes = [];
       const solicitudesEnExpedienteAPI = await get(

@@ -12,6 +12,11 @@
         useSolicitudesStore().elementoAbierto = this.solicitud; // Guarda el elemento en el store para editarlo
         this.$router.push({ name: "FormularioSolicitudView" });
       },
+      abrirFormularioSolicitudConsulta() {
+        useSolicitudesStore().consultando = true;
+        useSolicitudesStore().elementoAbierto = this.solicitud; // Guarda el elemento en el store para consultarlo
+        this.$router.push({ name: "FormularioSolicitudView" });
+      },
     },
   };
 </script>
@@ -38,13 +43,8 @@
         <div class="col-md-6 text-end">
           <div class="d-flex justify-content-end align-items-center gap-3">
             <div class="d-flex align-items-center">
-              <span class="me-2">Abrir</span>
-              <font-awesome-icon
-                :icon="['fas', 'magnifying-glass']"
-                size="lg"
-                @click="abrirFormularioSolicitud"
-                class="text-primary cursor-pointer"
-              />
+              <button type="button" class="btn btn-info" @click="abrirFormularioSolicitudConsulta">Consultar</button>
+              <button type="button" class="btn btn-primary ms-2" @click="abrirFormularioSolicitud">Modificar</button>
             </div>
           </div>
         </div>

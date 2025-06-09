@@ -13,6 +13,7 @@
     data() {
       return {
         editando: true,
+        consultando: useSolicitudesStore().consultando,
         mostrarModal: false,
         mostrarModalReservistas: false,
         mostrarModalUcos: false,
@@ -22,7 +23,6 @@
         reservista: null,
         inicio: null,
         fin: null,
-        consultando: useSolicitudesStore().consultando,
       };
     },
     computed: {
@@ -342,7 +342,7 @@
       </option>
     </div>
     <div v-if="solicitudAbierta.tipoSolicitud === 'FC'" class="form-group">
-      <label>Escala:</label>
+      <label>Escala</label>
       <select
         :disabled="consultando"
         v-model.number="solicitudAbierta.escala"
@@ -379,7 +379,11 @@
         <button type="submit" class="btn btn-light" @click="volverAlListado">
           Cancelar
         </button>
-        <button type="button" @click="eliminarSolicitud" class="btn btn-danger ms-2">
+        <button
+          type="button"
+          @click="eliminarSolicitud"
+          class="btn btn-danger ms-2"
+        >
           Eliminar
         </button>
         <button type="submit" class="btn btn-success ms-2">Guardar</button>

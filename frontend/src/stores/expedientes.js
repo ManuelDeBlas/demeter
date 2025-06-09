@@ -5,11 +5,17 @@ import { useSolicitudesStore } from "@/stores/solicitudes";
 import { get, patchEntidad } from "@/utils/api-service";
 
 export const useExpedientesStore = crearStore("expedientes", {
-  agregarSolicitudAExpediente(solicitud) {
+  async editarExpediente(expediente) {
+    const expedienteParaLaAPI = { ...expediente };
+    delete expedienteParaLaAPI.solicitudes;
+    const respuesta = await this.editarElemento(expedienteParaLaAPI);
+    return respuesta;
+  },
+  async agregarSolicitudAExpediente(solicitud) {
     "Agregando solicitud al expediente:", solicitud;
     const expedienteId = getId(this.elementoAbierto._links.self.href);
     const solicitudId = getId(solicitud._links.self.href);
-    patchEntidad(
+    await patchEntidad(
       `${API_BASE_URL}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
     );
     this.elementoAbierto.solicitudes;
@@ -18,10 +24,10 @@ export const useExpedientesStore = crearStore("expedientes", {
     solicitud.expediente = this.elementoAbierto;
     solicitud.estado = "ACEPTADA_PENDIENTE_PUBLICACION";
   },
-  eliminarSolicitudDeExpediente(solicitud) {
+  async eliminarSolicitudDeExpediente(solicitud) {
     const expedienteId = getId(this.elementoAbierto._links.self.href);
     const solicitudId = getId(solicitud._links.self.href);
-    patchEntidad(
+    await patchEntidad(
       `${API_BASE_URL}/expedientes/${expedienteId}/desasignar-solicitud/${solicitudId}`
     );
     const indice = this.elementoAbierto.solicitudes.findIndex(

@@ -2,28 +2,12 @@
   import Cabecera from "@/components/navegacion/Cabecera.vue";
   import ProgressSpinner from "primevue/progressspinner";
   import Footer from "@/components/navegacion/Footer.vue";
-  import { mapActions } from "pinia";
-  import { useExpedientesStore } from "@/stores/expedientes.js";
-  import { useReservistasStore } from "@/stores/reservistas.js";
-  import { useSolicitudesStore } from "@/stores/solicitudes.js";
-  import { usePresupuestosSecresStore } from "@/stores/presupuestos-secres.js";
-  import { useCostesPorDiaStore } from "@/stores/costes-por-dia.js";
+  import { cargarTodaLaApi } from "@/utils/utils";
 
   export default {
     components: { Cabecera, ProgressSpinner, Footer },
     async mounted() {
-      await Promise.all([
-        useExpedientesStore().cargarElementos(),
-        useReservistasStore().cargarElementos(),
-        useSolicitudesStore().cargarElementos(),
-        usePresupuestosSecresStore().cargarElementos(),
-        useCostesPorDiaStore().cargarElementos(),
-      ]);
-      await Promise.all([
-        useExpedientesStore().cargarSolicitudesEnExpedientes(),
-        useReservistasStore().crearListadoSolicitudes(),
-        useSolicitudesStore().cargarReservistaEnSolicitudes(),
-      ]);
+      await cargarTodaLaApi();
     },
   };
 </script>
@@ -72,9 +56,9 @@
     color: #7c732f;
   }
   .colorSecundario {
-    color: #c4bd86;
+    background-color: #c4bd86;
   }
-  .clolorSecundario:hover {
+  .colorSecundario:hover {
     color: #979163;
   }
   .spinnerColor {
@@ -86,6 +70,14 @@
   .colorFuenteFooter {
     color: #fff;
   }
+
+  .componente-en-lista {
+    background-color: #f9faf8;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
   .otrosFuente {
     color: #000;
   }

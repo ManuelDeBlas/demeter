@@ -5,7 +5,7 @@
   export default {
     props: ["solicitud"],
     methods: {
-      abrirFormularioSolicitud() {
+      abrirElementoEditar() {
         useSolicitudesStore().elementoAbierto = this.solicitud; // Guarda el elemento en el store para editarlo
         this.$router.push({ name: "FormularioSolicitudView" });
       },

@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/app";
 import { defineStore } from "pinia";
-import { getNombreDAO } from "@/utils/utils";
+import { getNombreDAO, cargarTodaLaApi } from "@/utils/utils";
 import { get, post, deleteEntidad, put } from "@/utils/api-service";
 
 export function crearStore(nombreColeccion, accionesAdicionales = {}) {
@@ -39,45 +39,56 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
             nuevoElemento,
             API_BASE_URL + "/" + nombreColeccion
           );
-          if (respuesta.status === 201) {
-            const elementoAgregado = {
-              ...nuevoElemento,
-              _links: respuesta.data._links,
-            };
-            this.elementos.unshift(elementoAgregado);
-          }
+          await cargarTodaLaApi();
+          // if (respuesta.status === 201) {
+          //   const elementoAgregado = {
+          //     ...nuevoElemento,
+          //     _links: respuesta.data._links,
+          //   };
+          //   this.elementos.unshift(elementoAgregado);
+          // }
           return respuesta;
         } catch (error) {
-          console.error("Error: ", error);
+          return error;
         }
       },
       async eliminarElemento(objeto) {
         // const hrefAEliminar = objeto;
-        const hrefAEliminar = objeto._links.self.href;
-        const respuesta = await deleteEntidad(hrefAEliminar);
-        const indice = this.elementos.findIndex(
-          (elemento) => elemento._links.self.href === hrefAEliminar
-        );
-        if (indice !== -1) {
-          this.elementos.splice(indice, 1);
+        try {
+          const hrefAEliminar = objeto._links.self.href;
+          const respuesta = await deleteEntidad(hrefAEliminar);
+          await cargarTodaLaApi();
+          // const indice = this.elementos.findIndex(
+          //   (elemento) => elemento._links.self.href === hrefAEliminar
+          // );
+          // if (indice !== -1) {
+          //   this.elementos.splice(indice, 1);
+          // }
+          return respuesta;
+        } catch (error) {
+          return error;
         }
-        return respuesta;
       },
       async editarElemento(elementoEditado) {
-        const indice = this.elementos.findIndex(
-          (elemento) =>
-            elemento._links.self.href === elementoEditado._links.self.href
-        );
-        if (indice !== -1) {
-          this.elementos[indice] = elementoEditado;
+        try {
+          // const indice = this.elementos.findIndex(
+          //   (elemento) =>
+          //     elemento._links.self.href === elementoEditado._links.self.href
+          // );
+          // if (indice !== -1) {
+          //   this.elementos[indice] = elementoEditado;
+          // }
+          const respuesta = await put(
+            elementoEditado,
+            elementoEditado._links.self.href
+          );
+          await cargarTodaLaApi();
+          console.log("Respuesta de edición:", respuesta);
+
+          return respuesta;
+        } catch (error) {
+          return error;
         }
-        await put(elementoEditado, elementoEditado._links.self.href)
-          .then((response) => {
-            return response;
-          })
-          .catch((error) => {
-            return error;
-          });
       },
       ...accionesAdicionales,
     },

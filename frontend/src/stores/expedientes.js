@@ -10,6 +10,7 @@ export const useExpedientesStore = crearStore("expedientes", {
     const expedienteParaLaAPI = { ...expediente };
     delete expedienteParaLaAPI.solicitudes;
     const respuesta = await this.editarElemento(expedienteParaLaAPI);
+    // TODO recargar el store del presupuesto
     return respuesta;
   },
   async agregarSolicitudAExpediente(solicitud) {

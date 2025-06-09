@@ -36,6 +36,7 @@
         return expediente;
       },
       solicitudesDisponibles() {
+        // TODO poner solo las solicitudes del mismo año
         return useSolicitudesStore().elementos.filter(
           (s) =>
             !this.expedienteAbierto.solicitudes.some(

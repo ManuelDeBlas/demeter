@@ -39,53 +39,51 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
             nuevoElemento,
             API_BASE_URL + "/" + nombreColeccion
           );
-          await cargarTodaLaApi();
-          // if (respuesta.status === 201) {
-          //   const elementoAgregado = {
-          //     ...nuevoElemento,
-          //     _links: respuesta.data._links,
-          //   };
-          //   this.elementos.unshift(elementoAgregado);
-          // }
-          return respuesta;
+          if (respuesta.status === 201) {
+            this.elementos.unshift(respuesta.data);
+          }
+
+          return respuesta.data;
         } catch (error) {
           return error;
         }
       },
       async eliminarElemento(objeto) {
-        // const hrefAEliminar = objeto;
         try {
           const hrefAEliminar = objeto._links.self.href;
           const respuesta = await deleteEntidad(hrefAEliminar);
-          await cargarTodaLaApi();
-          // const indice = this.elementos.findIndex(
-          //   (elemento) => elemento._links.self.href === hrefAEliminar
-          // );
-          // if (indice !== -1) {
-          //   this.elementos.splice(indice, 1);
-          // }
-          return respuesta;
+          if (respuesta.status === 200) {
+            const indice = this.elementos.findIndex(
+              (elemento) =>
+                elemento._links.self.href === respuesta.data._links.self.href
+            );
+            if (indice !== -1) {
+              this.elementos.splice(indice, 1);
+            }
+          }
+
+          return respuesta.data;
         } catch (error) {
           return error;
         }
       },
       async editarElemento(elementoEditado) {
         try {
-          // const indice = this.elementos.findIndex(
-          //   (elemento) =>
-          //     elemento._links.self.href === elementoEditado._links.self.href
-          // );
-          // if (indice !== -1) {
-          //   this.elementos[indice] = elementoEditado;
-          // }
           const respuesta = await put(
             elementoEditado,
             elementoEditado._links.self.href
           );
-          await cargarTodaLaApi();
-          console.log("Respuesta de edición:", respuesta);
+          if (respuesta.status === 200) {
+            const indice = this.elementos.findIndex(
+              (elemento) =>
+                elemento._links.self.href === respuesta.data._links.self.href
+            );
+            if (indice !== -1) {
+              this.elementos[indice] = respuesta.data;
+            }
+          }
 
-          return respuesta;
+          return respuesta.data;
         } catch (error) {
           return error;
         }

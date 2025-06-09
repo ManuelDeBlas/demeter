@@ -6,6 +6,7 @@ import { get, patchEntidad } from "@/utils/api-service";
 
 export const useExpedientesStore = crearStore("expedientes", {
   async editarExpediente(expediente) {
+    // TODO como postSolicitud
     const expedienteParaLaAPI = { ...expediente };
     delete expedienteParaLaAPI.solicitudes;
     const respuesta = await this.editarElemento(expedienteParaLaAPI);
@@ -39,28 +40,26 @@ export const useExpedientesStore = crearStore("expedientes", {
     solicitud.expediente = null;
     solicitud.estado = "PENDIENTE_EVALUACION";
   },
-  async cargarSolicitudesEnExpedientes() {
-    for (let expediente of this.elementos) {
-      expediente.solicitudes = [];
-      const solicitudesEnExpedienteAPI = await get(
-        expediente._links.solicitudes.href
+  async cargarSolicitudesEnExpediente(expediente) {
+    expediente.solicitudes = [];
+    const solicitudesEnExpedienteAPI = await get(
+      expediente._links.solicitudes.href
+    );
+    const embedded = solicitudesEnExpedienteAPI.data._embedded;
+    const keys = Object.keys(embedded);
+    const firstKey = keys[0];
+    const solicitudesAPI = embedded[firstKey];
+    for (let solicitudAPI of solicitudesAPI) {
+      const soliditudEnStore = useSolicitudesStore().recuperarObjetoDelStore(
+        solicitudAPI._links.self.href
       );
-      const embedded = solicitudesEnExpedienteAPI.data._embedded;
-      const keys = Object.keys(embedded);
-      const firstKey = keys[0];
-      const solicitudesAPI = embedded[firstKey];
-      for (let solicitudAPI of solicitudesAPI) {
-        const soliditudEnStore = useSolicitudesStore().recuperarObjetoDelStore(
-          solicitudAPI._links.self.href
-        );
-        expediente.solicitudes.push(soliditudEnStore);
-        // TODO Esto genera una referencia circular.
-        // soliditudEnStore.expediente = expediente;
-      }
-      const costeExpediente = await get(
-        `${API_BASE_URL}/expedientes/coste-expediente/${expediente.numeroExpediente}`
-      );
-      expediente.coste = costeExpediente.data;
+      expediente.solicitudes.push(soliditudEnStore);
+      // TODO Esto genera una referencia circular.
+      // soliditudEnStore.expediente = expediente;
     }
+    const costeExpediente = await get(
+      `${API_BASE_URL}/expedientes/coste-expediente/${expediente.numeroExpediente}`
+    );
+    expediente.coste = costeExpediente.data;
   },
 });

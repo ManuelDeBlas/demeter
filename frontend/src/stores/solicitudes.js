@@ -7,43 +7,36 @@ import { getNombreDAO } from "@/utils/utils";
 import { getId } from "@/utils/utils";
 
 export const useSolicitudesStore = crearStore("solicitudes", {
-  async cargarReservistaEnSolicitudes() {
-    for (let solicitud of this.elementos) {
-      const reservistaAPI = await get(solicitud._links.reservista.href);
-      const reservistaEnStore = useReservistasStore().recuperarObjetoDelStore(
-        reservistaAPI.data._links.self.href
-      );
-      solicitud.reservista = reservistaEnStore;
-      // TODO Esto genera una referencia circular.
-      // reservistaEnStore.solicitudes.push(solicitud);
-    }
+  async cargarReservistaEnSolicitud(solicitud) {
+    const reservistaAPI = await get(solicitud._links.reservista.href);
+    const reservistaEnStore = useReservistasStore().recuperarObjetoDelStore(
+      reservistaAPI.data._links.self.href
+    );
+    solicitud.reservista = reservistaEnStore;
+    // TODO Esto genera una referencia circular.
+    // reservistaEnStore.solicitudes.push(solicitud);
   },
   async postSolicitud(solicitud) {
-    console.log("postSolicitud", solicitud);
-    const solicitudParaLaAPI = { ...solicitud };
-    solicitudParaLaAPI.reservista = {
-      id: getId(solicitud.reservista._links.self.href),
-    };
-    console.log("Solicitud para la API:", solicitudParaLaAPI);
+    // TODO Comprobar si funciona bien
     try {
+      solicitud.reservista = {
+        id: getId(solicitud.reservista._links.self.href),
+      };
       const respuesta = await post(
-        solicitudParaLaAPI,
+        solicitud,
         `${API_BASE_URL}/${getNombreDAO(solicitud.tipoSolicitud)}`
       );
-      solicitud._links = respuesta.data._links;
+      solicitud = respuesta.data;
+      await useSolicitudesStore().cargarReservistaEnSolicitud(solicitud);
       this.elementos.unshift(solicitud);
-      await Promise.all([useSolicitudesStore().cargarElementos()]);
-      await Promise.all([
-        useExpedientesStore().cargarSolicitudesEnExpedientes(),
-        useReservistasStore().crearListadoSolicitudes(),
-        useSolicitudesStore().cargarReservistaEnSolicitudes(),
-      ]);
-      return respuesta;
+
+      return solicitud;
     } catch (error) {
-      console.error("Error: ", error);
+      return error;
     }
   },
   async putSolicitud(solicitud) {
+    // TODO como postSolicitud
     "putSolicitud", solicitud;
     const solicitudParaLaAPI = { ...solicitud };
     solicitudParaLaAPI.reservista = {

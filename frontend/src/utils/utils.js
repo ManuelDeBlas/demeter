@@ -12,11 +12,15 @@ export async function cargarTodaLaApi() {
     usePresupuestosSecresStore().cargarElementos(),
     useCostesPorDiaStore().cargarElementos(),
   ]);
-  await Promise.all([
-    useExpedientesStore().cargarSolicitudesEnExpedientes(),
-    useReservistasStore().crearListadoSolicitudes(),
-    useSolicitudesStore().cargarReservistaEnSolicitudes(),
-  ]);
+  for (let solicitud of useSolicitudesStore().elementos) {
+    await useSolicitudesStore().cargarReservistaEnSolicitud(solicitud);
+  }
+  for (let reservista of useReservistasStore().elementos) {
+    await useReservistasStore().crearListadoSolicitudes(reservista);
+  }
+  for (let expediente of useExpedientesStore().elementos) {
+    await useExpedientesStore().cargarSolicitudesEnExpediente(expediente);
+  }
 }
 
 export function getNombreDAO(tipoSolicitud) {

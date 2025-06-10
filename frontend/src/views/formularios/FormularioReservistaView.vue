@@ -38,7 +38,7 @@
     },
     methods: {
       ...mapActions(useReservistasStore, [
-        "anadirElemento",
+        "anhadirElemento",
         "editarElemento",
         "eliminarElemento",
       ]),
@@ -49,7 +49,7 @@
             this.mensajeModal = `Reservista editado correctamente`;
           } else {
             this.reservistaAbierto;
-            let respuesta = await this.anadirElemento(this.reservistaAbierto);
+            let respuesta = await this.anhadirElemento(this.reservistaAbierto);
             this.mensajeModal = `Reservista añadido correctamente`;
           }
         } catch (error) {

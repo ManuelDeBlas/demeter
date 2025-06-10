@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/app";
 import { defineStore } from "pinia";
-import { getNombreDAO, cargarTodaLaApi } from "@/utils/utils";
+import { getNombreDAO } from "@/utils/utils";
 import { get, post, deleteEntidad, put } from "@/utils/api-service";
 
 export function crearStore(nombreColeccion, accionesAdicionales = {}) {
@@ -29,7 +29,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
         )[0];
         return objetoRecuperado;
       },
-      async anadirElemento(nuevoElemento) {
+      async anhadirElemento(nuevoElemento) {
         // Esto evita hacer un post a '/soliticitudes'
         if (nombreColeccion === "solicitudes") {
           nombreColeccion = getNombreDAO(nuevoElemento.tipoSolicitud);
@@ -40,10 +40,17 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
             API_BASE_URL + "/" + nombreColeccion
           );
           if (respuesta.status === 201) {
-            this.elementos.unshift(respuesta.data);
+            const nuevoElementoApi = respuesta.data;
+            console.log(
+              `Elemento añadido a la colección ${nombreColeccion}:`,
+              nuevoElementoApi
+            );
+            this.elementos.unshift(nuevoElementoApi);
           }
 
-          return respuesta.data;
+          console.log("Colección actualizada:", this.elementos);
+
+          return nuevoElementoApi;
         } catch (error) {
           return error;
         }

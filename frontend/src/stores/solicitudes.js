@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/app";
 import { crearStore } from "@/stores/fabricaStore";
-import { get, post, put } from "@/utils/api-service";
+import { get } from "@/utils/api-service";
 import { useReservistasStore } from "@/stores/reservistas";
 import { useExpedientesStore } from "@/stores/expedientes";
 import { getNombreDAO } from "@/utils/utils";
@@ -8,7 +8,7 @@ import { getId } from "@/utils/utils";
 
 export const useSolicitudesStore = crearStore("solicitudes", {
   async cargarReservistaEnSolicitud(solicitud) {
-    const reservistaAPI = await get(solicitud._links.reservista.href);
+    const reservistaAPI = await get(solicitud._links.reservista);
     const reservistaEnStore = useReservistasStore().recuperarObjetoDelStore(
       reservistaAPI.data._links.self.href
     );
@@ -22,22 +22,20 @@ export const useSolicitudesStore = crearStore("solicitudes", {
       solicitud.reservista = {
         id: getId(solicitud.reservista._links.self.href),
       };
-      const respuesta = await post(
-        solicitud,
-        `${API_BASE_URL}/${getNombreDAO(solicitud.tipoSolicitud)}`
+      const solicitudEnApi = await useSolicitudesStore().anhadirElemento(
+        solicitud
       );
-      solicitud = respuesta.data;
-      await useSolicitudesStore().cargarReservistaEnSolicitud(solicitud);
-      this.elementos.unshift(solicitud);
+      console.log("Solicitud añadida:", solicitudEnApi);
+      await useSolicitudesStore().cargarReservistaEnSolicitud(solicitudEnApi);
 
-      return solicitud;
+      return solicitudEnApi;
     } catch (error) {
       return error;
     }
   },
   async putSolicitud(solicitud) {
     // TODO como postSolicitud
-    "putSolicitud", solicitud;
+    console.log("putSolicitud", solicitud);
     const solicitudParaLaAPI = { ...solicitud };
     solicitudParaLaAPI.reservista = {
       id: getId(solicitud.reservista._links.self.href),

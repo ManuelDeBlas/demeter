@@ -33,7 +33,7 @@
       },
     },
     methods: {
-      anadirElemento() {
+      anhadirElemento() {
         useReservistasStore().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
         this.$router.push({ path: "/formulario/reservista" });
       },

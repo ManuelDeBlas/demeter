@@ -54,7 +54,7 @@
     methods: {
       formatearAtributoEnElFrontend,
       ...mapActions(useExpedientesStore, [
-        "anadirElemento",
+        "anhadirElemento",
         "editarExpediente",
         "eliminarElemento",
         "agregarSolicitudAExpediente",
@@ -71,7 +71,7 @@
           console.log("Respuesta de edición:", respuesta);
           this.mensajeModal = respuesta
         } else {
-          const respuesta = await this.anadirElemento(this.expedienteAbierto);
+          const respuesta = await this.anhadirElemento(this.expedienteAbierto);
           this.mensajeModal = respuesta
         }
         // Envío de los cambios realizados a la API

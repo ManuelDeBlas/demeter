@@ -104,7 +104,7 @@
             this.mensajeModal = `Solicitud editada correctamente`;
           } else {
             const respuesta = await this.postSolicitud(this.solicitudAbierta);
-            this.mensajeModal = `Solicitud añadida correctamente`;
+            this.mensajeModal = "Solicitud añadida correctamente: " + respuesta;
           }
         } catch (error) {
           this.mensajeModal = `Error al procesar la solicitud: ${error.message}`;
@@ -287,7 +287,8 @@
         v-model="solicitudAbierta.telefonoPoc"
         type="text"
         class="form-control mx-auto"
-        pattern="^\+?[0-9]*$"
+        pattern="^\+?[0-9]{7,15}$"
+        title="Formato: Número de teléfono con entre 7 y 15 dígitos, opcionalmente con + al inicio"
         required
       />
     </div>

@@ -49,7 +49,7 @@
       },
     },
     methods: {
-      anadirElemento() {
+      anhadirElemento() {
         useExpedientesStore().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
         this.$router.push({ path: "/formulario/expediente" });
       },
@@ -69,7 +69,7 @@
   <div class="container">
     <h1 class="titulo p-4">Lista de expedientes</h1>
     <div class="d-flex align-items-center gap-2 mb-4">
-      <button type="button" class="btn btn-warning" @click="anadirElemento">
+      <button type="button" class="btn btn-warning" @click="anhadirElemento">
         Nuevo Expediente
       </button>
       <label class="mb-0 fw-bold">Filtrar:</label>

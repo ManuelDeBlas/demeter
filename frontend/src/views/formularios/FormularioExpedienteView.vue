@@ -67,40 +67,47 @@
       },
       async enviarFormulario() {
         if (this.editando) {
-          const respuesta = await this.editarExpediente(this.expedienteAbierto);
-          console.log("Respuesta de edición:", respuesta);
-          this.mensajeModal = respuesta
+          const expedienteEnStore = await this.editarExpediente(
+            this.expedienteAbierto
+          );
+          console.log("Respuesta de edición:", expedienteEnStore);
+          this.mensajeModal = expedienteEnStore + "\n";
         } else {
-          const respuesta = await this.anhadirElemento(this.expedienteAbierto);
-          this.mensajeModal = respuesta
+          const expedienteEnStore = await this.anhadirElemento(
+            this.expedienteAbierto
+          );
+          this.mensajeModal = expedienteEnStore + "\n";
         }
-        // Envío de los cambios realizados a la API
-        this.antiguoListadoSolicitudes
-          .filter(
-            (s) =>
-              !this.nuevoListadoSolicitudes.some(
-                (ns) => ns._links.self.href === s._links.self.href
-              )
-          )
-          .forEach((s) => {
-            this.eliminarSolicitudDeExpediente(s);
-          });
-        this.nuevoListadoSolicitudes
-          .filter(
-            (s) =>
-              !this.antiguoListadoSolicitudes.some(
-                (ns) => ns._links.self.href === s._links.self.href
-              )
-          )
-          .forEach((s) => {
-            this.agregarSolicitudAExpediente(s);
-          });
+        // Envío de las asignaciones y desasignaciones a la API
+        // TODO poner los métodos para que se ejecuten directamente sin tener que editar todo el expediente
+        for (let solicitud of this.antiguoListadoSolicitudes.filter(
+          (s) =>
+            !this.nuevoListadoSolicitudes.some(
+              (ns) => ns._links.self.href === s._links.self.href
+            )
+        )) {
+          this.mensajeModal += await this.eliminarSolicitudDeExpediente(
+            solicitud,
+            this.expedienteAbierto
+          ) + "\n";
+        }
+        for (let solicitud of this.nuevoListadoSolicitudes.filter(
+          (s) =>
+            !this.antiguoListadoSolicitudes.some(
+              (ns) => ns._links.self.href === s._links.self.href
+            )
+        )) {
+          this.mensajeModal += await this.agregarSolicitudAExpediente(
+            solicitud,
+            this.expedienteAbierto
+          ) + "\n";
+        }
         this.expedienteAbierto.solicitudes = this.nuevoListadoSolicitudes;
         await cargarTodaLaApi();
         this.mostrarModal = true;
       },
       eliminarExpediente() {
-        this.eliminarElemento(this.expedienteAbierto._links.self.href);
+        this.eliminarElemento(this.expedienteAbierto);
         this.$router.push({ path: "/listado/expedientes" });
       },
       volverAlListado() {

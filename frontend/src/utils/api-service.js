@@ -29,6 +29,6 @@ export function put(objeto, url) {
   return llamadaAPI("put", objeto, url);
 }
 
-export function patchEntidad(url, data) {
+export function patch(url, data) {
   return llamadaAPI("patch", data, url);
 }

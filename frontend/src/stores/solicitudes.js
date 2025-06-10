@@ -8,7 +8,7 @@ import { getId } from "@/utils/utils";
 
 export const useSolicitudesStore = crearStore("solicitudes", {
   async cargarReservistaEnSolicitud(solicitud) {
-    const reservistaAPI = await get(solicitud._links.reservista);
+    const reservistaAPI = await get(solicitud._links.reservista.href);
     const reservistaEnStore = useReservistasStore().recuperarObjetoDelStore(
       reservistaAPI.data._links.self.href
     );
@@ -16,44 +16,30 @@ export const useSolicitudesStore = crearStore("solicitudes", {
     // TODO Esto genera una referencia circular.
     // reservistaEnStore.solicitudes.push(solicitud);
   },
-  async postSolicitud(solicitud) {
-    // TODO Comprobar si funciona bien
+  async anhadirSolicitud(solicitudACrear) {
     try {
-      solicitud.reservista = {
-        id: getId(solicitud.reservista._links.self.href),
+      solicitudACrear.reservista = {
+        id: getId(solicitudACrear.reservista._links.self.href),
       };
-      const solicitudEnApi = await useSolicitudesStore().anhadirElemento(
-        solicitud
+      const solicitudEnStore = await useSolicitudesStore().anhadirElemento(
+        solicitudACrear
       );
-      console.log("Solicitud añadida:", solicitudEnApi);
-      await useSolicitudesStore().cargarReservistaEnSolicitud(solicitudEnApi);
+      await useSolicitudesStore().cargarReservistaEnSolicitud(solicitudEnStore);
 
-      return solicitudEnApi;
+      return solicitudEnStore;
     } catch (error) {
       return error;
     }
   },
-  async putSolicitud(solicitud) {
-    // TODO como postSolicitud
-    console.log("putSolicitud", solicitud);
-    const solicitudParaLaAPI = { ...solicitud };
-    solicitudParaLaAPI.reservista = {
-      id: getId(solicitud.reservista._links.self.href),
-    };
+  async editarSolicitud(solicitudAEditar) {
     try {
-      const respuesta = await put(
-        solicitudParaLaAPI,
-        solicitud._links.self.href
-      );
-      await Promise.all([useSolicitudesStore().cargarElementos()]);
-      await Promise.all([
-        useExpedientesStore().cargarSolicitudesEnExpedientes(),
-        useReservistasStore().crearListadoSolicitudes(),
-        useSolicitudesStore().cargarReservistaEnSolicitudes(),
-      ]);
-      return respuesta;
+      const reservistaEnStore = solicitudAEditar.reservista;
+      const solicitudEnStore = await this.editarElemento(solicitudAEditar);
+      solicitudEnStore.reservista = reservistaEnStore;
+
+      return solicitudEnStore;
     } catch (error) {
-      console.error("Error: ", error);
+      return error;
     }
   },
 });

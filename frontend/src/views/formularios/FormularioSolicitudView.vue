@@ -72,9 +72,9 @@
       formatearAtributoEnElFrontend,
       formatearCentimosAEuros,
       ...mapActions(useSolicitudesStore, [
-        "putSolicitud",
+        "editarSolicitud",
         "eliminarElemento",
-        "postSolicitud",
+        "anhadirSolicitud",
       ]),
       seleccionarUco(uco) {
         this.solicitudAbierta.nombreUco = uco.nombreUco;
@@ -100,10 +100,10 @@
             return;
           }
           if (this.editando) {
-            const respuesta = await this.putSolicitud(this.solicitudAbierta);
+            const respuesta = await this.editarSolicitud(this.solicitudAbierta);
             this.mensajeModal = `Solicitud editada correctamente`;
           } else {
-            const respuesta = await this.postSolicitud(this.solicitudAbierta);
+            const respuesta = await this.anhadirSolicitud(this.solicitudAbierta);
             this.mensajeModal = "Solicitud añadida correctamente: " + respuesta;
           }
         } catch (error) {
@@ -116,7 +116,7 @@
       async rechazarSolicitud() {
         try {
           this.solicitudAbierta.estado = "RECHAZADA";
-          await this.putSolicitud(this.solicitudAbierta);
+          await this.editarSolicitud(this.solicitudAbierta);
           this.mensajeModal = `Solicitud rechazada correctamente.`;
         } catch (error) {
           this.mensajeModal = `Error al rechazar la solicitud: ${error.message}`;
@@ -144,12 +144,12 @@
 
           console.log("solicitiudes", solicitud1, solicitud2);
           if (this.editando) {
-            await this.putSolicitud(solicitud1);
-            await this.postSolicitud(solicitud2); // Se usa post para la segunda solicitud ya que no existe en la API aún
+            await this.editarSolicitud(solicitud1);
+            await this.anhadirSolicitud(solicitud2); // Se usa post para la segunda solicitud ya que no existe en la API aún
             this.mensajeModal = "Solicitudes editadas correctamente.";
           } else {
-            await this.postSolicitud(solicitud1);
-            await this.postSolicitud(solicitud2);
+            await this.anhadirSolicitud(solicitud1);
+            await this.anhadirSolicitud(solicitud2);
             this.mensajeModal = "Solicitudes añadidas correctamente.";
           }
         } catch (error) {
@@ -208,7 +208,7 @@
         required
       />
       <button
-        v-if="!consultando"
+        v-if="!consultando && !editando"
         type="button"
         class="btn btn-secondary mt-2"
         @click="mostrarModalUcos = true"
@@ -236,7 +236,7 @@
         required
       />
       <button
-        v-if="!consultando"
+        v-if="!consultando && !editando"
         type="button"
         class="btn btn-secondary mt-2"
         @click="mostrarModalReservistas = true"

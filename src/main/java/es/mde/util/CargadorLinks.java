@@ -13,16 +13,19 @@ public class CargadorLinks {
   public static SolicitudConLinks cargarLinks(SolicitudConId solicitud) {
     SolicitudConLinks dto = new SolicitudConLinks();
     BeanUtils.copyProperties(solicitud, dto);
-    Map<String, String> links = new LinkedHashMap<>();
+
+    Map<String, Map<String, String>> links = new LinkedHashMap<>();
+
     URI selfUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/solicitudes/{id}")
         .buildAndExpand(solicitud.getId()).toUri();
-    links.put("self", selfUri.toString());
-    links.put("expediente", selfUri.toString() + "/expediente");
-    links.put("reservista", selfUri.toString() + "/reservista");
+
+    links.put("self", Map.of("href", selfUri.toString()));
+    links.put("expediente", Map.of("href", selfUri.toString() + "/expediente"));
+    links.put("reservista", Map.of("href", selfUri.toString() + "/reservista"));
+
     dto.set_links(links);
 
     return dto;
   }
 
 }
-

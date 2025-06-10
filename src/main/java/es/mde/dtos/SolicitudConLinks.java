@@ -5,13 +5,13 @@ import es.mde.entidades.SolicitudConId;
 
 public class SolicitudConLinks extends SolicitudConId {
 
-  private Map<String, String> _links;
+  private Map<String, Map<String, String>> _links;
 
-  public Map<String, String> get_links() {
+  public Map<String, Map<String, String>> get_links() {
     return _links;
   }
 
-  public void set_links(Map<String, String> _links) {
-    this._links = _links;
+  public void set_links(Map<String, Map<String, String>> links) {
+    this._links = links;
   }
 }

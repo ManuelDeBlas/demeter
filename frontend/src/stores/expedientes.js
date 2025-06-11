@@ -2,59 +2,116 @@ import { API_BASE_URL } from "@/config/app";
 import { getId } from "@/utils/utils";
 import { crearStore } from "@/stores/fabricaStore";
 import { useSolicitudesStore } from "@/stores/solicitudes";
-import { get, patchEntidad } from "@/utils/api-service";
+import { usePresupuestosSecresStore } from "@/stores/presupuestos-secres";
+import { get, patch } from "@/utils/api-service";
 
 export const useExpedientesStore = crearStore("expedientes", {
-  agregarSolicitudAExpediente(solicitud) {
-    "Agregando solicitud al expediente:", solicitud;
-    const expedienteId = getId(this.elementoAbierto._links.self.href);
-    const solicitudId = getId(solicitud._links.self.href);
-    patchEntidad(
-      `${API_BASE_URL}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
-    );
-    this.elementoAbierto.solicitudes;
-    "Solicitud a agregar:", solicitud;
-    this.elementoAbierto.solicitudes.push(solicitud);
-    solicitud.expediente = this.elementoAbierto;
-    solicitud.estado = "ACEPTADA_PENDIENTE_PUBLICACION";
-  },
-  eliminarSolicitudDeExpediente(solicitud) {
-    const expedienteId = getId(this.elementoAbierto._links.self.href);
-    const solicitudId = getId(solicitud._links.self.href);
-    patchEntidad(
-      `${API_BASE_URL}/expedientes/${expedienteId}/desasignar-solicitud/${solicitudId}`
-    );
-    const indice = this.elementoAbierto.solicitudes.findIndex(
-      (e) => e._links.self.href === solicitud._links.self.href
-    );
-    if (indice !== -1) {
-      this.elementoAbierto.solicitudes.splice(indice, 1);
+  async anhadirExpediente(expedienteAAnhadir) {
+    try {
+      const expedienteEnStore = await this.anhadirElemento(expedienteAAnhadir);
+      expedienteEnStore.solicitudes = [];
+      expedienteEnStore.coste = 0;
+
+      return expedienteEnStore;
+    } catch (error) {
+      return error;
     }
-    solicitud.expediente = null;
-    solicitud.estado = "PENDIENTE_EVALUACION";
   },
-  async cargarSolicitudesEnExpedienteAlIniciar() {
-    for (let expediente of this.elementos) {
-      expediente.solicitudes = [];
-      const solicitudesEnExpedienteAPI = await get(
-        expediente._links.solicitudes.href
+  async editarExpediente(expedienteAEditar) {
+    try {
+      const solicitudesEnStore = expedienteAEditar.solicitudes;
+      delete expedienteAEditar.solicitudes;
+      const expedienteEnStore = await this.editarElemento(expedienteAEditar);
+      expedienteEnStore.solicitudes = solicitudesEnStore;
+
+      return expedienteEnStore;
+    } catch (error) {
+      return error;
+    }
+  },
+  async agregarSolicitudAExpediente(solicitud, expediente) {
+    try {
+      const expedienteId = getId(expediente._links.self.href);
+      const solicitudId = getId(solicitud._links.self.href);
+      const respuesta = await patch(
+        `${API_BASE_URL}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
       );
-      const embedded = solicitudesEnExpedienteAPI.data._embedded;
-      const keys = Object.keys(embedded);
-      const firstKey = keys[0];
-      const solicitudesAPI = embedded[firstKey];
-      for (let solicitudAPI of solicitudesAPI) {
-        const soliditudEnStore = useSolicitudesStore().recuperarObjetoDelStore(
-          solicitudAPI._links.self.href
+      console.log(
+        `${API_BASE_URL}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
+      );
+      if (respuesta.status === 200) {
+        expediente.solicitudes.push(solicitud);
+        solicitud.expediente = expediente;
+        solicitud.estado = "ACEPTADA_PENDIENTE_PUBLICACION";
+        await usePresupuestosSecresStore().cargarElementos();
+        const costeExpediente = await get(
+          `${API_BASE_URL}/expedientes/coste-expediente/${expediente.numeroExpediente}`
         );
-        expediente.solicitudes.push(soliditudEnStore);
-        // TODO Esto genera una referencia circular.
-        // soliditudEnStore.expediente = expediente;
+        expediente.coste = costeExpediente.data;
+
+        return "Solicitud añadida al expediente correctamente";
       }
-      const costeExpediente = await get(
-        `${API_BASE_URL}/expedientes/coste-expediente/${expediente.numeroExpediente}`
-      );
-      expediente.coste = costeExpediente.data;
+    } catch (error) {
+      return error.response.data;
     }
+  },
+  async eliminarSolicitudDeExpediente(solicitud, expediente) {
+    try {
+      const expedienteId = getId(expediente._links.self.href);
+      const solicitudId = getId(solicitud._links.self.href);
+      const respuesta = await patch(
+        `${API_BASE_URL}/expedientes/${expedienteId}/desasignar-solicitud/${solicitudId}`
+      );
+      console.log(
+        `${API_BASE_URL}/expedientes/${expedienteId}/asignar-solicitud/${solicitudId}`
+      );
+      if (respuesta.status === 200) {
+        const indice = expediente.solicitudes.findIndex(
+          (e) => e._links.self.href === solicitud._links.self.href
+        );
+        console.log(
+          `Eliminando solicitud con indice ${indice} de expediente ${expediente.solicitudes}`
+        );
+        if (indice !== -1) {
+          expediente.solicitudes.splice(indice, 1);
+        }
+        console.log(
+          `Solicitud eliminada de expediente ${expediente.solicitudes}`
+        );
+        solicitud.expediente = null;
+        solicitud.estado = "PENDIENTE_EVALUACION";
+        await usePresupuestosSecresStore().cargarElementos();
+        const costeExpediente = await get(
+          `${API_BASE_URL}/expedientes/coste-expediente/${expediente.numeroExpediente}`
+        );
+        expediente.coste = costeExpediente.data;
+
+        return "Solicitud eliminada del expediente correctamente";
+      }
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+  async cargarSolicitudesEnExpediente(expediente) {
+    expediente.solicitudes = [];
+    const solicitudesEnExpedienteAPI = await get(
+      expediente._links.solicitudes.href
+    );
+    const embedded = solicitudesEnExpedienteAPI.data._embedded;
+    const keys = Object.keys(embedded);
+    const firstKey = keys[0];
+    const solicitudesAPI = embedded[firstKey];
+    for (let solicitudAPI of solicitudesAPI) {
+      const soliditudEnStore = useSolicitudesStore().recuperarObjetoDelStore(
+        solicitudAPI._links.self.href
+      );
+      expediente.solicitudes.push(soliditudEnStore);
+      // TODO Esto genera una referencia circular.
+      // soliditudEnStore.expediente = expediente;
+    }
+    const costeExpediente = await get(
+      `${API_BASE_URL}/expedientes/coste-expediente/${expediente.numeroExpediente}`
+    );
+    expediente.coste = costeExpediente.data;
   },
 });

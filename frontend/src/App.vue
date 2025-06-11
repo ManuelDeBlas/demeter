@@ -2,38 +2,34 @@
   import Cabecera from "@/components/navegacion/Cabecera.vue";
   import ProgressSpinner from "primevue/progressspinner";
   import Footer from "@/components/navegacion/Footer.vue";
-  import { mapActions } from "pinia";
-  import { useExpedientesStore } from "@/stores/expedientes.js";
-  import { useReservistasStore } from "@/stores/reservistas.js";
-  import { useSolicitudesStore } from "@/stores/solicitudes.js";
-  import { usePresupuestosSecresStore } from "@/stores/presupuestos-secres.js";
-  import { useCostesPorDiaStore } from "@/stores/costes-por-dia.js";
+  import { cargarTodaLaApi } from "@/utils/utils";
 
   export default {
     components: { Cabecera, ProgressSpinner, Footer },
+    data() {
+      return {
+        cargandoFrontend: true,
+      };
+    },
     async mounted() {
-      await Promise.all([
-        useExpedientesStore().cargarElementos(),
-        useReservistasStore().cargarElementos(),
-        useSolicitudesStore().cargarElementos(),
-        usePresupuestosSecresStore().cargarElementos(),
-        useCostesPorDiaStore().cargarElementos(),
-      ]);
-      await Promise.all([
-        useExpedientesStore().cargarSolicitudesEnExpedienteAlIniciar(),
-        useReservistasStore().crearListadoSolicitudes(),
-        useSolicitudesStore().cargarReservistaEnSolicitudAlIniciar(),
-      ]);
+      await cargarTodaLaApi();
+      this.cargandoFrontend = false;
     },
   };
 </script>
+
 <template>
   <div class="app-container">
-    <Cabecera></Cabecera>
+    <Cabecera />
     <main>
-      <router-view></router-view>
+      <ProgressSpinner
+        v-if="cargandoFrontend"
+        style="display: block; margin: 4rem auto;"
+        class="spinnerColor"
+      />
+      <router-view v-else />
     </main>
-    <footer></footer>
+    <Footer />
   </div>
 </template>
 
@@ -72,9 +68,9 @@
     color: #7c732f;
   }
   .colorSecundario {
-    color: #c4bd86;
+    background-color: #c4bd86;
   }
-  .clolorSecundario:hover {
+  .colorSecundario:hover {
     color: #979163;
   }
   .spinnerColor {
@@ -86,6 +82,14 @@
   .colorFuenteFooter {
     color: #fff;
   }
+
+  .componente-en-lista {
+    background-color: #f9faf8;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
   .otrosFuente {
     color: #000;
   }

@@ -5,16 +5,19 @@
   import { useExpedientesStore } from "@/stores/expedientes";
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import { mapState, mapActions } from "pinia";
+  import ProgressSpinner from "primevue/progressspinner";
+  import { cargarTodaLaApi } from "@/utils/utils";
 
   export default {
     name: "FormularioExpedienteView",
-    components: { SolicitudEnFormularioExpediente },
+    components: { SolicitudEnFormularioExpediente, ProgressSpinner },
     data() {
       return {
         editando: true,
+        consultando: useExpedientesStore().consultando,
+        mensajeModal: "",
+        mostrarModal: false,
         seleccionSolicitud: "",
-        antiguoListadoSolicitudes: [],
-        nuevoListadoSolicitudes: [],
         ESTADOS_EXPEDIENTE: ESTADOS_EXPEDIENTE,
       };
     },
@@ -24,7 +27,6 @@
         if (expediente === null) {
           expediente = {
             numeroExpediente: "",
-            tipoSolicitud: "",
             estado: "ABIERTO",
             solicitudes: [],
           };
@@ -35,14 +37,13 @@
       solicitudesDisponibles() {
         return useSolicitudesStore().elementos.filter(
           (s) =>
-            !this.expedienteAbierto.solicitudes.some(
+            !(this.expedienteAbierto.solicitudes || []).some(
               (es) => es._links.self.href === s._links.self.href
             ) &&
-            !this.nuevoListadoSolicitudes.some(
-              (ns) => ns._links.self.href === s._links.self.href
-            ) &&
             s.estado === "PENDIENTE_EVALUACION" &&
-            s.tipoSolicitud === this.expedienteAbierto.tipoSolicitud
+            s.tipoSolicitud === this.expedienteAbierto.tipoSolicitud &&
+            new Date(s.fechaInicio).getFullYear() ===
+              this.expedienteAbierto.anho
         );
       },
       ...mapState(useSolicitudesStore, { solicitudes: "elementos" }),
@@ -50,122 +51,101 @@
     methods: {
       formatearAtributoEnElFrontend,
       ...mapActions(useExpedientesStore, [
-        "anadirElemento",
-        "editarElemento",
+        "anhadirExpediente",
+        "editarExpediente",
         "eliminarElemento",
         "agregarSolicitudAExpediente",
         "eliminarSolicitudDeExpediente",
       ]),
-      eliminarSolicitudDelNuevoListado(solicitud) {
-        this.nuevoListadoSolicitudes = this.nuevoListadoSolicitudes.filter(
-          (s) => s._links.self.href !== solicitud._links.self.href
+      async enviarFormulario() {
+        if (this.editando) {
+          const expedienteEnStore = await this.editarExpediente(
+            this.expedienteAbierto
+          );
+          console.log("Respuesta de edición:", expedienteEnStore);
+          this.mensajeModal = expedienteEnStore + "\n";
+        } else {
+          const expedienteEnStore = await this.anhadirExpediente(
+            this.expedienteAbierto
+          );
+          this.mensajeModal = expedienteEnStore + "\n";
+        }
+        this.mostrarModal = true;
+      },
+      async agregarSolicitud(solicitud) {
+        this.mostrarModal = true;
+        this.mensajeModal = "";
+        this.mensajeModal = await this.agregarSolicitudAExpediente(
+          solicitud,
+          this.expedienteAbierto
         );
       },
-      enviarFormulario() {
-        if (this.editando) {
-          // this.editarElemento(this.expedienteAbierto);
-        } else {
-          this.anadirElemento(this.expedienteAbierto);
-        }
-        // Envío de los cambios realizados a la API
-        this.antiguoListadoSolicitudes
-          .filter(
-            (s) =>
-              !this.nuevoListadoSolicitudes.some(
-                (ns) => ns._links.self.href === s._links.self.href
-              )
-          )
-          .forEach((s) => {
-            this.eliminarSolicitudDeExpediente(s);
-          });
-        this.nuevoListadoSolicitudes
-          .filter(
-            (s) =>
-              !this.antiguoListadoSolicitudes.some(
-                (ns) => ns._links.self.href === s._links.self.href
-              )
-          )
-          .forEach((s) => {
-            this.agregarSolicitudAExpediente(s);
-          });
-        this.expedienteAbierto.solicitudes = this.nuevoListadoSolicitudes;
-        this.$router.push({ path: "/listado/expedientes" });
+      async eliminarSolicitud(solicitud) {
+        this.mensajeModal = await this.eliminarSolicitudDeExpediente(
+          solicitud,
+          this.expedienteAbierto
+        );
+        this.mostrarModal = true;
       },
       eliminarExpediente() {
-        this.eliminarElemento(this.expedienteAbierto._links.self.href);
+        this.eliminarElemento(this.expedienteAbierto);
         this.$router.push({ path: "/listado/expedientes" });
       },
-      descartarCambios() {
+      volverAlListado() {
         this.$router.push({ path: "/listado/expedientes" });
       },
-    },
-    async created() {
-      // Crear una copia independiente para antiguoListadoSolicitudes
-      this.antiguoListadoSolicitudes = [...this.expedienteAbierto.solicitudes];
-
-      // Asignar directamente las solicitudes a nuevoListadoSolicitudes
-      this.nuevoListadoSolicitudes = [...this.expedienteAbierto.solicitudes];
+      cerrarModal() {
+        this.mostrarModal = false;
+        useExpedientesStore().elementoAbierto = null;
+        useExpedientesStore().consultando = false;
+        this.$router.push({ path: "/listado/expedientes" });
+      },
     },
   };
 </script>
 
 <template>
-  <div
-    class="formulario-con-fondo d-flex justify-content-center align-items-center"
-  >
-    <div class="card card-ancha text-center">
-      <div class="card-header fw-bold fs-5">
-        <h2 v-if="editando">Editar expediente</h2>
-        <h2 v-else>Crear nuevo expediente</h2>
+  <div class="container align-items-end mt-3">
+    <h2 v-if="!editando">Añadir expediente</h2>
+    <h2 v-if="editando && consultando">Consultar expediente</h2>
+    <h2 v-if="editando && !consultando">Modificar expediente</h2>
+    <form @submit.prevent="enviarFormulario" class="row g-3 mt-2">
+      <div class="row align-items-end mt-3">
+        <div class="col-md-8">
+          <label class="form-label">Número expediente</label>
+          <input
+            v-model="expedienteAbierto.numeroExpediente"
+            type="text"
+            class="form-control"
+            :disabled="editando || consultando"
+            pattern="^T64(PS|EX|FC)A(ENE|FEB|MAR|ABR|MAY|JUN|JUL|AGO|SEP|OCT|NOV|DIC)([0-9]{2})[1-9][0-9]*$"
+            title="Formato: T64 seguido de PS, EX o FC, luego A, el mes (ej. ENE), el año (25) y el número de expediente que corresponda (ej. 1). Ejemplo completo: T64PSAENE251"
+            required
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Estado</label>
+          <select
+            v-model="expedienteAbierto.estado"
+            class="form-select"
+            :disabled="!editando || consultando"
+          >
+            <option
+              v-for="estado in ESTADOS_EXPEDIENTE"
+              :key="estado"
+              :value="estado"
+            >
+              {{ formatearAtributoEnElFrontend(estado) }}
+            </option>
+          </select>
+        </div>
       </div>
-      <div class="card-body">
-        <form @submit.prevent="enviarFormulario">
-          <div class="mb-3">
-            <label class="form-label">Número expediente:</label>
-            <input
-              v-model="expedienteAbierto.numeroExpediente"
-              type="text"
-              class="form-control w-50 mx-auto"
-              :disabled="editando"
-              pattern="^T64(PS|EX|FC)A(ENE|FEB|MAR|ABR|MAY|JUN|JUL|AGO|SEP|OCT|NOV|DIC)([0-9]{2})[1-9][0-9]*$"
-              title="Formato: T64 seguido de PS, EX o FC, luego A, el mes (ej. ENE), el año (25) y el número de expediente que corresponda (ej. 1). Ejemplo completo: T64PSAENE251"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Tipo de Solicitud:</label>
-            <select
-              v-model="expedienteAbierto.tipoSolicitud"
-              class="form-select w-50 mx-auto"
-              :disabled="editando"
-            >
-              <option value="FC">Formación continuada</option>
-              <option value="EX">Activación ampliada</option>
-              <option value="PS">Prestación servicios unidad</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Estado:</label>
-            <select
-              v-model="expedienteAbierto.estado"
-              class="form-control w-50 mx-auto"
-              :disabled="!editando"
-            >
-              <option
-                v-for="estado in ESTADOS_EXPEDIENTE"
-                :key="estado"
-                :value="estado"
-              >
-                {{ formatearAtributoEnElFrontend(estado) }}
-              </option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Solicitudes: </label>
-            <select
-              v-model="seleccionSolicitud"
-              class="border p-2 rounded mb-4"
-            >
+
+      <div class="row align-items-end mt-3">
+        <div class="col-md-12" v-if="editando && !consultando">
+          <label class="form-label">Añadir solicitud</label>
+          <div class="d-flex">
+            <select v-model="seleccionSolicitud" class="form-select me-2">
               <option value="">Seleccionar</option>
               <option
                 v-for="solicitud in solicitudesDisponibles"
@@ -179,59 +159,115 @@
             </select>
             <button
               type="button"
-              class="btn btn-primary mb-2"
+              class="btn btn-primary"
               :disabled="!seleccionSolicitud"
-              @click="nuevoListadoSolicitudes.push(seleccionSolicitud)"
+              @click="agregarSolicitud(seleccionSolicitud)"
             >
-              Añadir solicitud
+              Añadir
             </button>
-            <ul>
-              <div
-                v-for="solicitud in nuevoListadoSolicitudes"
-                :key="solicitud._links.self.href"
-                class="d-flex align-items-center justify-content-between mb-3"
-              >
-                <solicitud-en-formulario-expediente
-                  :solicitud="solicitud"
-                  class="flex-grow-1"
-                ></solicitud-en-formulario-expediente>
-                <button
-                  type="button"
-                  class="btn btn-danger ms-3"
-                  @click="eliminarSolicitudDelNuevoListado(solicitud)"
-                >
-                  Eliminar solicitud
-                </button>
-              </div>
-            </ul>
           </div>
+        </div>
+      </div>
 
-          <div class="d-flex justify-content-between">
-            <button v-if="editando" type="submit" class="btn btn-primary">
-              Guardar cambios
-            </button>
-            <button v-else type="submit" class="btn btn-success">
-              Crear expediente
-            </button>
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Solicitudes</label>
+        <small v-if="!editando && !consultando"
+          ><br />&nbsp;Se podrán asignar solicitudes una vez se haya añadido el expediente al sistema</small
+        >
+
+        <ul class="list-group mb-2">
+          <li
+            v-for="solicitud in expedienteAbierto.solicitudes"
+            :key="solicitud._links.self.href"
+            class="list-group-item d-flex align-items-center justify-content-between"
+          >
+            <solicitud-en-formulario-expediente
+              :solicitud="solicitud"
+              class="flex-grow-1"
+            />
             <button
-              v-if="editando"
+              v-if="editando && !consultando"
               type="button"
-              @click="eliminarExpediente"
-              class="btn btn-danger"
+              class="btn btn-danger btn-sm ms-3"
+              @click="eliminarSolicitud(solicitud)"
             >
-              Eliminar expediente
+              Eliminar
             </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <button
+          v-if="!editando"
+          type="button"
+          class="btn btn-light"
+          @click="volverAlListado"
+        >
+          Cancelar cambios
+        </button>
+        <button v-if="!editando" type="submit" class="btn btn-success">
+          Añadir
+        </button>
+        <button
+          v-if="editando && consultando"
+          type="button"
+          class="btn btn-success"
+          @click="volverAlListado"
+        >
+          Volver al listado
+        </button>
+        <template v-if="editando && !consultando">
+          <button type="button" class="btn btn-light" @click="volverAlListado">
+            Cancelar cambios
+          </button>
+          <button
+            type="button"
+            @click="eliminarExpediente"
+            class="btn btn-danger ms-2"
+          >
+            Eliminar expediente
+          </button>
+          <button type="submit" class="btn btn-success ms-2">
+            Guardar cambios
+          </button>
+        </template>
+      </div>
+    </form>
+
+    <!-- Modal -->
+    <div
+      v-if="mostrarModal"
+      class="modal fade show"
+      tabindex="-1"
+      style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Información</h5>
             <button
-              v-if="editando"
               type="button"
-              @click="descartarCambios"
-              class="btn btn-danger"
+              class="btn-close"
+              @click="cerrarModal"
+            ></button>
+          </div>
+          <ProgressSpinner v-if="this.mensajeModal === ''" />
+          <div class="modal-body">
+            <p>{{ mensajeModal }}</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="cerrarModal"
             >
-              Descartar cambios
+              Cerrar
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
+    <!-- Fin Modal -->
   </div>
 </template>

@@ -3,12 +3,17 @@
   import { useReservistasStore } from "@/stores/reservistas";
   import { useUcosStore } from "@/stores/ucos";
   import { mapActions } from "pinia";
+  import {
+    formatearAtributoEnElFrontend,
+    formatearCentimosAEuros,
+  } from "@/utils/utils";
 
   export default {
     name: "FormularioSolicitudView",
     data() {
       return {
         editando: true,
+        consultando: useSolicitudesStore().consultando,
         mostrarModal: false,
         mostrarModalReservistas: false,
         mostrarModalUcos: false,
@@ -28,11 +33,14 @@
             useSolicitudesStore().elementoAbierto = {
               nombreUco: "",
               ciu: "",
-              reservista: null,
+              telefonoPoc: "",
+              emailPoc: "",
               fechaInicio: "",
               fechaFin: "",
               tipoSolicitud: "",
+              pagaSecres: false,
               estado: "PENDIENTE_EVALUACION",
+              reservista: null,
             };
           }
           return useSolicitudesStore().elementoAbierto;
@@ -52,12 +60,21 @@
           ? `${this.solicitudAbierta.reservista.dni} ${this.solicitudAbierta.reservista.empleo} ${this.solicitudAbierta.reservista.nombre} ${this.solicitudAbierta.reservista.apellido1} ${this.solicitudAbierta.reservista.apellido2}`
           : "";
       },
+      costeEuros() {
+        if (!this.solicitudAbierta.costeCentimos) {
+          return "El coste se calcula automáticamente al generar la solicitud";
+        } else {
+          return formatearCentimosAEuros(this.solicitudAbierta.costeCentimos);
+        }
+      },
     },
     methods: {
+      formatearAtributoEnElFrontend,
+      formatearCentimosAEuros,
       ...mapActions(useSolicitudesStore, [
-        "putSolicitud",
+        "editarSolicitud",
         "eliminarElemento",
-        "postSolicitud",
+        "anhadirSolicitud",
       ]),
       seleccionarUco(uco) {
         this.solicitudAbierta.nombreUco = uco.nombreUco;
@@ -69,6 +86,11 @@
         this.solicitudAbierta.reservista = reservista;
         this.mostrarModalReservistas = false;
       },
+      volverAlListado() {
+        useSolicitudesStore().elementoAbierto = null;
+        useSolicitudesStore().consultando = false;
+        this.$router.push({ path: "/listado/solicitudes" });
+      },
       async enviarFormulario() {
         try {
           this.inicio = new Date(this.solicitudAbierta.fechaInicio);
@@ -78,17 +100,30 @@
             return;
           }
           if (this.editando) {
-            const respuesta = await this.putSolicitud(this.solicitudAbierta);
+            const respuesta = await this.editarSolicitud(this.solicitudAbierta);
             this.mensajeModal = `Solicitud editada correctamente`;
           } else {
-            const respuesta = await this.postSolicitud(this.solicitudAbierta);
-            this.mensajeModal = `Solicitud añadida correctamente`;
+            const respuesta = await this.anhadirSolicitud(
+              this.solicitudAbierta
+            );
+            this.mensajeModal = "Solicitud añadida correctamente: " + respuesta;
           }
         } catch (error) {
           this.mensajeModal = `Error al procesar la solicitud: ${error.message}`;
         } finally {
           this.mostrarModal = true;
           this.envioPendiente = false;
+        }
+      },
+      async rechazarSolicitud() {
+        try {
+          this.solicitudAbierta.estado = "RECHAZADA";
+          await this.editarSolicitud(this.solicitudAbierta);
+          this.mensajeModal = `Solicitud rechazada correctamente.`;
+        } catch (error) {
+          this.mensajeModal = `Error al rechazar la solicitud: ${error.message}`;
+        } finally {
+          this.mostrarModal = true;
         }
       },
       async enviarDosSolicitudes() {
@@ -111,12 +146,12 @@
 
           console.log("solicitiudes", solicitud1, solicitud2);
           if (this.editando) {
-            await this.putSolicitud(solicitud1);
-            await this.putSolicitud(solicitud2);
+            await this.editarSolicitud(solicitud1);
+            await this.anhadirSolicitud(solicitud2); // Se usa post para la segunda solicitud ya que no existe en la API aún
             this.mensajeModal = "Solicitudes editadas correctamente.";
           } else {
-            await this.postSolicitud(solicitud1);
-            await this.postSolicitud(solicitud2);
+            await this.anhadirSolicitud(solicitud1);
+            await this.anhadirSolicitud(solicitud2);
             this.mensajeModal = "Solicitudes añadidas correctamente.";
           }
         } catch (error) {
@@ -142,131 +177,242 @@
       },
       cerrarModal() {
         this.mostrarModal = false;
+        useSolicitudesStore().elementoAbierto = null;
+        useSolicitudesStore().consultando = false;
         this.$router.push({ path: "/listado/solicitudes" });
+      },
+    },
+    watch: {
+      "solicitudAbierta.tipoSolicitud"(nuevoValor) {
+        if (nuevoValor === "PS") {
+          this.solicitudAbierta.pagaSecres = true;
+        }
+        if (nuevoValor === "FC") {
+          this.solicitudAbierta.pagaSecres = false;
+        }
       },
     },
   };
 </script>
 
 <template>
-  <div>{{ solicitudAbierta }}</div>
-  <div>{{ editando }}</div>
-  <div
-    class="formulario-con-fondo d-flex justify-content-center align-items-center"
-  >
-    <div class="card text-center card-ancha">
-      <div class="card-header fw-bold fs-5">
-        <h2 v-if="editando">Editar solicitud</h2>
-        <h2 v-else>Crear nueva solicitud</h2>
+  <div class="container">
+    <h2 v-if="!editando">Añadir solicitud</h2>
+    <h2 v-if="editando && consultando">Consultar solicitud</h2>
+    <h2 v-if="editando && !consultando">Modificar solicitud</h2>
+    <form @submit.prevent="enviarFormulario" class="row g-3 mt-2">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">Nombre UCO</label>
+          <input
+            disabled
+            v-model="solicitudAbierta.nombreUco"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">CIU</label>
+          <input
+            disabled
+            v-model="solicitudAbierta.ciu"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button
+            v-if="!consultando && !editando"
+            type="button"
+            class="btn btn-primary w-100"
+            @click="mostrarModalUcos = true"
+          >
+            Seleccionar UCO
+          </button>
+        </div>
       </div>
-      <div class="card-body">
-        <form @submit.prevent="enviarFormulario">
-          <div class="mb-3">
-            <label class="form-label">Nombre UCO:</label>
-            <div class="d-flex align-items-center gap-2 mx-auto">
-              <input
-                disabled
-                v-model="solicitudAbierta.nombreUco"
-                type="text"
-                class="form-control"
-              />
-              <button
-                type="button"
-                class="btn btn-secondary mt-2"
-                @click="mostrarModalUcos = true"
-              >
-                Seleccionar UCO
-              </button>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">CIU:</label>
-            <input
-              disabled
-              v-model="solicitudAbierta.ciu"
-              type="text"
-              class="form-control mx-auto"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Reservista:</label>
-            <div class="d-flex align-items-center gap-2 mx-auto">
-              <input
-                disabled
-                v-model="reservistaFormateado"
-                type="text"
-                class="form-control"
-              />
-              <button
-                type="button"
-                class="btn btn-secondary mt-2"
-                @click="mostrarModalReservistas = true"
-              >
-                Seleccionar Reservista
-              </button>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Fecha Inicio:</label>
-            <input
-              v-model="solicitudAbierta.fechaInicio"
-              type="date"
-              class="form-control mx-auto"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Fecha Fin:</label>
-            <input
-              v-model="solicitudAbierta.fechaFin"
-              type="date"
-              class="form-control mx-auto"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Tipo de Solicitud:</label>
-            <select
-              v-model="solicitudAbierta.tipoSolicitud"
-              class="form-select mx-auto"
-            >
-              <option value="FC">Formación continuada</option>
-              <option value="EX">Activación ampliada</option>
-              <option value="PS">Prestación servicios unidad</option>
-            </select>
-          </div>
-          <div v-if="solicitudAbierta.tipoSolicitud === 'FC'" class="mb-3">
-            <label class="form-label">Escala:</label>
-            <input
-              v-model.number="solicitudAbierta.escala"
-              type="text"
-              class="form-control mx-auto"
-            />
-          </div>
-          <div v-if="solicitudAbierta.tipoSolicitud === 'EX'" class="mb-3">
-            <label class="form-label">Motivo:</label>
-            <textarea
-              v-model="solicitudAbierta.motivo"
-              class="form-control mx-auto"
-            ></textarea>
-          </div>
-          <div class="d-flex justify-content-between">
-            <button v-if="editando" type="submit" class="btn btn-primary">
-              Guardar cambios
-            </button>
-            <button v-else type="submit" class="btn btn-success">
-              Crear solicitud
-            </button>
-            <button
-              v-if="editando"
-              type="button"
-              @click="eliminarSolicitud"
-              class="btn btn-danger"
-            >
-              Eliminar
-            </button>
-          </div>
-        </form>
+      <div class="row">
+        <div class="col-md-9">
+          <label class="form-label">Reservista</label>
+          <input
+            disabled
+            v-model="reservistaFormateado"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button
+            v-if="!consultando && !editando"
+            type="button"
+            class="btn btn-primary w-80"
+            @click="mostrarModalReservistas = true"
+          >
+            Seleccionar Reservista
+          </button>
+        </div>
       </div>
-    </div>
+      <div v-if="editando" class="form-group">
+        <label>Estado</label>
+        <option disabled class="form-control mx-auto">
+          {{ formatearAtributoEnElFrontend(solicitudAbierta.estado) }}
+        </option>
+        <button
+          v-if="
+            !consultando && solicitudAbierta.estado === 'PENDIENTE_EVALUACION'
+          "
+          type="button"
+          @click="rechazarSolicitud"
+          class="btn btn-danger"
+        >
+          Rechazar solicitud
+        </button>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label>Fecha Inicio</label>
+          <input
+            :disabled="consultando"
+            v-model="solicitudAbierta.fechaInicio"
+            type="date"
+            class="form-control mx-auto"
+            required
+          />
+        </div>
+        <div class="col-md-6">
+          <label>Fecha Fin</label>
+          <input
+            :disabled="consultando"
+            v-model="solicitudAbierta.fechaFin"
+            type="date"
+            class="form-control mx-auto"
+            required
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label>Teléfono POC</label>
+          <input
+            :disabled="consultando"
+            v-model="solicitudAbierta.telefonoPoc"
+            type="text"
+            class="form-control mx-auto"
+            pattern="^\+?[0-9]{7,15}$"
+            title="Formato: Número de teléfono con entre 7 y 15 dígitos, opcionalmente con + al inicio"
+            required
+          />
+        </div>
+        <div class="col-md-6">
+          <label>Email POC</label>
+          <input
+            :disabled="consultando"
+            v-model="solicitudAbierta.emailPoc"
+            type="email"
+            class="form-control mx-auto"
+            required
+          />
+          <small id="emailHelp" class="form-text text-muted"
+            >Dirección de email a la cual se enviarán todas las actualizaciones
+            de la solicitud</small
+          >
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tipo de Solicitud</label>
+        <select
+          :disabled="consultando"
+          v-model="solicitudAbierta.tipoSolicitud"
+          class="form-select mx-auto"
+          required
+        >
+          <option value="FC">Formación continuada</option>
+          <option value="EX">Activación ampliada</option>
+          <option value="PS">Prestación servicios unidad</option>
+        </select>
+      </div>
+      <div class="form-check">
+        <input
+          :disabled="
+            solicitudAbierta.tipoSolicitud === 'PS' ||
+            solicitudAbierta.tipoSolicitud === 'FC' ||
+            consultando
+          "
+          v-model="solicitudAbierta.pagaSecres"
+          type="checkbox"
+          class="form-check-input"
+          id="pagaSecresCheck"
+        />
+        <label class="form-check-label ms-2" for="pagaSecresCheck">
+          Solicitud a cargo del crédito de la SECRES </label
+        ><br />
+        <small>
+          Las prestaciones de servicio en unidad siempre corren a cargo de la
+          SECRES y las formaciones continuadas a cargo de la unidad solicitante
+        </small>
+      </div>
+      <div class="form-group">
+        <label>Coste</label>
+        <option disabled class="form-control mx-auto">
+          {{ costeEuros }}
+        </option>
+      </div>
+      <div v-if="solicitudAbierta.tipoSolicitud === 'FC'" class="form-group">
+        <label>Escala</label>
+        <select
+          :disabled="consultando"
+          v-model.number="solicitudAbierta.escala"
+          class="form-control mx-auto"
+          :required="solicitudAbierta.tipoSolicitud === 'FC'"
+        >
+          <option value="Oficiales">Oficiales</option>
+          <option value="Suboficiales">Suboficiales</option>
+          <option value="Tropa">Tropa</option>
+        </select>
+      </div>
+      <div v-if="solicitudAbierta.tipoSolicitud === 'EX'" class="form-group">
+        <label class="form-label">Motivo</label>
+        <textarea
+          :disabled="consultando"
+          v-model="solicitudAbierta.motivo"
+          class="form-control mx-auto"
+          :required="solicitudAbierta.tipoSolicitud === 'EX'"
+        ></textarea>
+      </div>
+      <div class="d-flex justify-content-end gap-2">
+        <div v-if="!editando">
+          <button type="button" class="btn btn-light" @click="volverAlListado">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success">Añadir</button>
+        </div>
+        <div v-if="editando && consultando">
+          <button
+            type="button"
+            class="btn btn-success"
+            @click="volverAlListado"
+          >
+            Volver al listado
+          </button>
+        </div>
+        <div v-if="editando && !consultando">
+          <button type="submit" class="btn btn-light" @click="volverAlListado">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            @click="eliminarSolicitud"
+            class="btn btn-danger ms-2"
+          >
+            Eliminar
+          </button>
+          <button type="submit" class="btn btn-success ms-2">Guardar</button>
+        </div>
+      </div>
+    </form>
 
     <div
       v-if="mostrarModal"
@@ -334,79 +480,80 @@
         </div>
       </div>
     </div>
-  </div>
+    <!-- </div> -->
 
-  <div
-    v-if="mostrarModalUcos"
-    class="modal fade show"
-    tabindex="-1"
-    style="display: block; background-color: rgba(0, 0, 0, 0.5)"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Seleccionar UCO</h5>
-          <button
-            type="button"
-            class="btn-close"
-            @click="mostrarModalUcos = false"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <ul class="list-group">
-            <li
-              v-for="uco in ucos"
-              :key="uco.id"
-              class="list-group-item"
-              @click="seleccionarUco(uco)"
-            >
-              {{ uco.nombreUco }}&nbsp; (CIU: {{ uco.ciu }})
-            </li>
-          </ul>
+    <div
+      v-if="mostrarModalUcos"
+      class="modal fade show"
+      tabindex="-1"
+      style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Seleccionar UCO</h5>
+            <button
+              type="button"
+              class="btn-close"
+              @click="mostrarModalUcos = false"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group">
+              <li
+                v-for="uco in ucos"
+                :key="uco.id"
+                class="list-group-item"
+                @click="seleccionarUco(uco)"
+              >
+                {{ uco.nombreUco }}&nbsp; (CIU: {{ uco.ciu }})
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div
-    v-if="mostrarModalConfirmacion"
-    class="modal fade show"
-    tabindex="-1"
-    style="display: block; background-color: rgba(0, 0, 0, 0.5)"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Confirmar envío</h5>
-          <button
-            type="button"
-            class="btn-close"
-            @click="cancelarEnvio"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <p>
-            Las fechas de inicio y fin no están en el mismo año natural. Si
-            desea continuar, se crearán dos solicitudes independientes
-            transcurriendo cada una durante su propio año natural. ¿Desea
-            continuar?
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            @click="cancelarEnvio"
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="enviarDosSolicitudes"
-          >
-            Continuar
-          </button>
+    <div
+      v-if="mostrarModalConfirmacion"
+      class="modal fade show"
+      tabindex="-1"
+      style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmar envío</h5>
+            <button
+              type="button"
+              class="btn-close"
+              @click="cancelarEnvio"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Las fechas de inicio y fin no están en el mismo año natural. Si
+              desea continuar, se crearán dos solicitudes independientes
+              transcurriendo cada una durante su propio año natural. ¿Desea
+              continuar?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="cancelarEnvio"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="enviarDosSolicitudes"
+            >
+              Continuar
+            </button>
+          </div>
         </div>
       </div>
     </div>

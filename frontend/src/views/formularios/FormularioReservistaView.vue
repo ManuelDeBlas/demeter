@@ -38,7 +38,7 @@
     },
     methods: {
       ...mapActions(useReservistasStore, [
-        "anadirElemento",
+        "anhadirElemento",
         "editarElemento",
         "eliminarElemento",
       ]),
@@ -49,7 +49,7 @@
             this.mensajeModal = `Reservista editado correctamente`;
           } else {
             this.reservistaAbierto;
-            let respuesta = await this.anadirElemento(this.reservistaAbierto);
+            let respuesta = await this.anhadirElemento(this.reservistaAbierto);
             this.mensajeModal = `Reservista añadido correctamente`;
           }
         } catch (error) {
@@ -77,7 +77,7 @@
       </div>
       <div class="card-body">
         <form @submit.prevent="enviarFormulario">
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">Nombre:</label>
             <input
               v-model="reservistaAbierto.nombre"
@@ -86,7 +86,7 @@
               required
             />
           </div>
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">Primer Apellido:</label>
             <input
               v-model="reservistaAbierto.apellido1"
@@ -95,7 +95,7 @@
               required
             />
           </div>
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">Segundo Apellido:</label>
             <input
               v-model="reservistaAbierto.apellido2"
@@ -103,7 +103,7 @@
               class="form-control w-50 mx-auto"
             />
           </div>
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">Empleo:</label>
             <input
               v-model="reservistaAbierto.empleo"
@@ -111,7 +111,7 @@
               class="form-control w-50 mx-auto"
             />
           </div>
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">DNI:</label>
             <input
               v-model="reservistaAbierto.dni"
@@ -120,7 +120,7 @@
               required
             />
           </div>
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">Teléfono Particular:</label>
             <input
               v-model="reservistaAbierto.telefonoParticular"
@@ -128,7 +128,7 @@
               class="form-control w-50 mx-auto"
             />
           </div>
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">Fecha Fin Compromiso:</label>
             <input
               v-model="reservistaAbierto.fechaFinCompromiso"
@@ -136,7 +136,7 @@
               class="form-control w-50 mx-auto"
             />
           </div>
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">Días Consumidos:</label>
             <input
               v-model.number="reservistaAbierto.diasConsumidos"
@@ -144,7 +144,7 @@
               class="form-control w-50 mx-auto"
             />
           </div>
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">Localidad de Residencia:</label>
             <input
               v-model="reservistaAbierto.localidadResidencia"
@@ -152,7 +152,7 @@
               class="form-control w-50 mx-auto"
             />
           </div>
-          <div class="mb-3">
+          <div class="form-group">
             <label class="form-label">Subdelegación de Defensa:</label>
             <input
               v-model="reservistaAbierto.subdelegacionDefensa"

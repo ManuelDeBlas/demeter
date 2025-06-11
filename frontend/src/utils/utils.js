@@ -1,3 +1,28 @@
+import { useExpedientesStore } from "@/stores/expedientes";
+import { useSolicitudesStore } from "@/stores/solicitudes";
+import { usePresupuestosSecresStore } from "@/stores/presupuestos-secres";
+import { useCostesPorDiaStore } from "@/stores/costes-por-dia";
+import { useReservistasStore } from "@/stores/reservistas";
+
+export async function cargarTodaLaApi() {
+  await Promise.all([
+    useExpedientesStore().cargarElementos(),
+    useSolicitudesStore().cargarElementos(),
+    useReservistasStore().cargarElementos(),
+    usePresupuestosSecresStore().cargarElementos(),
+    useCostesPorDiaStore().cargarElementos(),
+  ]);
+  for (let solicitud of useSolicitudesStore().elementos) {
+    await useSolicitudesStore().cargarReservistaEnSolicitud(solicitud);
+  }
+  for (let reservista of useReservistasStore().elementos) {
+    await useReservistasStore().crearListadoSolicitudes(reservista);
+  }
+  for (let expediente of useExpedientesStore().elementos) {
+    await useExpedientesStore().cargarSolicitudesEnExpediente(expediente);
+  }
+}
+
 export function getNombreDAO(tipoSolicitud) {
   const tiposSolicitudes = {
     PS: "prestaciones-servicios-unidad",

@@ -33,7 +33,7 @@
       },
     },
     methods: {
-      anadirElemento() {
+      anhadirElemento() {
         useReservistasStore().elementoAbierto = null; // Vacía el store para añadir un nuevo elemento
         this.$router.push({ path: "/formulario/reservista" });
       },
@@ -52,11 +52,6 @@
 <template>
   <div class="container">
     <h1 class="titulo p-4">Lista de Reservistas</h1>
-    <div class="d-flex align-items-center gap-2 mb-4">
-      <button type="button" class="btn btn-warning" @click="anadirElemento">
-        Nuevo Reservista
-      </button>
-    </div>
     <ul>
       <div
         v-for="reservista in elementos"

@@ -59,6 +59,7 @@
     methods: {
       formatearAtributoEnElFrontend,
       agregarSolicitud() {
+        useSolicitudesStore().consultando = false;
         useSolicitudesStore().elementoAbierto = null;
         this.$router.push({ path: "/formulario/solicitud" });
       },
@@ -87,7 +88,7 @@
     <h1 class="titulo p-4">Lista de Solicitudes</h1>
     <div class="d-flex align-items-center gap-2 mb-4">
       <button type="button" class="btn btn-warning" @click="agregarSolicitud">
-        Nueva Solicitud
+        Añadir Solicitud
       </button>
       <label class="mb-0 fw-bold">Filtrar por estado:</label>
       <select v-model="filtroEstadoSeleccionado" class="form-select w-auto">

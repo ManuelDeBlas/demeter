@@ -8,6 +8,7 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
     state: () => ({
       elementos: [],
       elementoAbierto: null,
+      consultando: false,
     }),
     actions: {
       async cargarElementos() {
@@ -28,55 +29,68 @@ export function crearStore(nombreColeccion, accionesAdicionales = {}) {
         )[0];
         return objetoRecuperado;
       },
-      async anadirElemento(nuevoElemento) {
+      async anhadirElemento(objetoACrear) {
         // Esto evita hacer un post a '/soliticitudes'
         if (nombreColeccion === "solicitudes") {
-          nombreColeccion = getNombreDAO(nuevoElemento.tipoSolicitud);
+          nombreColeccion = getNombreDAO(objetoACrear.tipoSolicitud);
         }
         try {
           const respuesta = await post(
-            nuevoElemento,
+            objetoACrear,
             API_BASE_URL + "/" + nombreColeccion
           );
           if (respuesta.status === 201) {
-            const elementoAgregado = {
-              ...nuevoElemento,
-              _links: respuesta.data._links,
-            };
-            this.elementos.unshift(elementoAgregado);
+            const nuevoObjetoEnApi = respuesta.data;
+            this.elementos.unshift(nuevoObjetoEnApi);
+
+            return nuevoObjetoEnApi;
           }
-          return respuesta;
         } catch (error) {
-          console.error("Error: ", error);
+          return error;
         }
       },
-      async eliminarElemento(objeto) {
-        // const hrefAEliminar = objeto;
-        const hrefAEliminar = objeto._links.self.href;
-        const respuesta = await deleteEntidad(hrefAEliminar);
-        const indice = this.elementos.findIndex(
-          (elemento) => elemento._links.self.href === hrefAEliminar
-        );
-        if (indice !== -1) {
-          this.elementos.splice(indice, 1);
+      async eliminarElemento(objetoAEliminar) {
+        try {
+          const hrefAEliminar = objetoAEliminar._links.self.href;
+          const respuesta = await deleteEntidad(hrefAEliminar);
+          if (respuesta.status === 200) {
+            const objetoEliminado = respuesta.data;
+            const indice = this.elementos.findIndex(
+              (elemento) =>
+                elemento._links.self.href === objetoEliminado._links.self.href
+            );
+            if (indice !== -1) {
+              this.elementos.splice(indice, 1);
+            }
+
+            return objetoEliminado;
+          }
+        } catch (error) {
+          return error;
         }
-        return respuesta;
       },
-      async editarElemento(elementoEditado) {
-        const indice = this.elementos.findIndex(
-          (elemento) =>
-            elemento._links.self.href === elementoEditado._links.self.href
-        );
-        if (indice !== -1) {
-          this.elementos[indice] = elementoEditado;
+      async editarElemento(objetoEditado) {
+        try {
+          const respuesta = await put(
+            objetoEditado,
+            objetoEditado._links.self.href
+          );
+          if (respuesta.status === 200) {
+            const objetoEditadoEnApi = respuesta.data;
+            const indice = this.elementos.findIndex(
+              (elemento) =>
+                elemento._links.self.href ===
+                objetoEditadoEnApi._links.self.href
+            );
+            if (indice !== -1) {
+              this.elementos[indice] = objetoEditadoEnApi;
+            }
+
+            return objetoEditadoEnApi;
+          }
+        } catch (error) {
+          return error;
         }
-        await put(elementoEditado, elementoEditado._links.self.href)
-          .then((response) => {
-            return response;
-          })
-          .catch((error) => {
-            return error;
-          });
       },
       ...accionesAdicionales,
     },

@@ -9,6 +9,13 @@ import "@/scss/styles.scss";
 // Bootstrap
 import * as bootstrap from "bootstrap";
 
+// PrimeVue
+import PrimeVue from "primevue/config";
+import 'primevue/resources/themes/saga-blue/theme.css';
+import 'primevue/resources/primevue.min.css';
+import 'primeicons/primeicons.css';
+
+
 // FontAwesome
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -20,5 +27,6 @@ const pinia = createPinia();
 
 app.use(router);
 app.use(pinia);
+app.use(PrimeVue);
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.mount("#app");

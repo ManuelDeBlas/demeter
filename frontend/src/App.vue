@@ -6,18 +6,30 @@
 
   export default {
     components: { Cabecera, ProgressSpinner, Footer },
+    data() {
+      return {
+        cargandoFrontend: true,
+      };
+    },
     async mounted() {
       await cargarTodaLaApi();
+      this.cargandoFrontend = false;
     },
   };
 </script>
+
 <template>
   <div class="app-container">
-    <Cabecera></Cabecera>
+    <Cabecera />
     <main>
-      <router-view></router-view>
+      <ProgressSpinner
+        v-if="cargandoFrontend"
+        style="display: block; margin: 4rem auto;"
+        class="spinnerColor"
+      />
+      <router-view v-else />
     </main>
-    <footer></footer>
+    <Footer />
   </div>
 </template>
 

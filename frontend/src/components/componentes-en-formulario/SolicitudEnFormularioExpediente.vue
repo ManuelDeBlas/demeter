@@ -1,40 +1,55 @@
 <script>
   import { useSolicitudesStore } from "@/stores/solicitudes";
-  import { formatearAtributoEnElFrontend } from "@/utils/utils";
+  import {
+    formatearAtributoEnElFrontend,
+    formatearFecha,
+    formatearCentimosAEuros,
+  } from "@/utils/utils";
 
   export default {
     props: ["solicitud"],
     methods: {
-      abrirElementoEditar() {
-        useSolicitudesStore().elementoAbierto = this.solicitud; // Guarda el elemento en el store para editarlo
+      formatearAtributoEnElFrontend,
+      formatearFecha,
+      formatearCentimosAEuros,
+      abrirElementoConsulta() {
+        useSolicitudesStore().consultando = true;
+        useSolicitudesStore().elementoAbierto = this.solicitud; // Guarda el elemento en el store para consultarlo
         this.$router.push({ name: "FormularioSolicitudView" });
       },
-      formatearAtributoEnElFrontend,
     },
   };
 </script>
 
 <template>
-  <div class="card my-2 py-1">
-    <div class="card-body">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-auto d-flex align-items-center">
-            <div class="fw-bold fs-6">Solicitud</div>
-          </div>
-          <div class="col">
-            <div class="text-start fs-6">
-              DNI: {{ solicitud.reservista.dni }}
-              <strong>
-                {{ solicitud.reservista.empleo }}
-                {{ solicitud.reservista.nombre }}
-                {{ solicitud.reservista.apellido1 }}
-                {{ solicitud.reservista.apellido2 }}
-              </strong>
-              <br />
-              Desde {{ solicitud.fechaInicio }} hasta {{ solicitud.fechaFin }}
-            </div>
-          </div>
+  <div
+    class="row justify-content-between align-items-center colorSecundario p-2 mb-2 shadow"
+  >
+    <div class="col-md-6 text-start">
+      <div class="mb-0">
+        {{ solicitud.nombreUco }}
+        <strong>
+          {{ solicitud.reservista.empleo }}
+          {{ solicitud.reservista.nombre }}
+          {{ solicitud.reservista.apellido1 }}
+          {{ solicitud.reservista.apellido2 }}</strong
+        >
+        {{ solicitud.reservista.dni }} Duración:
+        {{ formatearFecha(solicitud.fechaInicio) }} -
+        {{ formatearFecha(solicitud.fechaFin) }} Coste:
+        {{ formatearCentimosAEuros(solicitud.costeCentimos) }}
+      </div>
+    </div>
+    <div class="col-md-6 text-end">
+      <div class="d-flex justify-content-end align-items-center gap-3">
+        <div class="d-flex align-items-center">
+          <button
+            type="button"
+            class="btn btn-info"
+            @click="abrirElementoConsulta"
+          >
+            Consultar
+          </button>
         </div>
       </div>
     </div>

@@ -6,6 +6,17 @@ import { usePresupuestosSecresStore } from "@/stores/presupuestos-secres";
 import { get, patch } from "@/utils/api-service";
 
 export const useExpedientesStore = crearStore("expedientes", {
+  async anhadirExpediente(expedienteAAnhadir) {
+    try {
+      const expedienteEnStore = await this.anhadirElemento(expedienteAAnhadir);
+      expedienteEnStore.solicitudes = [];
+      expedienteEnStore.coste = 0;
+
+      return expedienteEnStore;
+    } catch (error) {
+      return error;
+    }
+  },
   async editarExpediente(expedienteAEditar) {
     try {
       const solicitudesEnStore = expedienteAEditar.solicitudes;
@@ -41,7 +52,7 @@ export const useExpedientesStore = crearStore("expedientes", {
         return "Solicitud añadida al expediente correctamente";
       }
     } catch (error) {
-      return error.response;
+      return error.response.data;
     }
   },
   async eliminarSolicitudDeExpediente(solicitud, expediente) {
@@ -58,9 +69,15 @@ export const useExpedientesStore = crearStore("expedientes", {
         const indice = expediente.solicitudes.findIndex(
           (e) => e._links.self.href === solicitud._links.self.href
         );
+        console.log(
+          `Eliminando solicitud con indice ${indice} de expediente ${expediente.solicitudes}`
+        );
         if (indice !== -1) {
           expediente.solicitudes.splice(indice, 1);
         }
+        console.log(
+          `Solicitud eliminada de expediente ${expediente.solicitudes}`
+        );
         solicitud.expediente = null;
         solicitud.estado = "PENDIENTE_EVALUACION";
         await usePresupuestosSecresStore().cargarElementos();
@@ -72,7 +89,7 @@ export const useExpedientesStore = crearStore("expedientes", {
         return "Solicitud eliminada del expediente correctamente";
       }
     } catch (error) {
-      return error.response;
+      return error.response.data;
     }
   },
   async cargarSolicitudesEnExpediente(expediente) {

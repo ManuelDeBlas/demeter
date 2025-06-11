@@ -59,6 +59,7 @@
     methods: {
       formatearAtributoEnElFrontend,
       agregarSolicitud() {
+        useSolicitudesStore().consultando = false;
         useSolicitudesStore().elementoAbierto = null;
         this.$router.push({ path: "/formulario/solicitud" });
       },

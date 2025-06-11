@@ -13,6 +13,7 @@
       formatearFecha,
       formatearCentimosAEuros,
       abrirElementoEditar() {
+        useSolicitudesStore().consultando = false;
         useSolicitudesStore().elementoAbierto = this.solicitud; // Guarda el elemento en el store para editarlo
         this.$router.push({ name: "FormularioSolicitudView" });
       },
@@ -26,7 +27,9 @@
 </script>
 
 <template>
-  <div class="row justify-content-between align-items-center colorSecundario p-2 mb-2 shadow">
+  <div
+    class="row justify-content-between align-items-center colorSecundario p-2 mb-2 shadow"
+  >
     <div class="col-md-6 text-start">
       <div class="mb-0">
         {{ solicitud.nombreUco }}

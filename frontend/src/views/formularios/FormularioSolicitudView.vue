@@ -17,6 +17,8 @@
         mostrarModal: false,
         mostrarModalReservistas: false,
         mostrarModalUcos: false,
+        busquedaUco: "",
+        busquedaReservista: "",
         mostrarModalConfirmacion: false,
         mensajeModal: "",
         uco: null,
@@ -49,11 +51,19 @@
           useSolicitudesStore().elementoAbierto = value;
         },
       },
-      reservistas() {
-        return useReservistasStore().elementos;
+      reservistasFiltrados() {
+        const term = this.busquedaReservista.toLowerCase();
+        return useReservistasStore().elementos.filter((r) =>
+          r.dni.toLowerCase().includes(term)
+        );
       },
-      ucos() {
-        return useUcosStore().ucos;
+      ucosFiltradas() {
+        const term = this.busquedaUco.toLowerCase();
+        return useUcosStore().ucos.filter(
+          (uco) =>
+            uco.nombreUco.toLowerCase().includes(term) ||
+            uco.ciu.toLowerCase().includes(term)
+        );
       },
       reservistaFormateado() {
         return this.solicitudAbierta.reservista
@@ -82,7 +92,6 @@
         this.mostrarModalUcos = false;
       },
       seleccionarReservista(reservista) {
-        this.reservista = reservista;
         this.solicitudAbierta.reservista = reservista;
         this.mostrarModalReservistas = false;
       },
@@ -196,12 +205,12 @@
 </script>
 
 <template>
-  <div class="container">
+  <div class="container mt-3">
     <h2 v-if="!editando">Añadir solicitud</h2>
     <h2 v-if="editando && consultando">Consultar solicitud</h2>
     <h2 v-if="editando && !consultando">Modificar solicitud</h2>
     <form @submit.prevent="enviarFormulario" class="row g-3 mt-2">
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-md-6">
           <label class="form-label">Nombre UCO</label>
           <input
@@ -233,7 +242,7 @@
           </button>
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-md-9">
           <label class="form-label">Reservista</label>
           <input
@@ -255,23 +264,28 @@
           </button>
         </div>
       </div>
-      <div v-if="editando" class="form-group">
-        <label>Estado</label>
-        <option disabled class="form-control mx-auto">
-          {{ formatearAtributoEnElFrontend(solicitudAbierta.estado) }}
-        </option>
-        <button
-          v-if="
-            !consultando && solicitudAbierta.estado === 'PENDIENTE_EVALUACION'
-          "
-          type="button"
-          @click="rechazarSolicitud"
-          class="btn btn-danger"
-        >
-          Rechazar solicitud
-        </button>
+      <div v-if="editando" class="row mt-3">
+        <div class="col-md-9">
+          <label class="form-label">Estado</label>
+          <option disabled class="form-control">
+            {{ formatearAtributoEnElFrontend(solicitudAbierta.estado) }}
+          </option>
+          <div class="col-md-3 d-flex align-items-end">
+            <button
+              v-if="
+                !consultando &&
+                solicitudAbierta.estado === 'PENDIENTE_EVALUACION'
+              "
+              type="button"
+              @click="rechazarSolicitud"
+              class="btn btn-danger w-80"
+            >
+              Rechazar solicitud
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-md-6">
           <label>Fecha Inicio</label>
           <input
@@ -293,7 +307,7 @@
           />
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-md-6">
           <label>Teléfono POC</label>
           <input
@@ -326,7 +340,7 @@
         <select
           :disabled="consultando"
           v-model="solicitudAbierta.tipoSolicitud"
-          class="form-select mx-auto"
+          class="form-select mx-auto mt-3"
           required
         >
           <option value="FC">Formación continuada</option>
@@ -349,9 +363,10 @@
         <label class="form-check-label ms-2" for="pagaSecresCheck">
           Solicitud a cargo del crédito de la SECRES </label
         ><br />
-        <small>
-          Las prestaciones de servicio en unidad siempre corren a cargo de la
-          SECRES y las formaciones continuadas a cargo de la unidad solicitante
+        <small class="form-text text-muted">
+          Las prestaciones de servicio en unidad son siempre a cargo del crédito
+          de la SECRES. Las formaciones continuadas son a cargo del crédito de
+          la unidad solicitante
         </small>
       </div>
       <div class="form-group">
@@ -463,9 +478,15 @@
             ></button>
           </div>
           <div class="modal-body">
+            <input
+              type="text"
+              class="form-control mb-3"
+              placeholder="Buscar por DNI..."
+              v-model="busquedaReservista"
+            />
             <ul class="list-group">
               <li
-                v-for="reservista in reservistas"
+                v-for="reservista in reservistasFiltrados"
                 :key="reservista.id"
                 class="list-group-item"
                 @click="seleccionarReservista(reservista)"
@@ -480,7 +501,47 @@
         </div>
       </div>
     </div>
-    <!-- </div> -->
+
+    <div
+      v-if="mostrarModalReservistas"
+      class="modal fade show"
+      tabindex="-1"
+      style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Seleccionar Reservista</h5>
+            <button
+              type="button"
+              class="btn-close"
+              @click="mostrarModalReservistas = false"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input
+              type="text"
+              class="form-control mb-3"
+              placeholder="Buscar por DNI..."
+              v-model="busquedaReservista"
+            />
+            <ul class="list-group">
+              <li
+                v-for="reservista in reservistasFiltrados"
+                :key="reservista.id"
+                class="list-group-item"
+                @click="seleccionarReservista(reservista)"
+              >
+                {{ reservista.dni }}&nbsp; {{ reservista.empleo }}&nbsp;
+                {{ reservista.apellido1 }}&nbsp;
+                {{ reservista.apellido2 }},&nbsp;
+                {{ reservista.nombre }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div
       v-if="mostrarModalUcos"
@@ -499,9 +560,15 @@
             ></button>
           </div>
           <div class="modal-body">
+            <input
+              type="text"
+              class="form-control mb-3"
+              placeholder="Introduzca el CIU de la UCO"
+              v-model="busquedaUco"
+            />
             <ul class="list-group">
               <li
-                v-for="uco in ucos"
+                v-for="uco in ucosFiltradas"
                 :key="uco.id"
                 class="list-group-item"
                 @click="seleccionarUco(uco)"

@@ -52,17 +52,17 @@
         },
       },
       reservistasFiltrados() {
-        const term = this.busquedaReservista.toLowerCase();
+        const dniBuscado = this.busquedaReservista.toLowerCase();
         return useReservistasStore().elementos.filter((r) =>
-          r.dni.toLowerCase().includes(term)
+          r.dni.toLowerCase().includes(dniBuscado)
         );
       },
       ucosFiltradas() {
-        const term = this.busquedaUco.toLowerCase();
+        const ucoBuscada = this.busquedaUco.toLowerCase();
         return useUcosStore().ucos.filter(
           (uco) =>
-            uco.nombreUco.toLowerCase().includes(term) ||
-            uco.ciu.toLowerCase().includes(term)
+            uco.nombreUco.toLowerCase().includes(ucoBuscada) ||
+            uco.ciu.toLowerCase().includes(ucoBuscada)
         );
       },
       reservistaFormateado() {

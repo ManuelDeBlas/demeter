@@ -12,6 +12,8 @@
       return {
         filtroEstadoSeleccionado: "",
         filtroTipoSeleccionado: "",
+        busquedaDni: "",
+        busquedaCiu: "",
         paginaActual: 1,
         registrosPorPagina: 10,
         ESTADOS_SOLICITUD: ESTADOS_SOLICITUD,
@@ -31,10 +33,19 @@
         }
         if (this.filtroTipoSeleccionado) {
           filtradas = filtradas.filter(
-            (solicitud) => solicitud.tipoSolicitud === this.filtroTipoSeleccionado
+            (solicitud) =>
+              solicitud.tipoSolicitud === this.filtroTipoSeleccionado
           );
         }
-        return filtradas;
+        const dniBuscado = this.busquedaDni.toLowerCase();
+        let solicitudesFiltradasDni = filtradas.filter((s) =>
+          s.reservista.dni.toLowerCase().includes(dniBuscado)
+        );
+        const ciuBuscado = this.busquedaCiu.toLowerCase();
+        let solicitudesFiltradasCiuYDni = solicitudesFiltradasDni.filter((s) =>
+          s.ciu.toLowerCase().includes(ciuBuscado)
+        );
+        return solicitudesFiltradasCiuYDni;
       },
       totalPaginas() {
         return (
@@ -90,6 +101,7 @@
       <button type="button" class="btn btn-warning" @click="agregarSolicitud">
         Añadir Solicitud
       </button>
+      <!-- Filtros -->
       <label class="mb-0 fw-bold">Filtrar por estado:</label>
       <select v-model="filtroEstadoSeleccionado" class="form-select w-auto">
         <option value="">Todas</option>
@@ -109,6 +121,23 @@
         </option>
       </select>
     </div>
+    <!-- Buscadores -->
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <label class="fw-bold">Buscar por DNI</label>
+      <input
+        type="text"
+        class="form-select"
+        placeholder="DNI"
+        v-model="busquedaDni"
+      />
+      <label class="mb-0 fw-bold">Buscar por CIU</label>
+      <input
+        type="text"
+        class="form-select"
+        placeholder="CIU"
+        v-model="busquedaCiu"
+      />
+    </div>
     <ul id="solicitudes-lista" class="list-unstyled">
       <li
         v-for="solicitud in solicitudesPaginadas"
@@ -118,6 +147,8 @@
         <solicitud-en-listado-solicitudes :solicitud="solicitud" />
       </li>
     </ul>
+
+    <!-- Paginación -->
     <div class="row">
       <div class="col-lg-12">
         <div class="card">

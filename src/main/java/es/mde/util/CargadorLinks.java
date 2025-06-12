@@ -10,13 +10,13 @@ import es.mde.entidades.SolicitudConId;
 
 public class CargadorLinks {
 
-  public static SolicitudConLinks cargarLinks(SolicitudConId solicitud) {
+  public static <T extends SolicitudConId> SolicitudConLinks cargarLinksGenerico(T solicitud, String rutaApi) {
     SolicitudConLinks dto = new SolicitudConLinks();
     BeanUtils.copyProperties(solicitud, dto);
 
     Map<String, Map<String, String>> links = new LinkedHashMap<>();
 
-    URI selfUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/solicitudes/{id}")
+    URI selfUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + rutaApi + "/{id}")
         .buildAndExpand(solicitud.getId()).toUri();
 
     links.put("self", Map.of("href", selfUri.toString()));

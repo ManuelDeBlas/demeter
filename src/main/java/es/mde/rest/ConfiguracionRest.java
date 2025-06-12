@@ -28,7 +28,6 @@ import es.mde.entidades.ActivacionAmpliadaConId;
 import es.mde.entidades.ExpedienteConId;
 import es.mde.entidades.FormacionContinuadaConId;
 import es.mde.entidades.PrestacionServiciosUnidadConId;
-import es.mde.entidades.SolicitudConId;
 
 /**
  * Configuracion de uso generalizado para distintos proyectos Spring Data Rest. Proporciona las

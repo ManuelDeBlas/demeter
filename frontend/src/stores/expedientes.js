@@ -106,8 +106,7 @@ export const useExpedientesStore = crearStore("expedientes", {
         solicitudAPI._links.self.href
       );
       expediente.solicitudes.push(soliditudEnStore);
-      // TODO Esto genera una referencia circular.
-      // soliditudEnStore.expediente = expediente;
+      // soliditudEnStore.expediente = expediente;  // Esto genera una referencia circular.
     }
     const costeExpediente = await get(
       `${API_BASE_URL}/expedientes/coste-expediente/${expediente.numeroExpediente}`

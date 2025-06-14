@@ -10,8 +10,7 @@ export const useSolicitudesStore = crearStore("solicitudes", {
       reservistaAPI.data._links.self.href
     );
     solicitud.reservista = reservistaEnStore;
-    // TODO Esto genera una referencia circular.
-    // reservistaEnStore.solicitudes.push(solicitud);
+    // reservistaEnStore.solicitudes.push(solicitud);  // Esto genera una referencia circular.
   },
   async anhadirSolicitud(solicitudACrear) {
     try {

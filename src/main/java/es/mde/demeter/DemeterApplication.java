@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
- * Clase principal de la aplicación Demeter.
- * Configura y ejecuta la aplicación Spring Boot.
+ * Clase principal de la aplicación Demeter. Configura y ejecuta la aplicación
+ * Spring Boot.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0

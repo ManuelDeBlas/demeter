@@ -8,10 +8,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Entidad JPA que representa un coste por día con identificador persistente.
+ * Hereda los campos 'empleo' y 'centimos' de la clase {@link CostePorDia}.
+ * 
+ * Se almacena en la tabla 'COSTES_POR_DIA'.
+ */
 @Entity
 @Table(name = "COSTES_POR_DIA")
 public class CostePorDiaConId extends CostePorDia {
 
+  /**
+   * Identificador único del registro en base de datos. Se genera automáticamente
+   * usando la estrategia IDENTITY.
+   */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)

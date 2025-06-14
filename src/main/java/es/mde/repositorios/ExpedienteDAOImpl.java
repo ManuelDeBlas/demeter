@@ -1,28 +1,17 @@
 package es.mde.repositorios;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.mde.entidades.ExpedienteConId;
 import es.mde.secres.Solicitud;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 /**
- * Implementación personalizada del repositorio para gestionar los expedientes.
- * Proporciona métodos específicos para asignar y desasignar solicitudes a
- * expedientes.
- * 
- * Esta clase implementa la interfaz {@link ExpedienteDAOCustom}.
+ * Implementación personalizada del repositorio para gestionar los expedientes..
  * 
  * @author Manuel de Blas Pino
  * @version 1.0
  */
-//@Transactional(readOnly = true)
 public class ExpedienteDAOImpl implements ExpedienteDAOCustom {
-
-  private static final Logger log = LoggerFactory.getLogger(ExpedienteDAOImpl.class);
 
   /**
    * Repositorio JPA para gestionar los expedientes.
@@ -31,11 +20,15 @@ public class ExpedienteDAOImpl implements ExpedienteDAOCustom {
   private ExpedienteDAO expedienteDAO;
 
   /**
-   * EntityManager para realizar operaciones personalizadas en la base de datos.
+   * Obtiene el coste total en céntimos de todas las solicitudes asociadas a un
+   * expediente, identificado por su número de expediente.
+   * 
+   * @param numeroExpediente el número único que identifica al expediente.
+   * @return la suma de los costes en céntimos de todas las solicitudes asociadas
+   *         al expediente.
+   * @throws IllegalArgumentException si no se encuentra el expediente con el
+   *                                  número dado.
    */
-  @PersistenceContext
-  EntityManager entityManager;
-
   @Override
   public int getCosteCentimosExpedienteByNumeroExpediente(String numeroExpediente) {
     int costeCentimos = 0;

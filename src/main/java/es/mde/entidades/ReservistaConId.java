@@ -15,10 +15,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
- * Representa un reservista. Extiende la funcionalidad de {@link ReservistaImpl}.
+ * Entidad JPA que representa un reservista con identificador único. Extiende la
+ * funcionalidad de la clase {@link Reservista}.
  * 
- * Esta entidad está mapeada a la tabla "RESERVISTAS" en la base de datos. Contiene información
- * sobre las solicitudes asociadas al reservista.
+ * Mapea a la tabla "RESERVISTAS" en la base de datos. Contiene las solicitudes
+ * asociadas a este reservista.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0
@@ -28,23 +29,18 @@ import jakarta.persistence.Table;
 public class ReservistaConId extends Reservista {
 
   /**
-   * Identificador único del reservista.
+   * Identificador único del reservista. Se genera automáticamente con la
+   * estrategia IDENTITY.
    */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
 
-  // /**
-  // * Lista de solicitudes asociadas al reservista.
-  // */
-  // @OneToMany(targetEntity = SolicitudConId.class, mappedBy = "reservista")
-  // private List<SolicitudConId> solicitudesConId;
-
   /**
-   * Obtiene el identificador único del reservista.
+   * Devuelve el identificador único del reservista.
    * 
-   * @return el identificador del reservista.
+   * @return el id del reservista.
    */
   public Long getId() {
     return id;
@@ -53,16 +49,17 @@ public class ReservistaConId extends Reservista {
   /**
    * Establece el identificador único del reservista.
    * 
-   * @param id el identificador a establecer.
+   * @param id identificador a establecer.
    */
   public void setId(Long id) {
     this.id = id;
   }
 
   /**
-   * Obtiene la lista de solicitudes asociadas al reservista.
+   * Obtiene la colección de solicitudes asociadas al reservista. Se ignora en la
+   * serialización JSON para evitar referencias cíclicas.
    * 
-   * @return la lista de solicitudes.
+   * @return la colección de solicitudes.
    */
   @Override
   @OneToMany(targetEntity = SolicitudConId.class)
@@ -70,16 +67,12 @@ public class ReservistaConId extends Reservista {
   public Collection<Solicitud> getSolicitudes() {
     return super.getSolicitudes();
   }
-  //
-  // /**
-  // * Establece la lista de solicitudes asociadas al reservista.
-  // *
-  // * @param solicitudesConId la lista de solicitudes a establecer.
-  // */
-  // public void setSolicitudesConId(List<SolicitudConId> solicitudesConId) {
-  // this.solicitudesConId = solicitudesConId;
-  // }
 
+  /**
+   * Añade una solicitud al reservista y establece la relación bidireccional.
+   * 
+   * @param solicitud solicitud a añadir.
+   */
   public void addSolicitudConId(SolicitudConId solicitud) {
     super.getSolicitudes().add(solicitud);
     solicitud.setReservista(this);

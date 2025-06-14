@@ -26,11 +26,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 /**
- * Clase de configuración principal para la aplicación Demeter.
- * Configura los beans necesarios para la gestión de JPA, transacciones y otros componentes.
+ * Clase de configuración principal para la aplicación Demeter. Configura los
+ * beans necesarios para la gestión de JPA, transacciones y otros componentes.
  * 
- * Carga las propiedades desde varios archivos de configuración y define los beans
- * para el EntityManager, EntityManagerFactory y ObjectMapper.
+ * Carga las propiedades desde varios archivos de configuración y define los
+ * beans para el EntityManager, EntityManagerFactory y ObjectMapper.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0
@@ -41,9 +41,10 @@ import jakarta.persistence.EntityManagerFactory;
 @EnableJpaRepositories("${es.mde.demeter.repositorios}")
 @ComponentScan({ "${paquetes-con-componentes}" })
 @PropertySource({ "classpath:config/rest.properties", "classpath:config/jackson.properties",
-    "classpath:config/email.properties", "classpath:config/DB.properties", 
-    "classpath:config/passwordsBD.properties", "classpath:config/passwords-email.properties"
-  })
+    "classpath:config/email.properties", "classpath:config/DB.properties",
+// "classpath:config/passwordsBD.properties",
+// "classpath:config/passwords-email.properties"
+})
 public class ConfiguracionPorJava {
 
   /**
@@ -61,10 +62,11 @@ public class ConfiguracionPorJava {
   /**
    * Configura el bean de EntityManagerFactory.
    * 
-   * @param dataSource Fuente de datos configurada.
-   * @param env Entorno de Spring para acceder a las propiedades.
+   * @param dataSource    Fuente de datos configurada.
+   * @param env           Entorno de Spring para acceder a las propiedades.
    * @param vendorAdapter Adaptador del proveedor JPA.
-   * @return Bean configurado de tipo {@link LocalContainerEntityManagerFactoryBean}.
+   * @return Bean configurado de tipo
+   *         {@link LocalContainerEntityManagerFactoryBean}.
    */
   @Bean
   public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, Environment env,
@@ -102,7 +104,8 @@ public class ConfiguracionPorJava {
   }
 
   /**
-   * Configura el bean de ObjectMapper para la serialización y deserialización de JSON.
+   * Configura el bean de ObjectMapper para la serialización y deserialización de
+   * JSON.
    * 
    * @return Bean configurado de tipo {@link ObjectMapper}.
    */

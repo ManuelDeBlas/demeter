@@ -8,12 +8,29 @@ import es.mde.repositorios.CostePorDiaDAO;
 import es.mde.repositorios.SolicitudDAO;
 import jakarta.persistence.EntityManager;
 
+/**
+ * Servicio abstracto para gestionar operaciones comunes sobre solicitudes.
+ * Proporciona funcionalidades para crear, actualizar y validar solicitudes, así
+ * como calcular el coste asociado en céntimos.
+ * 
+ * @param <T> Tipo de solicitud que extiende {@link SolicitudConId}
+ * 
+ * @author Manuel de Blas Pino
+ * @version 1.0
+ */
 public abstract class AbstractSolicitudServicio<T extends SolicitudConId> {
 
   private final EntityManager entityManager;
-  protected final SolicitudDAO solicitudDAO;
+  private final SolicitudDAO solicitudDAO;
   private final CostePorDiaDAO costePorDiaDAO;
 
+  /**
+   * Constructor para inyección de dependencias.
+   * 
+   * @param entityManager  EntityManager para gestión JPA.
+   * @param solicitudDAO   DAO para solicitudes.
+   * @param costePorDiaDAO DAO para costes por día.
+   */
   public AbstractSolicitudServicio(EntityManager entityManager, SolicitudDAO solicitudDAO,
       CostePorDiaDAO costePorDiaDAO) {
     this.entityManager = entityManager;
@@ -21,30 +38,61 @@ public abstract class AbstractSolicitudServicio<T extends SolicitudConId> {
     this.costePorDiaDAO = costePorDiaDAO;
   }
 
+  /**
+   * Crea una nueva solicitud.
+   * 
+   * @param solicitud la solicitud a crear.
+   * @return la solicitud creada y guardada.
+   */
   public T crearSolicitud(T solicitud) {
     return guardarYRecalcularCoste(solicitud);
   }
 
+  /**
+   * Actualiza una solicitud existente.
+   * 
+   * @param id        identificador de la solicitud a actualizar.
+   * @param solicitud datos de la solicitud para actualizar.
+   * @return la solicitud actualizada y guardada.
+   */
   public T actualizarSolicitud(Long id, T solicitud) {
     solicitud.setId(id);
     return guardarYRecalcularCoste(solicitud);
   }
 
+  /**
+   * Guarda la solicitud en la base de datos y recalcula su coste en céntimos.
+   * Antes de guardar, verifica la viabilidad de la solicitud.
+   * 
+   * @param solicitud solicitud a guardar y calcular coste.
+   * @return la solicitud guardada.
+   */
   private T guardarYRecalcularCoste(T solicitud) {
     comprobarViabilidadSolicitud(solicitud);
     solicitud.setCosteCentimos(calcularCosteCentimos(solicitud));
     return solicitudDAO.save(solicitud);
   }
 
+  /**
+   * Calcula el coste en céntimos de una solicitud basándose en la duración y el
+   * coste diario asociado al empleo del reservista.
+   * 
+   * @param solicitud solicitud para la cual se calcula el coste.
+   * @return coste en céntimos.
+   */
   protected int calcularCosteCentimos(T solicitud) {
-    int costeCentimos = 0;
     int costeDiaCentimos = costePorDiaDAO.findByEmpleo(solicitud.getReservista().getEmpleo()).getCentimos();
     int duracion = solicitud.getDiasDuracion();
-    costeCentimos = Math.toIntExact(duracion * costeDiaCentimos);
-
-    return costeCentimos;
+    return Math.toIntExact(duracion * costeDiaCentimos);
   }
 
+  /**
+   * Comprueba si la solicitud es viable respecto a las fechas de compromiso y
+   * reconocimiento médico del reservista. Lanza excepción si no es válida.
+   * 
+   * @param solicitud solicitud a validar.
+   * @throws IllegalArgumentException si la solicitud no cumple las restricciones
+   */
   public void comprobarViabilidadSolicitud(SolicitudConId solicitud) {
     ReservistaConId reservista = entityManager.getReference(ReservistaConId.class, solicitud.getReservista().getId());
 
@@ -56,14 +104,16 @@ public abstract class AbstractSolicitudServicio<T extends SolicitudConId> {
       throw new IllegalArgumentException("ERROR: La fecha de fin de compromiso del reservista (" + fechaFinCompromiso
           + ") transcurre durante la activación");
     }
-    LocalDate fechaCaducidadReconocmientoMedico = reservista.getFechaCaducidadReconocimientoMedico();
-    if ((fechaCaducidadReconocmientoMedico.isEqual(solicitud.getFechaInicio())
-        || fechaCaducidadReconocmientoMedico.isAfter(solicitud.getFechaInicio()))
-        && (fechaCaducidadReconocmientoMedico.isEqual(solicitud.getFechaFin())
-            || fechaCaducidadReconocmientoMedico.isBefore(solicitud.getFechaFin()))) {
+
+    LocalDate fechaCaducidadReconocimientoMedico = reservista.getFechaCaducidadReconocimientoMedico();
+    if ((fechaCaducidadReconocimientoMedico.isEqual(solicitud.getFechaInicio())
+        || fechaCaducidadReconocimientoMedico.isAfter(solicitud.getFechaInicio()))
+        && (fechaCaducidadReconocimientoMedico.isEqual(solicitud.getFechaFin())
+            || fechaCaducidadReconocimientoMedico.isBefore(solicitud.getFechaFin()))) {
       throw new IllegalArgumentException("ERROR: La fecha de caducidad del reconocimiento medico del reservista ("
-          + fechaCaducidadReconocmientoMedico + ") transcurre durante la activación");
+          + fechaCaducidadReconocimientoMedico + ") transcurre durante la activación");
     }
+
     reservista.addSolicitudConId(solicitud);
   }
 

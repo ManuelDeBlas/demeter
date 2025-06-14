@@ -5,11 +5,12 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 /**
- * Representa una activación ampliada.
- * Extiende la funcionalidad de {@link SolicitudConId} e implementa la interfaz {@link ActivacionAmpliada}.
+ * Representa una activación ampliada. Extiende la funcionalidad de
+ * {@link SolicitudConId} e implementa la interfaz {@link ActivacionAmpliada}.
  * 
- * Esta entidad está mapeada a la base de datos con un valor de discriminador "Activacion ampliada".
- * Contiene como información adicional el motivo de la activación.
+ * Esta entidad está mapeada a la base de datos con un valor de discriminador
+ * "Activacion ampliada". Contiene como información adicional el motivo de la
+ * activación.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0

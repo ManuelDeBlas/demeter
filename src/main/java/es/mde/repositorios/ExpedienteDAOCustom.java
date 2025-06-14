@@ -3,16 +3,24 @@ package es.mde.repositorios;
 import es.mde.entidades.ExpedienteConId;
 
 /**
- * Repositorio JPA personalizado para gestionar los expedientes. Proporciona
- * métodos CRUD para la entidad {@link ExpedienteConId}.
+ * Interfaz personalizada para el repositorio JPA de expedientes. Define métodos
+ * específicos que no están incluidos en JpaRepository, centrados en operaciones
+ * personalizadas sobre la entidad {@link ExpedienteConId}.
  * 
- * Este repositorio está expuesto como un recurso REST con el path
- * "expedientes".
+ * Esta interfaz complementa la funcionalidad básica CRUD.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0
  */
 public interface ExpedienteDAOCustom {
 
+  /**
+   * Obtiene el coste total en céntimos asociado a un expediente identificado por
+   * su número de expediente.
+   * 
+   * @param numeroExpediente el número identificador único del expediente.
+   * @return el coste total en céntimos para ese expediente.
+   */
   int getCosteCentimosExpedienteByNumeroExpediente(String numeroExpediente);
+
 }

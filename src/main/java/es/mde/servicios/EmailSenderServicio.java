@@ -22,9 +22,6 @@ public class EmailSenderServicio {
 
   private static final Logger log = LoggerFactory.getLogger(EmailSenderServicio.class);
 
-  /**
-   * Instancia de {@link JavaMailSender} para enviar correos electrónicos.
-   */
   private final JavaMailSender mailSender;
 
   /**

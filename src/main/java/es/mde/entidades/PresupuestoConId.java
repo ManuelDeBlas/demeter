@@ -1,6 +1,5 @@
 package es.mde.entidades;
 
-import es.mde.secres.Expediente;
 import es.mde.secres.Presupuesto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,8 +9,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Representa un expediente con un identificador único. Extiende la
- * funcionalidad de la clase {@link Expediente}.
+ * Entidad JPA que representa un presupuesto con identificador único. Hereda los
+ * atributos y métodos de la clase {@link Presupuesto}.
+ * 
+ * Esta clase se mapea a la tabla 'PRESUPUESTOS' en la base de datos.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0
@@ -20,6 +21,10 @@ import jakarta.persistence.Table;
 @Table(name = "PRESUPUESTOS")
 public class PresupuestoConId extends Presupuesto {
 
+  /**
+   * Identificador único del presupuesto. Se genera automáticamente con la
+   * estrategia IDENTITY.
+   */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
@@ -34,6 +39,11 @@ public class PresupuestoConId extends Presupuesto {
     return id;
   }
 
+  /**
+   * Establece el identificador único del presupuesto.
+   * 
+   * @param id el identificador a establecer.
+   */
   public void setId(Long id) {
     this.id = id;
   }

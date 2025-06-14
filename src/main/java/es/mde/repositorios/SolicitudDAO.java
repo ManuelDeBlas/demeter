@@ -6,10 +6,11 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import es.mde.entidades.SolicitudConId;
 
 /**
- * Repositorio JPA para gestionar las solicitudes.
- * Proporciona métodos CRUD para la entidad {@link SolicitudConId}.
+ * Repositorio JPA para gestionar las solicitudes. Proporciona métodos CRUD para
+ * la entidad {@link SolicitudConId}.
  * 
- * Este repositorio está expuesto como un recurso REST con el path "solicitudes".
+ * Este repositorio está expuesto como un recurso REST con el path
+ * "solicitudes".
  * 
  * @author Manuel de Blas Pino
  * @version 1.0

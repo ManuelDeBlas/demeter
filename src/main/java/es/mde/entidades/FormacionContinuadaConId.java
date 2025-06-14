@@ -5,12 +5,12 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 /**
- * Representa una formación continuada. Extiende la funcionalidad de {@link SolicitudConId} e
- * implementa la interfaz {@link FormacionContinuada}.
+ * Representa una formación continuada. Extiende la funcionalidad de
+ * {@link SolicitudConId} e implementa la interfaz {@link FormacionContinuada}.
  * 
- * Esta entidad está mapeada a la base de datos con un valor de discriminador "Formacion
- * continuada". Contiene información específica como el tiempo máximo permitido y la escala
- * asociada.
+ * Esta entidad está mapeada a la base de datos con un valor de discriminador
+ * "Formacion continuada". Contiene información específica como el tiempo máximo
+ * permitido y la escala asociada.
  * 
  * @author Manuel de Blas Pino
  * @version 1.0

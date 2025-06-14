@@ -6,7 +6,6 @@
   import { useSolicitudesStore } from "@/stores/solicitudes";
   import { mapState, mapActions } from "pinia";
   import ProgressSpinner from "primevue/progressspinner";
-  import { cargarTodaLaApi } from "@/utils/utils";
 
   export default {
     name: "FormularioExpedienteView",
@@ -105,13 +104,13 @@
 </script>
 
 <template>
-  <div class="container align-items-end mt-3">
+  <div class="container mt-3">
     <h2 v-if="!editando">Añadir expediente</h2>
     <h2 v-if="editando && consultando">Consultar expediente</h2>
     <h2 v-if="editando && !consultando">Modificar expediente</h2>
     <form @submit.prevent="enviarFormulario" class="row g-3 mt-2">
-      <div class="row align-items-end mt-3">
-        <div class="col-md-8">
+      <div class="row mt-3">
+        <div class="col-md-6">
           <label class="form-label">Número expediente</label>
           <input
             v-model="expedienteAbierto.numeroExpediente"
@@ -123,7 +122,7 @@
             required
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <label class="form-label">Estado</label>
           <select
             v-model="expedienteAbierto.estado"
@@ -142,62 +141,52 @@
       </div>
 
       <div class="row align-items-end mt-3">
-        <div class="col-md-12" v-if="editando && !consultando">
+        <div class="col-md-10" v-if="editando && !consultando">
           <label class="form-label">Añadir solicitud</label>
-          <div class="d-flex">
-            <select v-model="seleccionSolicitud" class="form-select me-2">
-              <option value="">Seleccionar</option>
-              <option
-                v-for="solicitud in solicitudesDisponibles"
-                :key="solicitud._links.self.href"
-                :value="solicitud"
-              >
-                DNI: {{ solicitud.reservista.dni }} , Inicio:
-                {{ solicitud.fechaInicio }} , Fin: {{ solicitud.fechaFin }}
-                {{ solicitud.nombreUco }}
-              </option>
-            </select>
-            <button
-              type="button"
-              class="btn btn-primary"
-              :disabled="!seleccionSolicitud"
-              @click="agregarSolicitud(seleccionSolicitud)"
+          <select v-model="seleccionSolicitud" class="form-select">
+            <option value="">Seleccionar</option>
+            <option
+              v-for="solicitud in solicitudesDisponibles"
+              :key="solicitud._links.self.href"
+              :value="solicitud"
             >
-              Añadir
-            </button>
-          </div>
+              DNI: {{ solicitud.reservista.dni }} , Inicio:
+              {{ solicitud.fechaInicio }} , Fin: {{ solicitud.fechaFin }}
+              {{ solicitud.nombreUco }}
+            </option>
+          </select>
         </div>
+        <button
+          type="button"
+          class="btn btn-primary col-md-2"
+          :disabled="!seleccionSolicitud"
+          @click="agregarSolicitud(seleccionSolicitud)"
+        >
+          Añadir solicitud
+        </button>
       </div>
 
-      <div class="col-md-12 mt-3">
+      <div class="row mt-3">
         <label class="form-label">Solicitudes</label>
         <small v-if="!editando && !consultando"
-          ><br />&nbsp;Se podrán asignar solicitudes una vez se haya añadido el expediente al sistema</small
+          ><br />&nbsp;Se podrán asignar solicitudes una vez se haya añadido el
+          expediente al sistema</small
         >
 
-        <ul class="list-group mb-2">
+        <ul>
           <li
             v-for="solicitud in expedienteAbierto.solicitudes"
             :key="solicitud._links.self.href"
-            class="list-group-item d-flex align-items-center justify-content-between"
           >
             <solicitud-en-formulario-expediente
               :solicitud="solicitud"
-              class="flex-grow-1"
+              @eliminar="eliminarSolicitud(solicitud)"
             />
-            <button
-              v-if="editando && !consultando"
-              type="button"
-              class="btn btn-danger btn-sm ms-3"
-              @click="eliminarSolicitud(solicitud)"
-            >
-              Eliminar
-            </button>
           </li>
         </ul>
       </div>
 
-      <div class="d-flex justify-content-end gap-2 mt-4">
+      <div class="d-flex justify-content-end gap-2 mt-4 mb-3">
         <button
           v-if="!editando"
           type="button"

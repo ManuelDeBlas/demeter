@@ -12,6 +12,8 @@
       return {
         filtroEstadoSeleccionado: "",
         filtroTipoSeleccionado: "",
+        busquedaDni: "",
+        busquedaCiu: "",
         paginaActual: 1,
         registrosPorPagina: 10,
         ESTADOS_SOLICITUD: ESTADOS_SOLICITUD,
@@ -31,10 +33,19 @@
         }
         if (this.filtroTipoSeleccionado) {
           filtradas = filtradas.filter(
-            (solicitud) => solicitud.tipoSolicitud === this.filtroTipoSeleccionado
+            (solicitud) =>
+              solicitud.tipoSolicitud === this.filtroTipoSeleccionado
           );
         }
-        return filtradas;
+        const dniBuscado = this.busquedaDni.toLowerCase();
+        let solicitudesFiltradasDni = filtradas.filter((s) =>
+          s.reservista.dni.toLowerCase().includes(dniBuscado)
+        );
+        const ciuBuscado = this.busquedaCiu.toLowerCase();
+        let solicitudesFiltradasCiuYDni = solicitudesFiltradasDni.filter((s) =>
+          s.ciu.toLowerCase().includes(ciuBuscado)
+        );
+        return solicitudesFiltradasCiuYDni;
       },
       totalPaginas() {
         return (
@@ -85,30 +96,57 @@
 
 <template>
   <div class="container">
-    <h1 class="titulo p-4">Lista de Solicitudes</h1>
-    <div class="d-flex align-items-center gap-2 mb-4">
-      <button type="button" class="btn btn-warning" @click="agregarSolicitud">
-        Añadir Solicitud
-      </button>
-      <label class="mb-0 fw-bold">Filtrar por estado:</label>
-      <select v-model="filtroEstadoSeleccionado" class="form-select w-auto">
-        <option value="">Todas</option>
-        <option
-          v-for="estado in ESTADOS_SOLICITUD"
-          :key="estado"
-          :value="estado"
-        >
-          {{ formatearAtributoEnElFrontend(estado) }}
-        </option>
-      </select>
-      <label class="mb-0 fw-bold">Filtrar por tipo de solicitud:</label>
-      <select v-model="filtroTipoSeleccionado" class="form-select w-auto">
-        <option value="">Todas</option>
-        <option v-for="tipo in TIPOS_SOLICITUD" :key="tipo" :value="tipo">
-          {{ formatearAtributoEnElFrontend(tipo) }}
-        </option>
-      </select>
+    <h1 class="titulo py-4">Lista de Solicitudes</h1>
+    <button type="button" class="btn btn-warning" @click="agregarSolicitud">
+      Añadir Solicitud
+    </button>
+    <!-- Filtros -->
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <label class="fw-bold">Filtrar por estado</label>
+        <select v-model="filtroEstadoSeleccionado" class="form-select mt-2">
+          <option value="">Todas</option>
+          <option
+            v-for="estado in ESTADOS_SOLICITUD"
+            :key="estado"
+            :value="estado"
+          >
+            {{ formatearAtributoEnElFrontend(estado) }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="fw-bold">Filtrar por tipo de solicitud</label>
+        <select v-model="filtroTipoSeleccionado" class="form-select mt-2">
+          <option value="">Todas</option>
+          <option v-for="tipo in TIPOS_SOLICITUD" :key="tipo" :value="tipo">
+            {{ formatearAtributoEnElFrontend(tipo) }}
+          </option>
+        </select>
+      </div>
     </div>
+    <!-- Buscadores -->
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <label class="fw-bold">Buscar por DNI</label>
+        <input
+          type="text"
+          class="form-control mt-2"
+          placeholder="DNI"
+          v-model="busquedaDni"
+        />
+      </div>
+      <div class="col-md-6">
+        <label class="fw-bold">Buscar por CIU</label>
+        <input
+          type="text"
+          class="w-25 form-control mt-2"
+          placeholder="CIU"
+          v-model="busquedaCiu"
+        />
+      </div>
+    </div>
+    <!-- Lista de solicitudes -->
     <ul id="solicitudes-lista" class="list-unstyled">
       <li
         v-for="solicitud in solicitudesPaginadas"
@@ -118,6 +156,7 @@
         <solicitud-en-listado-solicitudes :solicitud="solicitud" />
       </li>
     </ul>
+    <!-- Paginación -->
     <div class="row">
       <div class="col-lg-12">
         <div class="card">
@@ -137,7 +176,6 @@
                   <option :value="20">20</option>
                   <option :value="30">30</option>
                 </select>
-
                 <div class="d-flex justify-content-end align-items-center">
                   <p class="mx-3">
                     Mostrando el intervalo {{ inicio + 1 }} - {{ fin }} de

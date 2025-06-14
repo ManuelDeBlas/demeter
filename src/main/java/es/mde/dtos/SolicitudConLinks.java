@@ -1,6 +1,7 @@
 package es.mde.dtos;
 
 import java.util.Map;
+
 import es.mde.entidades.SolicitudConId;
 
 public class SolicitudConLinks extends SolicitudConId {

@@ -1,6 +1,5 @@
 package es.mde.entidades;
 
-import es.mde.secres.Expediente;
 import es.mde.secres.PrestacionServiciosUnidad;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;

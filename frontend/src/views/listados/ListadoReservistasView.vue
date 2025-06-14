@@ -51,7 +51,7 @@
 
 <template>
   <div class="container">
-    <h1 class="titulo p-4">Lista de Reservistas</h1>
+    <h1 class="titulo py-4">Lista de Reservistas</h1>
     <ul>
       <div
         v-for="reservista in elementos"

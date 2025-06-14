@@ -1,7 +1,6 @@
 package es.mde.repositorios;
 
 import es.mde.entidades.ExpedienteConId;
-import es.mde.entidades.SolicitudConId;
 
 /**
  * Repositorio JPA personalizado para gestionar los expedientes. Proporciona

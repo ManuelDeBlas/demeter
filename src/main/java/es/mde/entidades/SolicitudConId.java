@@ -1,6 +1,5 @@
 package es.mde.entidades;
 
-import es.mde.secres.Expediente;
 import es.mde.secres.SolicitudImpl;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -13,9 +12,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PostLoad;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 /**
  * Representa una solicitud. Contiene información sobre el estado, las fechas y

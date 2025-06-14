@@ -67,7 +67,7 @@
 
 <template>
   <div class="container">
-    <h1 class="titulo p-4">Lista de expedientes</h1>
+    <h1 class="titulo py-4">Lista de expedientes</h1>
     <div class="d-flex align-items-center gap-2 mb-4">
       <button type="button" class="btn btn-warning" @click="anhadirElemento">
         Nuevo Expediente

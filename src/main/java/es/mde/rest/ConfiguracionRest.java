@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -28,7 +29,6 @@ import es.mde.entidades.ActivacionAmpliadaConId;
 import es.mde.entidades.ExpedienteConId;
 import es.mde.entidades.FormacionContinuadaConId;
 import es.mde.entidades.PrestacionServiciosUnidadConId;
-import es.mde.entidades.SolicitudConId;
 
 /**
  * Configuracion de uso generalizado para distintos proyectos Spring Data Rest. Proporciona las

@@ -1,15 +1,11 @@
 package es.mde.repositorios;
 
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import es.mde.entidades.ExpedienteConId;
-import es.mde.entidades.SolicitudConId;
 import es.mde.secres.Solicitud;
-import es.mde.servicios.ExpedienteServicio;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 

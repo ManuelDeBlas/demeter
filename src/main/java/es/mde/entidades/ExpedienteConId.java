@@ -1,7 +1,7 @@
 package es.mde.entidades;
 
 import java.util.Collection;
-import java.util.Objects;
+
 import es.mde.secres.Expediente;
 import es.mde.secres.Solicitud;
 import es.mde.secres.Solicitud.Estados;

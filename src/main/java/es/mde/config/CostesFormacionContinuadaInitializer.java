@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.mde.entidades.CosteFormacionContinuada;
+import es.mde.entidades.CosteFormacionContinuadaConId;
 import es.mde.repositorios.CosteFormacionContinuadaDAO;
 
 @Component
@@ -35,8 +35,8 @@ public class CostesFormacionContinuadaInitializer implements CommandLineRunner {
   public void run(String... args) throws Exception {
     if (costeFormacionContinuadaDAO.count() == 0) {
       InputStream inputStream = getClass().getResourceAsStream(costesIniciales);
-      List<CosteFormacionContinuada> costes =
-          Arrays.asList(objectMapper.readValue(inputStream, CosteFormacionContinuada[].class));
+      List<CosteFormacionContinuadaConId> costes =
+          Arrays.asList(objectMapper.readValue(inputStream, CosteFormacionContinuadaConId[].class));
       costeFormacionContinuadaDAO.saveAll(costes);
     }
   }

@@ -50,6 +50,13 @@
           >
             Consultar
           </button>
+          <button
+              type="button"
+              class="btn btn-danger ms-2"
+              @click="$emit('eliminar', solicitud)"
+            >
+              Eliminar solicitud
+            </button>
         </div>
       </div>
     </div>

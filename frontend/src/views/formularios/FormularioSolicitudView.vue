@@ -221,7 +221,7 @@
             required
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <label class="form-label">CIU</label>
           <input
             disabled
@@ -231,19 +231,20 @@
             required
           />
         </div>
-        <div class="col-md-2 d-flex align-items-end">
-          <button
-            v-if="!consultando && !editando"
-            type="button"
-            class="btn btn-primary w-100"
-            @click="mostrarModalUcos = true"
-          >
-            Seleccionar UCO
-          </button>
-        </div>
       </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button
+          v-if="!consultando && !editando"
+          type="button"
+          class="btn btn-primary w-100"
+          @click="mostrarModalUcos = true"
+        >
+          Seleccionar UCO
+        </button>
+      </div>
+
       <div class="row mt-3">
-        <div class="col-md-9">
+        <div class="col-md-12">
           <label class="form-label">Reservista</label>
           <input
             disabled
@@ -253,17 +254,18 @@
             required
           />
         </div>
-        <div class="col-md-3 d-flex align-items-end">
-          <button
-            v-if="!consultando && !editando"
-            type="button"
-            class="btn btn-primary w-80"
-            @click="mostrarModalReservistas = true"
-          >
-            Seleccionar Reservista
-          </button>
-        </div>
       </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <button
+          v-if="!consultando && !editando"
+          type="button"
+          class="btn btn-primary w-80"
+          @click="mostrarModalReservistas = true"
+        >
+          Seleccionar Reservista
+        </button>
+      </div>
+
       <div v-if="editando" class="row mt-3">
         <div class="col-md-9">
           <label class="form-label">Estado</label>
@@ -328,65 +330,67 @@
             type="email"
             class="form-control mx-auto"
             required
+            placeholder="Dirección de email a la cual se enviarán todas las actualizaciones
+            de la solicitud"
           />
-          <small id="emailHelp" class="form-text text-muted"
-            >Dirección de email a la cual se enviarán todas las actualizaciones
-            de la solicitud</small
-          >
         </div>
       </div>
-      <div class="form-group">
-        <label>Tipo de Solicitud</label>
-        <select
-          :disabled="consultando"
-          v-model="solicitudAbierta.tipoSolicitud"
-          class="form-select mx-auto mt-3"
-          required
-        >
-          <option value="FC">Formación continuada</option>
-          <option value="EX">Activación ampliada</option>
-          <option value="PS">Prestación servicios unidad</option>
-        </select>
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <label>Tipo de Solicitud</label>
+          <select
+            :disabled="consultando"
+            v-model="solicitudAbierta.tipoSolicitud"
+            class="form-select mx-auto mt-3"
+            required
+          >
+            <option value="FC">Formación continuada</option>
+            <option value="EX">Activación ampliada</option>
+            <option value="PS">Prestación servicios unidad</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <input
+            :disabled="
+              solicitudAbierta.tipoSolicitud === 'PS' ||
+              solicitudAbierta.tipoSolicitud === 'FC' ||
+              consultando
+            "
+            v-model="solicitudAbierta.pagaSecres"
+            type="checkbox"
+            class="form-check-input"
+            id="pagaSecresCheck"
+          />
+          <label class="form-check-label ms-2" for="pagaSecresCheck">
+            Solicitud a cargo del crédito de la SECRES </label
+          ><br />
+          <small class="form-text text-muted">
+            Las prestaciones de servicio en unidad son siempre a cargo del
+            crédito de la SECRES. Las formaciones continuadas son a cargo del
+            crédito de la unidad solicitante
+          </small>
+        </div>
       </div>
-      <div class="form-check">
-        <input
-          :disabled="
-            solicitudAbierta.tipoSolicitud === 'PS' ||
-            solicitudAbierta.tipoSolicitud === 'FC' ||
-            consultando
-          "
-          v-model="solicitudAbierta.pagaSecres"
-          type="checkbox"
-          class="form-check-input"
-          id="pagaSecresCheck"
-        />
-        <label class="form-check-label ms-2" for="pagaSecresCheck">
-          Solicitud a cargo del crédito de la SECRES </label
-        ><br />
-        <small class="form-text text-muted">
-          Las prestaciones de servicio en unidad son siempre a cargo del crédito
-          de la SECRES. Las formaciones continuadas son a cargo del crédito de
-          la unidad solicitante
-        </small>
-      </div>
-      <div class="form-group">
-        <label>Coste</label>
-        <option disabled class="form-control mx-auto">
-          {{ costeEuros }}
-        </option>
-      </div>
-      <div v-if="solicitudAbierta.tipoSolicitud === 'FC'" class="form-group">
-        <label>Escala</label>
-        <select
-          :disabled="consultando"
-          v-model.number="solicitudAbierta.escala"
-          class="form-control mx-auto"
-          :required="solicitudAbierta.tipoSolicitud === 'FC'"
-        >
-          <option value="Oficiales">Oficiales</option>
-          <option value="Suboficiales">Suboficiales</option>
-          <option value="Tropa">Tropa</option>
-        </select>
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <label>Coste</label>
+          <option disabled class="form-control mx-auto">
+            {{ costeEuros }}
+          </option>
+        </div>
+        <div v-if="solicitudAbierta.tipoSolicitud === 'FC'" class="col-md-6">
+          <label>Escala</label>
+          <select
+            :disabled="consultando"
+            v-model.number="solicitudAbierta.escala"
+            class="form-control mx-auto"
+            :required="solicitudAbierta.tipoSolicitud === 'FC'"
+          >
+            <option value="Oficiales">Oficiales</option>
+            <option value="Suboficiales">Suboficiales</option>
+            <option value="Tropa">Tropa</option>
+          </select>
+        </div>
       </div>
       <div v-if="solicitudAbierta.tipoSolicitud === 'EX'" class="form-group">
         <label class="form-label">Motivo</label>
@@ -397,9 +401,9 @@
           :required="solicitudAbierta.tipoSolicitud === 'EX'"
         ></textarea>
       </div>
-      <div class="d-flex justify-content-end gap-2">
+      <div class="d-flex justify-content-end mb-3 mt-3">
         <div v-if="!editando">
-          <button type="button" class="btn btn-light" @click="volverAlListado">
+          <button type="button" class="btn btn-light mx-3" @click="volverAlListado">
             Cancelar
           </button>
           <button type="submit" class="btn btn-success">Añadir</button>
@@ -414,7 +418,7 @@
           </button>
         </div>
         <div v-if="editando && !consultando">
-          <button type="submit" class="btn btn-light" @click="volverAlListado">
+          <button type="submit" class="btn btn-light mx-3" @click="volverAlListado">
             Cancelar
           </button>
           <button
@@ -424,7 +428,7 @@
           >
             Eliminar
           </button>
-          <button type="submit" class="btn btn-success ms-2">Guardar</button>
+          <button type="submit" class="btn btn-success ms-2 mx-3">Guardar</button>
         </div>
       </div>
     </form>

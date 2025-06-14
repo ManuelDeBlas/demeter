@@ -17,7 +17,7 @@
 <template>
   <div class="container">
         <!-- TODO Poner una tabla -->
-    <h1 class="titulo p-4">Presupuestos SECRES</h1>
+    <h1 class="titulo py-4">Presupuestos SECRES</h1>
     <ul>
       <div
         v-for="presupuesto in presupuestos"

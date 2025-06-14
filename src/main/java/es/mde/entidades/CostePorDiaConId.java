@@ -1,5 +1,6 @@
 package es.mde.entidades;
 
+import es.mde.secres.CostePorDia;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,15 +10,12 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "COSTES_POR_DIA")
-public class CostePorDia {
+public class CostePorDiaConId extends CostePorDia {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(unique = true)
   private Long id;
-
-  private String empleo;
-  private int centimos;
 
   /**
    * Obtiene el identificador único del coste.
@@ -35,22 +33,6 @@ public class CostePorDia {
    */
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public String getEmpleo() {
-    return empleo;
-  }
-
-  public void setEmpleo(String empleo) {
-    this.empleo = empleo;
-  }
-
-  public int getCentimos() {
-    return centimos;
-  }
-
-  public void setCentimos(int centimos) {
-    this.centimos = centimos;
   }
 
 }

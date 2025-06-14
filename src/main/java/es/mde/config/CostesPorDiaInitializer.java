@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.mde.entidades.CostePorDia;
+import es.mde.entidades.CostePorDiaConId;
 import es.mde.repositorios.CostePorDiaDAO;
 
 @Component
@@ -35,8 +35,8 @@ public class CostesPorDiaInitializer implements CommandLineRunner {
   public void run(String... args) throws Exception {
     if (costePorDiaDAO.count() == 0) {
       InputStream inputStream = getClass().getResourceAsStream(costesIniciales);
-      List<CostePorDia> costes =
-          Arrays.asList(objectMapper.readValue(inputStream, CostePorDia[].class));
+      List<CostePorDiaConId> costes =
+          Arrays.asList(objectMapper.readValue(inputStream, CostePorDiaConId[].class));
       costePorDiaDAO.saveAll(costes);
     }
   }

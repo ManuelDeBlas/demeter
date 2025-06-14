@@ -126,7 +126,7 @@
       </div>
     </div>
     <!-- Buscadores -->
-    <div class="row mt-3">
+    <div class="row mt-3 pb-3">
       <div class="col-md-6">
         <label class="fw-bold">Buscar por DNI</label>
         <input

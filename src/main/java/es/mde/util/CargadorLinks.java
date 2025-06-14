@@ -3,8 +3,10 @@ package es.mde.util;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import es.mde.dtos.SolicitudConLinks;
 import es.mde.entidades.SolicitudConId;
 

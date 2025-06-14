@@ -1,13 +1,11 @@
 package es.mde.servicios;
 
 import java.time.LocalDate;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+
 import es.mde.entidades.ReservistaConId;
 import es.mde.entidades.SolicitudConId;
 import es.mde.repositorios.CostePorDiaDAO;
 import es.mde.repositorios.SolicitudDAO;
-import es.mde.secres.Solicitud;
 import jakarta.persistence.EntityManager;
 
 public abstract class AbstractSolicitudServicio<T extends SolicitudConId> {

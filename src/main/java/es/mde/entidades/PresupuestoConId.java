@@ -1,18 +1,12 @@
 package es.mde.entidades;
 
-import es.mde.secres.Presupuesto;
-
-import java.util.Collection;
-import java.util.Objects;
 import es.mde.secres.Expediente;
-import es.mde.secres.Solicitud;
-import es.mde.secres.Solicitud.Estados;
+import es.mde.secres.Presupuesto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**

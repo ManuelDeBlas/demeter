@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.mde.demeter.DemeterApplication;
 import es.mde.entidades.CostePorDia;
 import es.mde.repositorios.CostePorDiaDAO;
 

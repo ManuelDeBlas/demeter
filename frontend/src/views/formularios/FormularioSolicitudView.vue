@@ -70,6 +70,9 @@
           ? `${this.solicitudAbierta.reservista.dni} ${this.solicitudAbierta.reservista.empleo} ${this.solicitudAbierta.reservista.nombre} ${this.solicitudAbierta.reservista.apellido1} ${this.solicitudAbierta.reservista.apellido2}`
           : "";
       },
+      estadoFormateado() {
+        return formatearAtributoEnElFrontend(this.solicitudAbierta.estado);
+      },
       costeEuros() {
         if (!this.solicitudAbierta.costeCentimos) {
           return "El coste se calcula automáticamente al generar la solicitud";
@@ -267,26 +270,31 @@
       </div>
 
       <div v-if="editando" class="row mt-3">
-        <div class="col-md-9">
+        <div class="col-10">
           <label class="form-label">Estado</label>
-          <option disabled class="form-control">
-            {{ formatearAtributoEnElFrontend(solicitudAbierta.estado) }}
-          </option>
-          <div class="col-md-3 d-flex align-items-end">
-            <button
-              v-if="
-                !consultando &&
-                solicitudAbierta.estado === 'PENDIENTE_EVALUACION'
-              "
-              type="button"
-              @click="rechazarSolicitud"
-              class="btn btn-danger w-80"
-            >
-              Rechazar solicitud
-            </button>
-          </div>
+          <input
+            class="form-control"
+            disabled
+            readonly
+            v-model="estadoFormateado"
+          />
+        </div>
+        <div
+          class="col-2 d-flex align-items-end"
+          v-if="
+            !consultando && solicitudAbierta.estado === 'PENDIENTE_EVALUACION'
+          "
+        >
+          <button
+            type="button"
+            @click="rechazarSolicitud"
+            class="btn btn-danger w-100"
+          >
+            Rechazar solicitud
+          </button>
         </div>
       </div>
+
       <div class="row mt-3">
         <div class="col-md-6">
           <label>Fecha Inicio</label>
@@ -403,7 +411,11 @@
       </div>
       <div class="d-flex justify-content-end mb-3 mt-3">
         <div v-if="!editando">
-          <button type="button" class="btn btn-light mx-3" @click="volverAlListado">
+          <button
+            type="button"
+            class="btn btn-light mx-3"
+            @click="volverAlListado"
+          >
             Cancelar
           </button>
           <button type="submit" class="btn btn-success">Añadir</button>
@@ -418,7 +430,11 @@
           </button>
         </div>
         <div v-if="editando && !consultando">
-          <button type="submit" class="btn btn-light mx-3" @click="volverAlListado">
+          <button
+            type="submit"
+            class="btn btn-light mx-3"
+            @click="volverAlListado"
+          >
             Cancelar
           </button>
           <button
@@ -428,7 +444,9 @@
           >
             Eliminar
           </button>
-          <button type="submit" class="btn btn-success ms-2 mx-3">Guardar</button>
+          <button type="submit" class="btn btn-success ms-2 mx-3">
+            Guardar
+          </button>
         </div>
       </div>
     </form>

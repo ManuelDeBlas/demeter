@@ -173,10 +173,11 @@
           expediente al sistema</small
         >
 
-        <ul>
+        <ul class="list-unstyled">
           <li
             v-for="solicitud in expedienteAbierto.solicitudes"
             :key="solicitud._links.self.href"
+            
           >
             <solicitud-en-formulario-expediente
               :solicitud="solicitud"

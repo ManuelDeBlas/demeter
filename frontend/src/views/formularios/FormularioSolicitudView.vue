@@ -113,12 +113,12 @@
           }
           if (this.editando) {
             const respuesta = await this.editarSolicitud(this.solicitudAbierta);
-            this.mensajeModal = `Solicitud editada correctamente`;
+            this.mensajeModal = respuesta;
           } else {
             const respuesta = await this.anhadirSolicitud(
               this.solicitudAbierta
             );
-            this.mensajeModal = "Solicitud añadida correctamente: " + respuesta;
+            this.mensajeModal = respuesta;
           }
         } catch (error) {
           this.mensajeModal = `Error al procesar la solicitud: ${error.message}`;

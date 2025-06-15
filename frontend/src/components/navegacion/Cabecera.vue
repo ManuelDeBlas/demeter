@@ -4,25 +4,19 @@
     data() {
       return {
         isMenuLateralAbierto: false,
-        mostrarBusqueda: false,
       };
     },
     methods: {
       menuLateral() {
         this.isMenuLateralAbierto = !this.isMenuLateralAbierto;
       },
-      buscar() {
-        this.mostrarBusqueda = !this.mostrarBusqueda;
-        this.$nextTick(() => {
-          if (this.mostrarBusqueda) this.$refs.inputBusqueda.focus();
-        });
-      },
-      ocultarBusqueda() {
-        this.mostrarBusqueda = false;
+      cerrarMenu() {
+        this.isMenuLateralAbierto = false;
       },
     },
   };
 </script>
+
 <template>
   <nav class="navbar navbar-light colorPrincipal">
     <div class="d-flex align-items-center">
@@ -59,32 +53,54 @@
     </div>
     <ul class="list-unstyled offcanvas-body">
       <li>
-        <router-link class="nav-link" to="/inicio">Inicio</router-link>
-      </li>
-      <li>
-        <router-link class="nav-link" to="/listado/solicitudes"
-          >Solicitudes</router-link
+        <router-link class="nav-link" to="/inicio" @click="cerrarMenu"
+          >Inicio</router-link
         >
       </li>
       <li>
-        <router-link class="nav-link" to="/listado/expedientes"
-          >Expedientes</router-link
+        <router-link
+          class="nav-link"
+          to="/listado/solicitudes"
+          @click="cerrarMenu"
         >
+          Solicitudes
+        </router-link>
       </li>
       <li>
-        <router-link class="nav-link" to="/listado/reservistas"
-          >Reservistas</router-link
+        <router-link
+          class="nav-link"
+          to="/listado/expedientes"
+          @click="cerrarMenu"
         >
+          Expedientes
+        </router-link>
       </li>
       <li>
-        <router-link class="nav-link" to="/listado/presupuestos-secres"
-          >Presupuestos SECRES</router-link
+        <router-link
+          class="nav-link"
+          to="/listado/reservistas"
+          @click="cerrarMenu"
         >
+          Reservistas
+        </router-link>
       </li>
       <li>
-        <router-link class="nav-link" to="/listado/costes-por-dia"
-          >Costes por día</router-link
+        <router-link
+          class="nav-link"
+          to="/listado/presupuestos-secres"
+          @click="cerrarMenu"
         >
+          Presupuestos SECRES
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          class="nav-link"
+          to="/listado/costes-por-dia"
+          @click="cerrarMenu"
+        >
+          Costes por día
+        </router-link>
       </li>
     </ul>
   </div>

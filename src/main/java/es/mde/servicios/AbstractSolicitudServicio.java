@@ -2,10 +2,14 @@ package es.mde.servicios;
 
 import java.time.LocalDate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.mde.entidades.ReservistaConId;
 import es.mde.entidades.SolicitudConId;
 import es.mde.repositorios.CostePorDiaDAO;
 import es.mde.repositorios.SolicitudDAO;
+import es.mde.secres.Solicitud.Estados;
 import jakarta.persistence.EntityManager;
 
 /**
@@ -20,9 +24,12 @@ import jakarta.persistence.EntityManager;
  */
 public abstract class AbstractSolicitudServicio<T extends SolicitudConId> {
 
+  private Logger log = LoggerFactory.getLogger(AbstractSolicitudServicio.class);
+
   private final EntityManager entityManager;
   private final SolicitudDAO solicitudDAO;
   private final CostePorDiaDAO costePorDiaDAO;
+  private final EmailSenderServicio emailSenderServicio;
 
   /**
    * Constructor para inyección de dependencias.
@@ -32,10 +39,11 @@ public abstract class AbstractSolicitudServicio<T extends SolicitudConId> {
    * @param costePorDiaDAO DAO para costes por día.
    */
   public AbstractSolicitudServicio(EntityManager entityManager, SolicitudDAO solicitudDAO,
-      CostePorDiaDAO costePorDiaDAO) {
+      CostePorDiaDAO costePorDiaDAO, EmailSenderServicio emailSenderServicio) {
     this.entityManager = entityManager;
     this.solicitudDAO = solicitudDAO;
     this.costePorDiaDAO = costePorDiaDAO;
+    this.emailSenderServicio = emailSenderServicio;
   }
 
   /**
@@ -57,6 +65,14 @@ public abstract class AbstractSolicitudServicio<T extends SolicitudConId> {
    */
   public T actualizarSolicitud(Long id, T solicitud) {
     solicitud.setId(id);
+    if (solicitud.getEstado() == Estados.RECHAZADA) {
+      log.info("Se envía el email de cambio de estado a " + solicitud.getEmailPoc());
+      emailSenderServicio.enviarEmail(solicitud.getEmailPoc(),
+          "El estado de la solicitud de activación se ha modificado",
+          "El estado de la solicitud de activación del reservista con DNI " + solicitud.getReservista().getDni()
+              + " entre las fechas " + solicitud.getFechaInicio() + " - " + solicitud.getFechaFin() + " ha cambiado a "
+              + solicitud.getEstado().toString() + ".");
+    }
     return guardarYRecalcularCoste(solicitud);
   }
 

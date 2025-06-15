@@ -32,8 +32,8 @@ public class PrestacionServiciosUnidadServicio extends AbstractSolicitudServicio
    * @param costePorDiaDAO DAO para obtener los costes por día según el empleo.
    */
   public PrestacionServiciosUnidadServicio(EntityManager entityManager, SolicitudDAO solicitudDAO,
-      CostePorDiaDAO costePorDiaDAO) {
-    super(entityManager, solicitudDAO, costePorDiaDAO);
+      CostePorDiaDAO costePorDiaDAO, EmailSenderServicio emailSenderServicio) {
+    super(entityManager, solicitudDAO, costePorDiaDAO, emailSenderServicio);
   }
 
 }

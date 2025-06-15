@@ -29,8 +29,8 @@ public class ActivacionAmpliadaServicio extends AbstractSolicitudServicio<Activa
    * @param costePorDiaDAO DAO para obtener costes diarios.
    */
   public ActivacionAmpliadaServicio(EntityManager entityManager, SolicitudDAO solicitudDAO,
-      CostePorDiaDAO costePorDiaDAO) {
-    super(entityManager, solicitudDAO, costePorDiaDAO);
+      CostePorDiaDAO costePorDiaDAO, EmailSenderServicio emailSenderServicio) {
+    super(entityManager, solicitudDAO, costePorDiaDAO, emailSenderServicio);
   }
 
 }

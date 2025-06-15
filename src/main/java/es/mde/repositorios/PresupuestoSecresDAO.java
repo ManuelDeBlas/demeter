@@ -13,7 +13,7 @@ import es.mde.entidades.PresupuestoConId;
  * @version 1.0
  */
 @RepositoryRestResource(path = "presupuestos-secres", itemResourceRel = "presupuesto-secres", collectionResourceRel = "presupuestos-secres")
-public interface PresupuestoDAO extends JpaRepository<PresupuestoConId, Long> {
+public interface PresupuestoSecresDAO extends JpaRepository<PresupuestoConId, Long> {
 
   /**
    * Obtiene un presupuesto por el año.

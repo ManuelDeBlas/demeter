@@ -36,8 +36,9 @@ public class FormacionContinuadaServicio extends AbstractSolicitudServicio<Forma
    *                                    asociados a la formación.
    */
   public FormacionContinuadaServicio(EntityManager entityManager, SolicitudDAO solicitudDAO,
-      CostePorDiaDAO costePorDiaDAO, CosteFormacionContinuadaDAO costeFormacionContinuadaDAO) {
-    super(entityManager, solicitudDAO, costePorDiaDAO);
+      CostePorDiaDAO costePorDiaDAO, CosteFormacionContinuadaDAO costeFormacionContinuadaDAO,
+      EmailSenderServicio emailSenderServicio) {
+    super(entityManager, solicitudDAO, costePorDiaDAO, emailSenderServicio);
     this.costeFormacionContinuadaDAO = costeFormacionContinuadaDAO;
   }
 

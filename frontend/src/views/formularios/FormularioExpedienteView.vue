@@ -57,19 +57,17 @@
         "eliminarSolicitudDeExpediente",
       ]),
       async enviarFormulario() {
-        if (this.editando) {
-          const expedienteEnStore = await this.editarExpediente(
-            this.expedienteAbierto
-          );
-          console.log("Respuesta de edición:", expedienteEnStore);
-          this.mensajeModal = expedienteEnStore + "\n";
-        } else {
-          const expedienteEnStore = await this.anhadirExpediente(
-            this.expedienteAbierto
-          );
-          this.mensajeModal = expedienteEnStore + "\n";
-        }
         this.mostrarModal = true;
+        this.mensajeModal = "";
+        if (this.editando) {
+          this.mensajeModal = await this.editarExpediente(
+            this.expedienteAbierto
+          );
+        } else {
+          this.mensajeModal = await this.anhadirExpediente(
+            this.expedienteAbierto
+          );
+        }
       },
       async agregarSolicitud(solicitud) {
         this.mostrarModal = true;
@@ -177,7 +175,6 @@
           <li
             v-for="solicitud in expedienteAbierto.solicitudes"
             :key="solicitud._links.self.href"
-            
           >
             <solicitud-en-formulario-expediente
               :solicitud="solicitud"

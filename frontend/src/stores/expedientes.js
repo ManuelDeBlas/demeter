@@ -12,7 +12,7 @@ export const useExpedientesStore = crearStore("expedientes", {
       expedienteEnStore.solicitudes = [];
       expedienteEnStore.coste = 0;
 
-      return expedienteEnStore;
+      return "Expediente añadido correctamente";
     } catch (error) {
       return error;
     }
@@ -24,7 +24,7 @@ export const useExpedientesStore = crearStore("expedientes", {
       const expedienteEnStore = await this.editarElemento(expedienteAEditar);
       expedienteEnStore.solicitudes = solicitudesEnStore;
 
-      return expedienteEnStore;
+      return "Expediente editado correctamente";
     } catch (error) {
       return error;
     }

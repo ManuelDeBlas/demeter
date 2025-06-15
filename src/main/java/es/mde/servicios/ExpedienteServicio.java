@@ -11,7 +11,7 @@ import es.mde.entidades.ExpedienteConId;
 import es.mde.entidades.PresupuestoConId;
 import es.mde.entidades.SolicitudConId;
 import es.mde.repositorios.ExpedienteDAO;
-import es.mde.repositorios.PresupuestoDAO;
+import es.mde.repositorios.PresupuestoSecresDAO;
 import es.mde.repositorios.SolicitudDAO;
 import es.mde.util.StringUtils;
 
@@ -36,7 +36,7 @@ public class ExpedienteServicio {
 
   private final ExpedienteDAO expedienteDAO;
   private final SolicitudDAO solicitudDAO;
-  private final PresupuestoDAO presupuestoDAO;
+  private final PresupuestoSecresDAO presupuestoSecresDAO;
   private final EmailSenderServicio emailSenderServicio;
 
   /** Máximo número de días permitidos para una activación en un año */
@@ -47,11 +47,11 @@ public class ExpedienteServicio {
    * Constructor que inyecta los DAOs y el servicio para envío de emails.
    */
   @Autowired
-  public ExpedienteServicio(ExpedienteDAO expedienteDAO, SolicitudDAO solicitudDAO, PresupuestoDAO presupuestoDAO,
+  public ExpedienteServicio(ExpedienteDAO expedienteDAO, SolicitudDAO solicitudDAO, PresupuestoSecresDAO presupuestoSecresDAO,
       EmailSenderServicio emailSenderServicio) {
     this.expedienteDAO = expedienteDAO;
     this.solicitudDAO = solicitudDAO;
-    this.presupuestoDAO = presupuestoDAO;
+    this.presupuestoSecresDAO = presupuestoSecresDAO;
     this.emailSenderServicio = emailSenderServicio;
   }
 
@@ -175,7 +175,7 @@ public class ExpedienteServicio {
     ExpedienteConId expediente = expedienteOpt.get();
     int anho = expediente.getAnho();
 
-    PresupuestoConId presupuesto = presupuestoDAO.getByAnho(anho);
+    PresupuestoConId presupuesto = presupuestoSecresDAO.getByAnho(anho);
     if (presupuesto == null) {
       throw new IllegalArgumentException("ERROR: No existe presupuesto para el año " + anho);
     }
@@ -193,6 +193,6 @@ public class ExpedienteServicio {
   private void guardarCambios(ExpedienteConId expediente, SolicitudConId solicitud, PresupuestoConId presupuesto) {
     expedienteDAO.save(expediente);
     solicitudDAO.save(solicitud);
-    presupuestoDAO.save(presupuesto);
+    presupuestoSecresDAO.save(presupuesto);
   }
 }

@@ -24,7 +24,7 @@ export const useSolicitudesStore = crearStore("solicitudes", {
       await useSolicitudesStore().cargarReservistaEnSolicitud(solicitudEnStore);
       solicitudEnStore.tipoSolicitud = tipoSolicitud;
 
-      return solicitudEnStore;
+      return "Solicitud añadida correctamente";
     } catch (error) {
       return error;
     }
@@ -32,12 +32,12 @@ export const useSolicitudesStore = crearStore("solicitudes", {
   async editarSolicitud(solicitudAEditar) {
     try {
       const reservistaEnStore = solicitudAEditar.reservista;
-      const tipoSolicitud = solicitudACrear.tipoSolicitud;
+      const tipoSolicitud = solicitudAEditar.tipoSolicitud;
       const solicitudEnStore = await this.editarElemento(solicitudAEditar);
       solicitudEnStore.reservista = reservistaEnStore;
       solicitudEnStore.tipoSolicitud = tipoSolicitud;
 
-      return solicitudEnStore;
+      return "Solicitud editada correctamente";
     } catch (error) {
       return error;
     }

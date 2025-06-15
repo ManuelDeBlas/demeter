@@ -102,4 +102,12 @@
   .colorAmarillo {
     background-color: #ffdd00;
   }
+
+  .btn-info {
+    background-color: #94bb71 !important;
+  }
+
+  .btn-primary {
+    background-color: #3a6f45 !important;
+  }
 </style>
